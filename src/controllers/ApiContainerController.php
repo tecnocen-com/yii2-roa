@@ -4,7 +4,11 @@ namespace tecnocen\roa\controllers;
 
 use yii\helpers\ArrayHelper;
 use yii\web\NoutFoundHttpException;
+use Yii;
 
+/**
+ * @author Angel (Faryshta) Guevara <aguevara@tecnocen.com>
+ */
 class ApiContainerController extends \yii\rest\Controller
 {
     /**
@@ -13,7 +17,7 @@ class ApiContainerController extends \yii\rest\Controller
      *
      * @return string[]
      */
-    public function indexAction()
+    public function actionIndex()
     {
         return ArrayHelper::map($this->module->modules, 'id', 'stability');
     }

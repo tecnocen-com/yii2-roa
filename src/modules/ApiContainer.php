@@ -5,7 +5,11 @@ namespace tecnocen\roa\modules;
 use tecnocen\roa\controllers\ApiContainerController;
 use yii\helpers\ArrayHelper;
 use yii\rest\UrlRule;
+use Yii;
 
+/**
+ * @author Angel (Faryshta) Guevara <aguevara@tecnocen.com>
+ */
 class ApiContainer extends \yii\base\Module
     implements \yii\base\BootstrapInterface
 {
@@ -13,6 +17,13 @@ class ApiContainer extends \yii\base\Module
      * @var string
      */
     public $identityClass;
+
+    /**
+     * @inheritdoc
+     */
+    public $defaultRoute = 'index';
+
+    public $baseNamespace;
 
     /**
      * @inheritdoc
@@ -34,31 +45,35 @@ class ApiContainer extends \yii\base\Module
      */
     public function bootstrap($app)
     {
-        $this->setAlias('@api', $this->uniqueId);
-        $class = $this::class;
-        $namespace = substr($class, 0, strrpos($class, '\\'));
+        Yii::setAlias('@api', $this->uniqueId);
         if (empty($this->identityClass)) {
-            $this->identityClass = "$namespace\\models\\User";
+            $this->identityClass = "{$this->baseNamespace}\\models\\User";
         }
         if (empty($this->errorAction)) {
             $this->errorAction = $this->uniqueId . '/index/error';
         }
         foreach ($this->versions as $route => $config) {
-            $this->addModule($route, ArrayHelper::merge([
+            $this->setModule($route, ArrayHelper::merge([
                 'class' => ApiVersion::class,
-                'controllerNamespace' => "$namespace\\$route",
+                'controllerNamespace' =>
+                    "{$this->baseNamespace}\\$route\\controllers",
             ], $config));
-            $version = $this->getModule($id);
-            $resources = $version->resources;
-            $prefix = "{$this->uniqueId}/{$route}/";
-            array_walk($resources, function (&$resource) use ($prefix) {
-                $resource = "$prefix/$resource";
-            });
-            $app->urlManager->addRules([[
-                'class' => UrlRule::class,
-                'controllers' => $resources,
-                'prefix' => $prefix,
-            ]]);
+            
+            $resources = $config['resources'];
+            if (!empty($resources)) {
+                $controllers = [];
+                $prefix = "{$this->uniqueId}/{$route}/";
+                foreach ($resources as $key => $resource) {
+                    $controllers[is_int($key) ? $resource : $key] = "$prefix$resource";
+                }
+ 
+                $app->urlManager->addRules([[
+                    'class' => UrlRule::class,
+                    'controller' => $controllers,
+                    'prefix' => $prefix,
+                    'pluralize' => false,
+                ]]);
+            }
         }
     }
 
