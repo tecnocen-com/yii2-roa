@@ -9,7 +9,11 @@ use yii\rest\UrlRule;
 class ApiContainer extends \yii\base\Module
     implements \yii\base\BootstrapInterface
 {
-    public $identand identityClassass;
+    /**
+     * @var string
+     */
+    public $identityClass;
+
     /**
      * @inheritdoc
      */
