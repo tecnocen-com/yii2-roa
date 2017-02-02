@@ -23,6 +23,10 @@ class ApiContainer extends \yii\base\Module
      */
     public $defaultRoute = 'index';
 
+    /**
+     * @var string namespace used along each api version route to create the
+     * default `controllerNamespace` for each module.
+     */
     public $baseNamespace;
 
     /**
@@ -59,13 +63,12 @@ class ApiContainer extends \yii\base\Module
                     "{$this->baseNamespace}\\$route\\controllers",
             ], $config));
             
-            $resources = ArrayHelper::getValue($config, 'resources', []);
-            if (!empty($resources)) {
+            if (!empty($config['resources'])) {
                 $controllers = [];
-                $prefix = "{$this->uniqueId}/{$route}/";
-                foreach ($resources as $key => $resource) {
+                $prefix = "{$this->uniqueId}/{$route}";
+                foreach ($config['resources'] as $key => $resource) {
                     $controllers[is_int($key) ? $resource : $key]
-                        = "$prefix$resource";
+                        = "$prefix/$resource";
                 }
  
                 $app->urlManager->addRules([[
