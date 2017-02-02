@@ -59,12 +59,13 @@ class ApiContainer extends \yii\base\Module
                     "{$this->baseNamespace}\\$route\\controllers",
             ], $config));
             
-            $resources = $config['resources'];
+            $resources = ArrayHelper::getValue($config, 'resources', []);
             if (!empty($resources)) {
                 $controllers = [];
                 $prefix = "{$this->uniqueId}/{$route}/";
                 foreach ($resources as $key => $resource) {
-                    $controllers[is_int($key) ? $resource : $key] = "$prefix$resource";
+                    $controllers[is_int($key) ? $resource : $key]
+                        = "$prefix$resource";
                 }
  
                 $app->urlManager->addRules([[
