@@ -7,6 +7,8 @@ use yii\web\NoutFoundHttpException;
 use Yii;
 
 /**
+ * Lists all the available versions for an api and handles error responses.
+ *
  * @author Angel (Faryshta) Guevara <aguevara@tecnocen.com>
  */
 class ApiContainerController extends \yii\rest\Controller
@@ -19,7 +21,11 @@ class ApiContainerController extends \yii\rest\Controller
      */
     public function actionIndex()
     {
-        return ArrayHelper::map($this->module->modules, 'id', 'stability');
+        $versions = [];
+        foreach ($this->module->versions as $id => $config) {
+            $versions[$id] = ArrayHelper::getValue($config, 'stability', 'dev');
+        }
+        return $versions;
     }
 
     /**
