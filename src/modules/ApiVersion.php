@@ -6,6 +6,14 @@ use DateTime;
 use tecnocen\roa\controllers\ApiVersionController;
 use yii\base\InvalidConfigException;
 
+/**
+ * Class to attach a version to an `ApiContainer` module.
+ *
+ * You can control the stability by setting the properties `$releaseDate`,
+ * `$deprecationDate` and `$obsoleteDate`.
+ *
+ * The resources are declared using the `$resources` array property
+ */
 class ApiVersion extends \yii\base\Module
 {
     const STABILITY_DEVELOPMENT = 'development';
@@ -55,7 +63,20 @@ class ApiVersion extends \yii\base\Module
     public $controllerMap = ['index' => ApiVersionController::class];
 
     /**
-     * @var string[]
+     * @var string[] list of 'patternRoute' => 'resource' pairs to connect a
+     * route to a resource. if no key is used, then the value will be the
+     * pattern too.
+     *
+     * ```php
+     * [
+     *     'profile',
+     *     'profile/image' => 'profile-image',
+     *     'profile/image/<image_id:[\d]+>/comment' => 'profile-image-comment',
+     *     'timeline',
+     *     'post',
+     *     'post/<post_id:[\d]+>/reply' => 'post-reply',
+     * ]
+     * ```
      */
     public $resources = [];
 
@@ -68,23 +89,23 @@ class ApiVersion extends \yii\base\Module
         if ($releaseTime = $this->calcTime($this->releaseDate)
             && $releaseTime <= ($now = time())
         ) {
-            if ($deprecatedTime = $this->calcTime($this->deprecatedDate)
+            if ($deprecationTime = $this->calcTime($this->deprecationDate)
                 && $obsoleteTime = $this->calcTime($this->obsoleteDate)
             ) {
-                if ($obsoleteTime < $deprecatedTime) {
+                if ($obsoleteTime < $deprecationTime) {
                     throw new InvalidConfigException(
-                        'The `obsoleteDate` must not be earlier than `deprecatedDate`'
+                        'The `obsoleteDate` must not be earlier than `deprecationDate`'
                     );
                 }
-                if ($deprecatedTime < $releaseTime) {
+                if ($deprecationTime < $releaseTime) {
                     throw new InvalidConfigException(
-                        'The `deprecatedDate` must not be earlier than `releaseDate`'
+                        'The `deprecationDate` must not be earlier than `releaseDate`'
                     );
                 }
 
                 if ($obsoleteTime > $now) {
                     $this->stability = self::STABILITY_OBSOLETE;
-                } elseif ($deprecatedTime > $now) {
+                } elseif ($deprecationTime > $now) {
                     $this->stability = self::STABILITY_DEPRECATED;
                 } else {
                     $this->stability = self::STABILITY_STABLE;
