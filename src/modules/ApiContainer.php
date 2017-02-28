@@ -62,22 +62,28 @@ class ApiContainer extends \yii\base\Module
                 'controllerNamespace' =>
                     "{$this->baseNamespace}\\$route\\controllers",
             ], $config));
-            
-            if (!empty($config['resources'])) {
-                $controllers = [];
-                $prefix = "{$this->uniqueId}/{$route}";
-                foreach ($config['resources'] as $key => $resource) {
-                    $controllers[is_int($key) ? $resource : $key]
-                        = "$prefix/$resource";
-                }
- 
-                $app->urlManager->addRules([[
-                    'class' => UrlRule::class,
-                    'controller' => $controllers,
-                    'prefix' => $prefix,
-                    'pluralize' => false,
-                ]]);
+            $v = $this->getModule($route);
+            $this->versions[$route] = $v;
+            $prefix = "{$this->uniqueId}/{$route}";
+
+            if ($v->stability == ApiVersion::STABILITY_OBSOLETE)) {
+                $app->urlManager->addRules([
+                    "$prefix/<route:[*]+>" => "${this->uniqueId}/gone"
+                ]);
+                continue;
             }
+            $controllers = [];
+            foreach ($v->resources as $key => $resource) {
+                $controllers[is_int($key) ? $resource : $key]
+                    = "$prefix/$resource";
+            }
+ 
+            $app->urlManager->addRules([[
+                'class' => UrlRule::class,
+                'controller' => $controllers,
+                'prefix' => $prefix,
+                'pluralize' => false,
+            ]]);
         }
     }
 

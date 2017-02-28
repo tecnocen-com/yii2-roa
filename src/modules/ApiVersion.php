@@ -133,4 +133,20 @@ class ApiVersion extends \yii\base\Module
 
          return $dt->getTimestamp();
     }
+
+    /**
+     * @return array stability, life cycle and resources for this version. 
+     */
+    public function getFactSheet()
+    {
+        return [
+            'stability' => $this->stability,
+            'lifeCycle' => [
+                'releaseDate' => $this->releaseDate,
+                'deprecationDate' => $this->deprecationDate,
+                'obsoleteDate' => $this->obsoleteDate,
+            ],
+            'resources' => $this->resources,
+        ];
+    }
 }

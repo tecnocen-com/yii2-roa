@@ -21,11 +21,7 @@ class ApiContainerController extends \yii\rest\Controller
      */
     public function actionIndex()
     {
-        $versions = [];
-        foreach ($this->module->versions as $id => $config) {
-            $versions[$id] = ArrayHelper::getValue($config, 'stability', 'dev');
-        }
-        return $versions;
+        return ArrayHelper::map($this->module->versions, 'id', 'factSheet');
     }
 
     /**
@@ -45,5 +41,19 @@ class ApiContainerController extends \yii\rest\Controller
             : 500;
 
         return $exception;
+    }
+
+    /**
+     * Action shown when a resource is  no longer available.
+     *
+     * @throws GoneHttpException
+     */
+    public function actionGone()
+    {
+        throw new GoneHttpException(
+            'The resource you seek is obsolete, visit '
+                . Url::to(['index'])
+                . ' to get the fact sheets of all available versions.'
+        );
     }
 }	

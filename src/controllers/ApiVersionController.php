@@ -11,6 +11,6 @@ class ApiVersionController extends \yii\rest\Controller
      */
     public function actionIndex()
     {
-        return $this->module->resources;
+        return $this->module->factSheet;
     }
 }
