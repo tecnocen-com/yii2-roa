@@ -66,9 +66,9 @@ class ApiContainer extends \yii\base\Module
             $this->versions[$route] = $v;
             $prefix = "{$this->uniqueId}/{$route}";
 
-            if ($v->stability == ApiVersion::STABILITY_OBSOLETE)) {
+            if ($v->stability == ApiVersion::STABILITY_OBSOLETE) {
                 $app->urlManager->addRules([
-                    "$prefix/<route:[*]+>" => "${this->uniqueId}/gone"
+                    "$prefix/<route:[*]+>" => "{$this->uniqueId}/gone"
                 ]);
                 continue;
             }
