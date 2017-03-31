@@ -60,7 +60,7 @@ class ApiContainer extends \yii\base\Module
                 continue;
             }
             $controllers = [];
-            foreach ($v->resources as $key => $resource) {
+            foreach ($v->resources as $resourceRoute => $resourceClass) {
                 $controllers[is_int($key) ? $resource : $key]
                     = "$prefix/$resource";
             }

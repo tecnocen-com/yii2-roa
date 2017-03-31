@@ -80,6 +80,11 @@ class ApiVersion extends \yii\base\Module
      */
     public $resources = [];
 
+    public function getRoutes()
+    {
+        return array_keys($this->routes);
+    }
+
     /**
      * @inheritdoc
      */
@@ -114,6 +119,48 @@ class ApiVersion extends \yii\base\Module
                 $this->stability = self::STABILITY_STABLE;
             }
         }
+
+        if ($this->stability !== self::STABILITY_OBSOLETE) {
+            $this->buildRoutes();
+        }
+    }
+
+    private function buildRoutes()
+    {
+        foreach ($this->resources as $route => $class) {
+            $route = is_int($route) ? $class : $route;
+            $controllerRoute = $this->buildControllerRoute($route);
+            if (strpos($class, '\\') === false) {
+                $class = $this->buildControllerClass($controllerRoute);
+            }
+
+            $this->controllerMap[$controllerRoute] = $class;
+            $this->controllerRoutes[$route] => "{$this->uniqueId}/$controllerRoute";
+
+        }
+        Yii::$app->urlManager->addRules([
+                'controller' => $controllers,
+                'prefix' => $this->uniqueId,
+                'pluralize' => false,
+        ]);
+    }
+
+    private function buildControllerRoute($roaRoute)
+    {
+        return strtr(
+            preg_replace(
+                '/\/\<.*?\>\//',
+                '--',
+                $roaRoute
+            ),
+            ['/' => '-']
+        );
+    }
+
+
+    private function buildControllerClass($controllerRoute)
+    {
+        return $this->controllersNamespace . 'string'
     }
 
     /**
