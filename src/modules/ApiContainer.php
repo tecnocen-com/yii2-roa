@@ -24,12 +24,6 @@ class ApiContainer extends \yii\base\Module
     public $defaultRoute = 'index';
 
     /**
-     * @var string namespace used along each api version route to create the
-     * default `controllerNamespace` for each module.
-     */
-    public $baseNamespace;
-
-    /**
      * @inheritdoc
      */
     public $controllerMap = ['index' => ApiContainerController::class];
@@ -50,18 +44,11 @@ class ApiContainer extends \yii\base\Module
     public function bootstrap($app)
     {
         Yii::setAlias('@api', $this->uniqueId);
-        if (empty($this->identityClass)) {
-            $this->identityClass = "{$this->baseNamespace}\\models\\User";
-        }
         if (empty($this->errorAction)) {
             $this->errorAction = $this->uniqueId . '/index/error';
         }
         foreach ($this->versions as $route => $config) {
-            $this->setModule($route, ArrayHelper::merge([
-                'class' => ApiVersion::class,
-                'controllerNamespace' =>
-                    "{$this->baseNamespace}\\$route\\controllers",
-            ], $config));
+            $this->setModule($route, $config);
             $v = $this->getModule($route);
             $this->versions[$route] = $v;
             $prefix = "{$this->uniqueId}/{$route}";
