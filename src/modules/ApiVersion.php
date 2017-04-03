@@ -3,6 +3,7 @@
 namespace tecnocen\roa\modules;
 
 use DateTime;
+use Yii;
 use tecnocen\roa\controllers\ApiVersionController;
 use yii\base\InvalidConfigException;
 
@@ -20,6 +21,10 @@ class ApiVersion extends \yii\base\Module
     const STABILITY_STABLE = 'stable';
     const STABILITY_DEPRECATED = 'deprecated';
     const STABILITY_OBSOLETE = 'obsolete';
+
+    public $controllerSubfix = 'Resource';
+
+    private $controllerRoutes = [];
 
     /**
      * @var string date in Y-m-d format for the date at which this version
@@ -69,12 +74,11 @@ class ApiVersion extends \yii\base\Module
      *
      * ```php
      * [
-     *     'profile',
-     *     'profile/image' => 'profile-image',
-     *     'profile/image/<image_id:[\d]+>/comment' => 'profile-image-comment',
-     *     'timeline',
-     *     'post',
-     *     'post/<post_id:[\d]+>/reply' => 'post-reply',
+     *     'profile', // resources\ProfileResource
+     *     'profile/history', // resources\profile\HistoryResource
+     *     'image/<image_id:[\d]+>.<ext:[jpg|png]> => resources\ImageFileResource::class,
+     *     'post' => resources\post\PostResource::class,
+     *     'post/<post_id:[\d]+>/reply', // resources\post\ReplyResource
      * ]
      * ```
      */
@@ -82,7 +86,7 @@ class ApiVersion extends \yii\base\Module
 
     public function getRoutes()
     {
-        return array_keys($this->routes);
+        return array_keys($this->controllerRoutes);
     }
 
     /**
@@ -127,6 +131,7 @@ class ApiVersion extends \yii\base\Module
 
     private function buildRoutes()
     {
+        $this->controllerNamespace = rtrim($this->controllerNamespace, '\\') . '\\';
         foreach ($this->resources as $route => $class) {
             $route = is_int($route) ? $class : $route;
             $controllerRoute = $this->buildControllerRoute($route);
@@ -135,14 +140,15 @@ class ApiVersion extends \yii\base\Module
             }
 
             $this->controllerMap[$controllerRoute] = $class;
-            $this->controllerRoutes[$route] => "{$this->uniqueId}/$controllerRoute";
+            $this->controllerRoutes[$route] = "{$this->uniqueId}/$controllerRoute";
 
         }
-        Yii::$app->urlManager->addRules([
-                'controller' => $controllers,
-                'prefix' => $this->uniqueId,
-                'pluralize' => false,
-        ]);
+        Yii::$app->urlManager->addRules([[
+            'class' => \yii\rest\UrlRule::class,
+            'controller' => $this->controllerRoutes,
+            'prefix' => $this->uniqueId,
+            'pluralize' => false,
+        ]]);
     }
 
     private function buildControllerRoute($roaRoute)
@@ -160,7 +166,18 @@ class ApiVersion extends \yii\base\Module
 
     private function buildControllerClass($controllerRoute)
     {
-        return $this->controllersNamespace . 'string'
+        $lastSeparator = strrpos($controllerRoute, '--');
+        if ($lastSeparator === false) {
+            $lastClass = $controllerRoute;
+            $ns = '';
+        } else {
+            $lastClass = substr($controllerRoute, $lastSeparator + 2);
+            $ns = substr($controllerRoute, 0, $lastSeparator);
+        }
+        return $this->controllerNamespace
+            . strtr($ns, ['--' => '\\'])
+            . str_replace(' ', '', ucwords(str_replace('-', ' ', $lastClass)))
+            . $this->controllerSubfix;
     }
 
     /**
@@ -193,7 +210,7 @@ class ApiVersion extends \yii\base\Module
                 'deprecationDate' => $this->deprecationDate,
                 'obsoleteDate' => $this->obsoleteDate,
             ],
-            'resources' => $this->resources,
+            'routes' => $this->getRoutes(),
         ];
     }
 }

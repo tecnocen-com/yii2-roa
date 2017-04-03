@@ -21,7 +21,7 @@ use yii\helpers\ArrayHelper;
  *
  * @author  Angel (Faryshta) Guevara <aguevara@tecnocen.com>
  */
-class OAuth2ResourceController extends \yii\rest\ActiveController
+class OAuth2Resource extends \yii\rest\ActiveController
 {
     const DEFAULT_REST_ACTIONS = [
         'index',
