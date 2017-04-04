@@ -95,12 +95,12 @@ class ApiVersion extends \yii\base\Module
     public function init()
     {
         parent::init();
-        if ($releaseTime = $this->calcTime($this->releaseDate)
-            && $releaseTime <= ($now = time())
-        ) {
-            if ($deprecationTime = $this->calcTime($this->deprecationDate)
-                && $obsoleteTime = $this->calcTime($this->obsoleteDate)
-            ) {
+        $releaseTime = $this->calcTime($this->releaseDate);
+        $now = time();
+        if ($releaseTime !== null && $releaseTime <= $now) {
+            $deprecationTime = $this->calcTime($this->deprecationDate);
+            $obsoleteTime = $this->calcTime($this->obsoleteDate);
+            if ($deprecationTime !== null && $obsoleteTime !== null) {
                 if ($obsoleteTime < $deprecationTime) {
                     throw new InvalidConfigException(
                         'The `obsoleteDate` must not be earlier than `deprecationDate`'
