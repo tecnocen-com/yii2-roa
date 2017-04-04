@@ -43,12 +43,13 @@ class ApiContainer extends \yii\base\Module
      */
     public function bootstrap($app)
     {
-        Yii::setAlias('@api', $this->uniqueId);
+        Yii::setAlias('@apiweb', $this->uniqueId);
         if (empty($this->errorAction)) {
             $this->errorAction = $this->uniqueId . '/index/error';
         }
         foreach ($this->versions as $route => $config) {
             $this->setModule($route, $config);
+            $this->versions[$route] = $this->getModule($route);
         }
     }
 
