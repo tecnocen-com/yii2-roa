@@ -17,11 +17,11 @@ V1Version extends \tecnocen\roa\modules\ApiVersion
     public $obsoleteDate = '2012-12-31';
 
     public $resources = [
-        'user', // UserController
-        'comment', // CommentController
-        'comment/<comment_id:[\d]+>/reply', // CommenReplyController
-        'user/avatar', // UserAvatarController
-        'user/avatar.<ext:[jpg|png]>' => UserAvatarFileController::class,
+        'user', // UserResource
+        'comment', // CommentResource
+        'comment/<comment_id:[\d]+>/reply', // CommenReplyResource
+        'user/avatar', // UserAvatarResource
+        'user/avatar.<ext:[jpg|png]>' => UserAvatarFileResource::class,
     ];
 }
 ```
@@ -66,8 +66,8 @@ Al publicarse una versión se convierte es estable, esto significa que ya no se
 desarrollan nuevas funcionalidades y se da mantenimiento activo conforme la
 retroalimentación del usuario final.
 
-Todo mantenimiento debe ser retroincompatible con los recursos e interfaces
-publicadas a partir de la fecha de liberación.
+Todo mantenimiento debe ser retrocompatible con los recursos e interfaces
+publicados a partir de la fecha de liberación `$releaseDate`.
 
 #### Politicas
 
@@ -93,8 +93,8 @@ soporte a fallos de seguridad para el cliente final y el servidor.
 - NO DEBERÍA eliminarse la funcionalidad de un recurso publicado
 - Las interfaces NO DEBEN eliminar atributos de la estructura de información.
 - Sólo se corrigen fallos de seguridad para el usuario final o el servidor.
-- NO DEBEN corregirse errores de ejecución
-. DEBERÍA recibir mantenimiento de seguridad por al menos 6 meses.
+- NO DEBEN corregirse errores de ejecución.
+- DEBERÍA recibir mantenimiento de seguridad por al menos 6 meses.
 - NO DEBERÍA recibir mantenimiento de seguridad por más de 12 meses.
 
 ### Obsoleto
