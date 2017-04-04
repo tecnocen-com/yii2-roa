@@ -13,6 +13,7 @@ Ejemplo de Modulo Contenedor de Api
 
 > backend/config/main.php
 ```php
+    'bootstrap' => ['api'],
     'modules' => [
         'api' => ['class' => BackendApi::class],
     ],
