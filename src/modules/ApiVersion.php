@@ -112,9 +112,9 @@ class ApiVersion extends \yii\base\Module
                     );
                 }
 
-                if ($obsoleteTime > $now) {
+                if ($obsoleteTime < $now) {
                     $this->stability = self::STABILITY_OBSOLETE;
-                } elseif ($deprecationTime > $now) {
+                } elseif ($deprecationTime < $now) {
                     $this->stability = self::STABILITY_DEPRECATED;
                 } else {
                     $this->stability = self::STABILITY_STABLE;
