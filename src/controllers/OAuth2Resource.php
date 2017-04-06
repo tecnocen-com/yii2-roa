@@ -59,7 +59,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
      * @var string class name for the model to be used on the search.
      * Must implement `tecnocen\roa\ResourceSearchInterface`
      */
-    public $seachClass;
+    public $searchClass;
 
     /**
      * @var string name of the form which will hold the GET parameters to filter
@@ -75,7 +75,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
     /**
      * @var string scenario to be used when creating a new record.
      */
-    public $createScenario;
+    public $createScenario = ActiveRecord::SCENARIO_DEFAULT;
 
     /**
      * @var string the message shown when no register is found.
