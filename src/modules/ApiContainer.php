@@ -43,7 +43,6 @@ class ApiContainer extends \yii\base\Module
      */
     public function bootstrap($app)
     {
-        Yii::setAlias('@apiweb', $this->uniqueId);
         if (empty($this->errorAction)) {
             $this->errorAction = $this->uniqueId . '/index/error';
         }
