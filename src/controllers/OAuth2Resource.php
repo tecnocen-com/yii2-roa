@@ -3,7 +3,7 @@
 namespace tecnocen\roa\controllers;
 
 use Yii;
-use filsh\yii2\oauth2server\filters\ErrorTo ExceptionFilter;
+use filsh\yii2\oauth2server\filters\ErrorToExceptionFilter;
 use filsh\yii2\oauth2server\filters\auth\CompositeAuth;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
