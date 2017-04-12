@@ -197,7 +197,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
     {
         if (null === ($model = $this->findQuery($id)->one())) {
             throw new NotFoundHttpException(
-                Yii::t('tecnocen/roa', $this->notFoundMessage, ['id' => $id])
+                strtr($this->notFoundMessage, ['{id}' => $id])
             );
         }
         return $model;
