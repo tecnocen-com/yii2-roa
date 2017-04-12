@@ -6,6 +6,7 @@ use DateTime;
 use Yii;
 use tecnocen\roa\controllers\ApiVersionController;
 use yii\base\InvalidConfigException;
+use yii\rest\UrlRule;
 
 /**
  * Class to attach a version to an `ApiContainer` module.
@@ -132,19 +133,19 @@ class ApiVersion extends \yii\base\Module
     private function buildRoutes()
     {
         $this->controllerNamespace = rtrim($this->controllerNamespace, '\\') . '\\';
-        foreach ($this->resources as $route => $class) {
-            $route = is_int($route) ? $class : $route;
+        foreach ($this->resources as $route => $controller) {
+            $route = is_int($route) ? $controller : $route;
             $controllerRoute = $this->buildControllerRoute($route);
-            if (strpos($class, '\\') === false) {
-                $class = $this->buildControllerClass($controllerRoute);
+            if (is_string($controller)) {
+                $controller = [
+                    'class' => $this->buildControllerClass($controllerRoute),
+                ];
             }
-
-            $this->controllerMap[$controllerRoute] = $class;
+            $this->controllerMap[$controllerRoute] = $controller;
             $this->controllerRoutes[$route] = "{$this->uniqueId}/$controllerRoute";
-
         }
         Yii::$app->urlManager->addRules([[
-            'class' => \yii\rest\UrlRule::class,
+            'class' => UrlRule::class,
             'controller' => $this->controllerRoutes,
             'prefix' => $this->uniqueId,
             'pluralize' => false,
@@ -172,7 +173,7 @@ class ApiVersion extends \yii\base\Module
             $ns = '';
         } else {
             $lastClass = substr($controllerRoute, $lastSeparator + 2);
-            $ns = substr($controllerRoute, 0, $lastSeparator);
+            $ns = substr($controllerRoute, 0, $lastSeparator + 2);
         }
         return $this->controllerNamespace
             . strtr($ns, ['--' => '\\'])
