@@ -16,6 +16,7 @@ use yii\filters\auth\HttpBearerAuth;
 use yii\filters\auth\QueryParamAuth;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
+use yii\web\MethodNotAllowedHttpException;
 
 /**
  * Resource Controller with OAuth2 Support.
@@ -89,6 +90,8 @@ class OAuth2Resource extends \yii\rest\ActiveController
     public function behaviors()
     {
         return ArrayHelper::merge(parent::behaviors(), [
+            // throw 405 on any action not into the 'verbs()' method.
+            'verbFilter' => ['actions' => ['*' => []]],
             'authenticator' => [
                 'class' => CompositeAuth::class,
                 'authMethods' => [
@@ -133,7 +136,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
      */
     public function actions()
     {
-        $actions = ArrayHelper::merge(parent::actions(), [
+        return ArrayHelper::merge(parent::actions(), [
             'index' => [
                 'prepareDataProvider' => [$this, 'indexProvider'],
             ],
@@ -145,15 +148,6 @@ class OAuth2Resource extends \yii\rest\ActiveController
             'create' => ['scenario' => $this->createScenario],
             'delete' => ['findModel' => [$this, 'findModel']],
         ]);
-
-        foreach (array_diff(
-            self::DEFAULT_REST_ACTIONS,
-            array_keys($this->verbs())
-        ) as $unsupportedAction) {
-            unset($actions[$unsupportedAction]);
-        }
-
-        return $actions;
     }
 
     /**
