@@ -16,12 +16,14 @@ class Slug extends \yii\base\Behavior
 
     protected $resourceLink;
 
-    public function init()
+    public function attach($owner)
     {
-        if (isset($this->parentSlugRelation)) {
-            $relation = $this->parentSlugRelation;
-            $this->parentSlug = $this->owner->$relation;
-            $this->resourceLink = $this->parentSlug . '/' . $this->resourceName;
+        parent::attach($owner);
+        if (null !== ($relation = $this->parentSlugRelation)
+            && null !== ($this->parentSlug = $owner->$relation))
+        ) {
+            $this->resourceLink = $this->parentSlug->resourceLink
+                . '/' . $this->resourceName;
         } else {
             $this->resourceLink = Url::to([$this->resourceName . '/'], true);
         }
@@ -52,7 +54,7 @@ class Slug extends \yii\base\Behavior
             return $selfLinks;
         }
         $parentLinks = $this->parentSlug->getSelfLink();
-        $parentLinks[$this->parentSlugRelation] = $parentLinks['self']; 
+        $pentLinks[$this->parentSlugRelation] = $parentLinks['self']; 
         unset($links['self']);
         return array_merge($selfLinks, $parentLinks);
     }
