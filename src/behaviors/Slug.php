@@ -3,9 +3,12 @@
 namespace tecnocen\roa\behaviors;
 
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 class Slug extends \yii\base\Behavior
 {
+    public $checkAccess;
+
     public $parentSlugRelation;
 
     public $resourceName;
@@ -19,14 +22,21 @@ class Slug extends \yii\base\Behavior
     public function attach($owner)
     {
         parent::attach($owner);
-        if (null !== ($relation = $this->parentSlugRelation)
-            && null !== ($this->parentSlug = $owner->$relation))
-        ) {
-            $this->resourceLink = $this->parentSlug->resourceLink
-                . '/' . $this->resourceName;
+        if (null !== $this->parentSlugRelation) {
+            if ($owner->isRelationPopulated($this->parentSlugRelation)) {
+                $this->populateSlugParent($owner);
+            }
         } else {
             $this->resourceLink = Url::to([$this->resourceName . '/'], true);
         }
+    }
+
+    private function populateSlugParent($owner)
+    {
+        $relation = $this->parentSlugRelation;
+        $this->parentSlug = $owner->$relation;
+        $this->resourceLink = $this->parentSlug->selfLink
+            . '/' . $this->resourceName;
     }
 
     public function getResourceRecordId()
@@ -61,6 +71,14 @@ class Slug extends \yii\base\Behavior
 
     public function checkAccess($params)
     {
+         if (null !== $this->parentSlugRelation) {
+             $this->populateSlugParent($this->owner);
+             if (null === $this->parentSlug) {
+                 throw new NotFoundHttpException(
+                     "{$this->parentSlugRelation} not found."
+                 );
+             }
+        }
         if (null !== $this->checkAccess) {
             call_user_func($this->checkAccess, $params);
         }
