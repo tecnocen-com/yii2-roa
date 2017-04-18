@@ -5,8 +5,8 @@ namespace tecnocen\roa\modules;
 use DateTime;
 use Yii;
 use tecnocen\roa\controllers\ApiVersionController;
+use tecnocen\roa\UrlRule;
 use yii\base\InvalidConfigException;
-use yii\rest\UrlRule;
 
 /**
  * Class to attach a version to an `ApiContainer` module.
@@ -24,6 +24,8 @@ class ApiVersion extends \yii\base\Module
     const STABILITY_OBSOLETE = 'obsolete';
 
     public $controllerSubfix = 'Resource';
+
+    public $urlRuleClass = UrlRule::class;
 
     private $controllerRoutes = [];
 
@@ -145,7 +147,7 @@ class ApiVersion extends \yii\base\Module
             $this->controllerRoutes[$route] = "{$this->uniqueId}/$controllerRoute";
         }
         Yii::$app->urlManager->addRules([[
-            'class' => UrlRule::class,
+            'class' => $this->urlRuleClass,
             'controller' => $this->controllerRoutes,
             'prefix' => $this->uniqueId,
             'pluralize' => false,
