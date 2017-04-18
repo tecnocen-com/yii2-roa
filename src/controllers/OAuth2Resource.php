@@ -173,12 +173,12 @@ class OAuth2Resource extends \yii\rest\ActiveController
 
         $searchClass = $this->searchClass;
         $searchModel = new $searchClass();
-        $searchModel->load(
+        $dataProvider = $searchModel->search(
             Yii::$app->request->queryParams,
             $this->searchFormName
         );
 
-        return $searchModel->validate() ? $searchModel->search() : $searchModel;
+        return $dataProvider ?: $searchModel;
     }
 
     /**
