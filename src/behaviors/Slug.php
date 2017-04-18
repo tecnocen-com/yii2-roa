@@ -2,6 +2,7 @@
 
 namespace tecnocen\roa\behaviors;
 
+use yii\db\ActiveRecord;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -29,6 +30,18 @@ class Slug extends \yii\base\Behavior
         } else {
             $this->resourceLink = Url::to([$this->resourceName . '/'], true);
         }
+    }
+
+    public function event()
+    {
+        return [ActiveRecord::EVENT_AFTER_FIND => 'afterFind'];
+    }
+
+    public function afterFind()
+    {
+        $relation = $this->parentSlugRelation;
+        $this->owner->$relation;
+        $this->populateSlugParent($this->owner);
     }
 
     private function populateSlugParent($owner)
