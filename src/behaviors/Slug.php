@@ -90,7 +90,7 @@ class Slug extends \yii\base\Behavior
         if (null === $this->parentSlug) {
             return $selfLinks;
         }
-        $parentLinks = $this->parentSlug->getLinks();
+        $parentLinks = $this->parentSlug->getSlugLinks();
         $parentLinks['parent_' . $this->parentSlugRelation]
             = $parentLinks['self'];
         unset($parentLinks['self']);
