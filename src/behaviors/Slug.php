@@ -6,6 +6,12 @@ use yii\db\ActiveRecord;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
+/**
+ * Behavior to handle slug componentes linked as parent-child relations.
+ *
+ * @author Angel (Faryshta) Guevara <aguevara@alquimiadigital.mx>
+ * @author Luis Campos <lcampos@artificesweb.com>
+ */
 class Slug extends \yii\base\Behavior
 {
     public $checkAccess;
@@ -23,12 +29,21 @@ class Slug extends \yii\base\Behavior
     public function attach($owner)
     {
         parent::attach($owner);
-        if (null !== $this->parentSlugRelation) {
+        $this->ensureSlug($owner);
+    }
+    
+    private function ensureSlug($owner, $forceFind = false)
+    {
+        if (null === $this->parentSlugRelation) {
+            $this->resourceLink = Url::to([$this->resourceName . '/'], true);
+        } else {
+            if ($forceFind) {
+                $relation = $this->parentSlugRelation;
+                $this->owner->$relation;
+            }
             if ($owner->isRelationPopulated($this->parentSlugRelation)) {
                 $this->populateSlugParent($owner);
             }
-        } else {
-            $this->resourceLink = Url::to([$this->resourceName . '/'], true);
         }
     }
 
@@ -39,9 +54,7 @@ class Slug extends \yii\base\Behavior
 
     public function afterFind()
     {
-        $relation = $this->parentSlugRelation;
-        $this->owner->$relation;
-        $this->populateSlugParent($this->owner);
+        $this->ensureSlug($this->owner, true);
     }
 
     private function populateSlugParent($owner)
@@ -69,29 +82,26 @@ class Slug extends \yii\base\Behavior
 
     public function getSlugLinks()
     {
+        $this->ensureSlug($this->owner, true);
         $selfLinks = [
             'self' => $this->getSelfLink(),
-            $this->resourceName => $this->resourceLink,
+            $this->resourceName . '_list' => $this->resourceLink,
         ];
         if (null === $this->parentSlug) {
             return $selfLinks;
         }
-        $parentLinks = $this->parentSlug->getSelfLink();
-        $pentLinks[$this->parentSlugRelation] = $parentLinks['self']; 
-        unset($links['self']);
+        $parentLinks = $this->parentSlug->getSlugLinks();
+        $parentLinks['parent_' . $this->parentSlugRelation]
+            = $parentLinks['self'];
+        unset($parentLinks['self']);
+        // preserve order
         return array_merge($selfLinks, $parentLinks);
     }
 
     public function checkAccess($params)
     {
-         if (null !== $this->parentSlugRelation) {
-             $this->populateSlugParent($this->owner);
-             if (null === $this->parentSlug) {
-                 throw new NotFoundHttpException(
-                     "{$this->parentSlugRelation} not found."
-                 );
-             }
-        }
+        $this->ensureSlug($this->owner, true);
+
         if (null !== $this->checkAccess) {
             call_user_func($this->checkAccess, $params);
         }
