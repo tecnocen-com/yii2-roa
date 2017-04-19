@@ -69,6 +69,7 @@ class Slug extends \yii\base\Behavior
 
     public function getSlugLinks()
     {
+        $this->checkAccess(null);
         $selfLinks = [
             'self' => $this->getSelfLink(),
             $this->resourceName => $this->resourceLink,
@@ -76,9 +77,9 @@ class Slug extends \yii\base\Behavior
         if (null === $this->parentSlug) {
             return $selfLinks;
         }
-        $parentLinks = $this->parentSlug->getSelfLink();
-        $pentLinks[$this->parentSlugRelation] = $parentLinks['self']; 
-        unset($links['self']);
+        $parentLinks = $this->parentSlug->getLinks();
+        $pentLinks[$this->parentSlugRelation] = $parentLinks['self'];
+        unset($parentLinks['self']);
         return array_merge($selfLinks, $parentLinks);
     }
 
