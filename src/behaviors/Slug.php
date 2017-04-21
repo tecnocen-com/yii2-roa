@@ -36,14 +36,10 @@ class Slug extends \yii\base\Behavior
     {
         if (null === $this->parentSlugRelation) {
             $this->resourceLink = Url::to([$this->resourceName . '/'], true);
-        } else {
-            if ($forceFind) {
-                $relation = $this->parentSlugRelation;
-                $this->owner->$relation;
-            }
-            if ($owner->isRelationPopulated($this->parentSlugRelation)) {
-                $this->populateSlugParent($owner);
-            }
+        } elseif ($forceFind 
+            ||$owner->isRelationPopulated($this->parentSlugRelation)
+        ) {
+            $this->populateSlugParent($owner);
         }
     }
 
