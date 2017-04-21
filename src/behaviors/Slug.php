@@ -10,7 +10,7 @@ use yii\web\NotFoundHttpException;
  * Behavior to handle slug componentes linked as parent-child relations.
  *
  * @author Angel (Faryshta) Guevara <aguevara@alquimiadigital.mx>
- * @author Luis Campos <lcampos@artificesweb.com>
+ * @author Luis (Berkant) Campos <lcampos@artificesweb.com>
  */
 class Slug extends \yii\base\Behavior
 {
@@ -43,7 +43,7 @@ class Slug extends \yii\base\Behavior
         }
     }
 
-    public function event()
+    public function events()
     {
         return [ActiveRecord::EVENT_AFTER_FIND => 'afterFind'];
     }
