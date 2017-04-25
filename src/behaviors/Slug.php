@@ -55,7 +55,7 @@ class Slug extends \yii\base\Behavior
     protected $resourceLink;
 
     /**
-     * @inheritdoc
+     * Ensures and attaches the slug to its parents.
      */
     public function attach($owner)
     {
@@ -81,7 +81,7 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * @inheritdoc
+     * Calls the event afterFind
      */
     public function events()
     {
@@ -110,7 +110,7 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * @inheritdoc
+     * @return string idAttribute
      */
     public function getResourceRecordId()
     {
@@ -118,7 +118,7 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * @inheritdoc
+     * @return string resourceLink
      */
     public function getResourceLink()
     {
@@ -126,7 +126,7 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * @inheritdoc
+     * @return string Link to self resource
      */
     public function getSelfLink()
     {
@@ -134,7 +134,7 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * @inheritdoc
+     * @return array parent links and self links
      */
     public function getSlugLinks()
     {
@@ -155,7 +155,8 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * Checks the access to the parents
+     * Determines if the logged user has permission to access a resource
+     * record or any of its chidren resources.
      * @param  Array $params
      */
     public function checkAccess($params)
@@ -172,7 +173,7 @@ class Slug extends \yii\base\Behavior
 
 
     /**
-     * @inheritdoc
+     * @return behavior this
      */
     public function getSlugBehavior()
     {
