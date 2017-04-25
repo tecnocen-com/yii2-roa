@@ -15,27 +15,37 @@ use yii\web\NotFoundHttpException;
 class Slug extends \yii\base\Behavior
 {
     /**
-     * @var bool
+     * @var callable a PHP callable which will determine if the logged
+     * user has permission to access a resource record or any of its
+     * chidren resources.
+     *
+     * It must have signature
+     * ```php
+     * function (array $queryParams): void
+     *     throws \yii\web\HTTPException
+     * {
+     * }
+     * ```
      */
     public $checkAccess;
 
     /**
-     * @var string Name of the parent relation
+     * @var string name of the parent relation of the `$owner`
      */
     public $parentSlugRelation;
 
     /**
-     * @var string Name of the resource
+     * @var string name of the resource
      */
     public $resourceName;
 
     /**
-     * @var string Name of the id column
+     * @var string name of the identifier attribute
      */
     public $idAttribute = 'id';
 
     /**
-     * @var string Name of the parent resource
+     * @var ActiveRecord parent record.
      */
     protected $parentSlug;
 
@@ -45,8 +55,7 @@ class Slug extends \yii\base\Behavior
     protected $resourceLink;
 
     /**
-     * Function to attach Slug
-     * @param  object $owner
+     * @inheritdoc
      */
     public function attach($owner)
     {
@@ -55,16 +64,16 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * Function that ensures the relation to parent
-     * it can be forced
+     * Ensures the parent record is attached to the behavior.
+     *
      * @param  object  $owner
-     * @param  boolean $forceFind
+     * @param  boolean $force
      */
-    private function ensureSlug($owner, $forceFind = false)
+    private function ensureSlug($owner, $force = false)
     {
         if (null === $this->parentSlugRelation) {
             $this->resourceLink = Url::to([$this->resourceName . '/'], true);
-        } elseif ($forceFind 
+        } elseif ($force
             ||$owner->isRelationPopulated($this->parentSlugRelation)
         ) {
             $this->populateSlugParent($owner);
@@ -80,7 +89,8 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * @inheritdoc
+     * Handles the event `ActiveRecord::EVENT_AFTER_FIND` by ensuring the
+     * record's parent exists when `parentSlugRelation` is set.
      */
     public function afterFind()
     {
