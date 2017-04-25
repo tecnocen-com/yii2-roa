@@ -14,24 +14,52 @@ use yii\web\NotFoundHttpException;
  */
 class Slug extends \yii\base\Behavior
 {
+    /**
+     * @var bool
+     */
     public $checkAccess;
 
+    /**
+     * @var string Name of the parent relation
+     */
     public $parentSlugRelation;
 
+    /**
+     * @var string Name of the resource
+     */
     public $resourceName;
 
+    /**
+     * @var string Name of the id column
+     */
     public $idAttribute = 'id';
 
+    /**
+     * @var string Name of the parent resource
+     */
     protected $parentSlug;
 
+    /**
+     * @var string url to resource
+     */
     protected $resourceLink;
 
+    /**
+     * Function to attach Slug
+     * @param  object $owner
+     */
     public function attach($owner)
     {
         parent::attach($owner);
         $this->ensureSlug($owner);
     }
-    
+
+    /**
+     * Function that ensures the relation to parent
+     * it can be forced
+     * @param  object  $owner
+     * @param  boolean $forceFind
+     */
     private function ensureSlug($owner, $forceFind = false)
     {
         if (null === $this->parentSlugRelation) {
@@ -43,16 +71,26 @@ class Slug extends \yii\base\Behavior
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function events()
     {
         return [ActiveRecord::EVENT_AFTER_FIND => 'afterFind'];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function afterFind()
     {
         $this->ensureSlug($this->owner, true);
     }
 
+    /**
+     * This populates the slug to the parentSlug
+     * @param  object $owner
+     */
     private function populateSlugParent($owner)
     {
         $relation = $this->parentSlugRelation;
@@ -61,21 +99,33 @@ class Slug extends \yii\base\Behavior
             . '/' . $this->resourceName;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getResourceRecordId()
     {
         return $this->owner->getAttribute($this->idAttribute);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getResourceLink()
     {
         return $this->resourceLink;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getSelfLink()
     {
         return $this->resourceLink . '/' . $this->getResourceRecordId();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getSlugLinks()
     {
         $this->ensureSlug($this->owner, true);
@@ -94,6 +144,10 @@ class Slug extends \yii\base\Behavior
         return array_merge($selfLinks, $parentLinks);
     }
 
+    /**
+     * Checks the access to the parents
+     * @param  Array $params
+     */
     public function checkAccess($params)
     {
         $this->ensureSlug($this->owner, true);
@@ -106,6 +160,10 @@ class Slug extends \yii\base\Behavior
         }
     }
 
+
+    /**
+     * @inheritdoc
+     */
     public function getSlugBehavior()
     {
         return $this;
