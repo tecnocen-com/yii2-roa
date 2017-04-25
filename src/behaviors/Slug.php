@@ -55,7 +55,7 @@ class Slug extends \yii\base\Behavior
     protected $resourceLink;
 
     /**
-     * Ensures and attaches the slug to its parents.
+     * @inheritdoc
      */
     public function attach($owner)
     {
@@ -66,8 +66,9 @@ class Slug extends \yii\base\Behavior
     /**
      * Ensures the parent record is attached to the behavior.
      *
-     * @param  object  $owner
-     * @param  boolean $force
+     * @param  ActiveRecord $owner
+     * @param  boolean $force whether to force finding the parent of the owner
+     * when `$parentSlugRelation` is defined
      */
     private function ensureSlug($owner, $force = false)
     {
@@ -81,7 +82,7 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * Calls the event afterFind
+     * @inheritdoc
      */
     public function events()
     {
@@ -99,7 +100,7 @@ class Slug extends \yii\base\Behavior
 
     /**
      * This populates the slug to the parentSlug
-     * @param  object $owner
+     * @param  ActiveRecord $owner
      */
     private function populateSlugParent($owner)
     {
@@ -110,7 +111,7 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * @return string idAttribute
+     * @return mixed value of the owner's identifier
      */
     public function getResourceRecordId()
     {
@@ -118,7 +119,7 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * @return string resourceLink
+     * @return string HTTP Url to the resource list
      */
     public function getResourceLink()
     {
@@ -126,7 +127,7 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * @return string Link to self resource
+     * @return string HTTP Url to self resource
      */
     public function getSelfLink()
     {
@@ -134,7 +135,7 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * @return array parent links and self links
+     * @return array link to self resource and all the acumulated parent's links
      */
     public function getSlugLinks()
     {
@@ -173,7 +174,7 @@ class Slug extends \yii\base\Behavior
 
 
     /**
-     * @return behavior this
+     * @return $this
      */
     public function getSlugBehavior()
     {
