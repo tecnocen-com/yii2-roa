@@ -2,7 +2,7 @@
 
 namespace tecnocen\roa\actions;
 
-class Action extends \yii\rest\Action;
+class Action extends \yii\rest\Action
 {
     /**
      * @param ?ActiveRecord $model
