@@ -4,7 +4,7 @@ namespace tecnocen\roa\actions;
 
 use Yii;
 
-use tecnocen\roa\FileResource;
+use tecnocen\roa\FileRecord;
 
 /**
  * Access and show s the content of a file on the browser or download it.
@@ -26,10 +26,10 @@ class FileStream extends Action
     {
         parent::init();
         $interfaces = class_implements($this->modelClass);
-        if (empty($interfaces[FileResource::class])) {
+        if (empty($interfaces[FileRecord::class])) {
             throw new InvalidConfigException(
                 "The class `{$this->modelClass}` must implement "
-                    . FileResource::class
+                    . FileRecord::class
             );
         }
     }

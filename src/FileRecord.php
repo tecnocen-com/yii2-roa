@@ -5,7 +5,7 @@
  *
  * @author Angel (Faryshta) Guevara <aguevara@alquimiadigital.mx>
  */
-interface FileResource
+interface FileRecord
 {
     /**
      * Full path for the file.
