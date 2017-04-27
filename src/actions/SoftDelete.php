@@ -3,6 +3,7 @@
 namespace tecnocen\roa\actions;
 
 use Yii;
+use yii\web\ServerErrorHttpException;
 
 /**
  * Access and show s the content of a file on the browser or download it.
@@ -17,7 +18,7 @@ class SoftDelete extends Action
      * @param mixed $id the identifier value.
      * @param string $ext the requested file extension.
      */
-    public function run($id, $ext)
+    public function run($id)
     {
         $this->checkAccess(
             ($model = $this->findModel($id)),
