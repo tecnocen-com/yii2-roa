@@ -6,15 +6,15 @@ use Yii;
 use yii\web\ServerErrorHttpException;
 
 /**
- * Deletes a record using the `softDelete()` method. Meant to be used with
+ * Restores a record using the `restoreDelete()` method. Meant to be used with
  * library "yii2tech/ar-softdelete".
  *
  * @author Angel (Faryshta) Guevara <aguevara@alquimiadigital.mx>
  */
-class SoftDelete extends Action
+class Restore extends Action
 {
     /**
-     * Applies the `softDelete()` method to a record.
+     * Applies the `restore()` method to a record.
      *
      * @param mixed $id the identifier value.
      */
@@ -26,9 +26,11 @@ class SoftDelete extends Action
         );
 
 
-        if (false === $model->softDelete()) {
-            throw new ServerErrorHttpException('Failed to delete the object for unknown reason.');
+        if (false === $model->restore()) {
+            throw new ServerErrorHttpException(
+                'Failed to restore the object for unknown reason.'
+            );
         }
-        Yii::$app->getResponse()->setStatusCode(204);
+        return $model;
     }
 }

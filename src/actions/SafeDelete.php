@@ -6,12 +6,12 @@ use Yii;
 use yii\web\ServerErrorHttpException;
 
 /**
- * Deletes a record using the `softDelete()` method. Meant to be used with
+ * Deletes a record using the `safeDelete()` method. Meant to be used with
  * library "yii2tech/ar-softdelete".
  *
  * @author Angel (Faryshta) Guevara <aguevara@alquimiadigital.mx>
  */
-class SoftDelete extends Action
+class SafeDelete extends Action
 {
     /**
      * Applies the `softDelete()` method to a record.
@@ -26,7 +26,7 @@ class SoftDelete extends Action
         );
 
 
-        if (false === $model->softDelete()) {
+        if (false === $model->safeDelete()) {
             throw new ServerErrorHttpException('Failed to delete the object for unknown reason.');
         }
         Yii::$app->getResponse()->setStatusCode(204);
