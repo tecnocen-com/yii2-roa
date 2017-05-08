@@ -1,5 +1,7 @@
 <?php
 
+namespace tecnocen\roa;
+
 /**
  * Interface to get a the information of a file associated to a model.
  *
