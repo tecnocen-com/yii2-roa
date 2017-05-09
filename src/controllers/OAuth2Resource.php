@@ -5,6 +5,7 @@ namespace tecnocen\roa\controllers;
 use Yii;
 use filsh\yii2\oauth2server\filters\ErrorToExceptionFilter;
 use filsh\yii2\oauth2server\filters\auth\CompositeAuth;
+use tecnocen\roa\actions;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 use yii\filters\AccessControl;
@@ -138,15 +139,26 @@ class OAuth2Resource extends \yii\rest\ActiveController
     {
         return ArrayHelper::merge(parent::actions(), [
             'index' => [
-                'prepareDataProvider' => [$this, 'indexProvider'],
+                'class' => actions\Index::class,
+                'searchClass' => $this->searchClass,
             ],
-            'view' => ['findModel' => [$this, 'findModel']],
+            'view' => [
+                'class' => actions\View::class,
+                'findModel' => [$this, 'findModel'],
+            ],
             'update' => [
+                'class' => actions\Update::class,
                 'findModel' => [$this, 'findModel'],
                 'scenario' => $this->updateScenario,
             ],
-            'create' => ['scenario' => $this->createScenario],
-            'delete' => ['findModel' => [$this, 'findModel']],
+            'create' => [
+                'class' => actions\Index::class,
+                'scenario' => $this->createScenario
+            ],
+            'delete' => [
+                'class' => actions\Index::class,
+                'findModel' => [$this, 'findModel'],
+            ],
         ]);
     }
 
@@ -171,14 +183,6 @@ class OAuth2Resource extends \yii\rest\ActiveController
             return new ActiveDataProvider(['query' => $this->indexQuery()]);
         }
 
-        $searchClass = $this->searchClass;
-        $searchModel = new $searchClass();
-        $dataProvider = $searchModel->search(
-            Yii::$app->request->queryParams,
-            $this->searchFormName
-        );
-
-        return $dataProvider ?: $searchModel;
     }
 
     /**
