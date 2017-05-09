@@ -7,6 +7,8 @@ use Yii;
 use tecnocen\roa\controllers\ApiVersionController;
 use tecnocen\roa\UrlRule;
 use yii\base\InvalidConfigException;
+use yii\helpers\ArrayHelper;
+use yii\web\UrlManager;
 
 /**
  * Class to attach a version to an `ApiContainer` module.
@@ -23,10 +25,19 @@ class ApiVersion extends \yii\base\Module
     const STABILITY_DEPRECATED = 'deprecated';
     const STABILITY_OBSOLETE = 'obsolete';
 
+    /**
+     * @var string subfix used to create the default classes
+     */
     public $controllerSubfix = 'Resource';
 
+    /**
+     * @var string full class name which will be used as default for routing.
+     */
     public $urlRuleClass = UrlRule::class;
 
+    /**
+     * @var string[] routes allowed for this api version.
+     */
     private $controllerRoutes = [];
 
     /**
@@ -87,9 +98,12 @@ class ApiVersion extends \yii\base\Module
      */
     public $resources = [];
 
+    /**
+     * @return string[] gets the list of routes allowed for this api version.
+     */
     public function getRoutes()
     {
-        return array_keys($this->controllerRoutes);
+        return $this->controllerRoutes;
     }
 
     /**
@@ -128,11 +142,17 @@ class ApiVersion extends \yii\base\Module
         }
 
         if ($this->stability !== self::STABILITY_OBSOLETE) {
-            $this->buildRoutes();
+            $this->buildRoutes(Yii::$app->urlManager);
         }
     }
 
-    private function buildRoutes()
+    /**
+     * Attach routing rules.
+     *
+     * @param UrlManager $urlManager the manager at which the rules will be
+     * attached.
+     */
+    private function buildRoutes(UrlManager $urlManager)
     {
         $this->controllerNamespace = rtrim($this->controllerNamespace, '\\') . '\\';
         foreach ($this->resources as $route => $controller) {
@@ -143,17 +163,27 @@ class ApiVersion extends \yii\base\Module
                     'class' => $this->buildControllerClass($controllerRoute),
                 ];
             }
+            $urlManager->addRules([array_merge(
+                [
+                    'class' => $this->urlRuleClass,
+                    'controller' => [
+                        $route =>  "{$this->uniqueId}/$controllerRoute"
+                    ],
+                    'prefix' => $this->uniqueId,
+                ],
+                ArrayHelper::remove($controller, 'urlRule', [])
+            )]);
+            $this->controllerRoutes[] = $route;
             $this->controllerMap[$controllerRoute] = $controller;
-            $this->controllerRoutes[$route] = "{$this->uniqueId}/$controllerRoute";
         }
-        Yii::$app->urlManager->addRules([[
-            'class' => $this->urlRuleClass,
-            'controller' => $this->controllerRoutes,
-            'prefix' => $this->uniqueId,
-            'pluralize' => false,
-        ]]);
     }
 
+    /**
+     * Converts a ROA route to an MVC route to be handled by `$controllerMap`
+     *
+     * @param string $roaRoute
+     * @return string
+     */
     private function buildControllerRoute($roaRoute)
     {
         return strtr(
@@ -166,7 +196,12 @@ class ApiVersion extends \yii\base\Module
         );
     }
 
-
+    /**
+     * Converts an MVC route to the default controller class.
+     *
+     * @param string $controllerRoute
+     * @return string
+     */
     private function buildControllerClass($controllerRoute)
     {
         $lastSeparator = strrpos($controllerRoute, '--');

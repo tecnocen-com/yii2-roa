@@ -9,6 +9,11 @@ class UrlRule extends \yii\rest\UrlRule
     /**
      * @inheritdoc
      */
+    public $pluralize = false;
+
+    /**
+     * @inheritdoc
+     */
     public function parseRequest($manager, $request)
     {
         $pathInfo = $request->getPathInfo();

@@ -22,7 +22,7 @@ class ProfileResource extends OAuth2Resource
     public final function verbs()
     {
         $verbs = parent::verbs();
-        unset($verbs['view'], $verbs['create'], $verbs['delete']);
+        unset($verbs['index'], $verbs['create'], $verbs['delete']);
         return $verbs;
     }
 
@@ -32,7 +32,7 @@ class ProfileResource extends OAuth2Resource
     public function actions()
     {
         return [
-            'index' => ['class' => ProfileView::class],
+            'view' => ['class' => ProfileView::class],
             'update' => ['class' => ProfileUpdate::class],
         ];
     }
