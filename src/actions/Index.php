@@ -32,7 +32,7 @@ class Index extends Action
             Yii::$app->request->queryParams,
             $this->formName
         );
-        $this->checkAccess($searchModel, $request->getQueryParams());
+        $this->checkAccess($searchModel, Yii::$app->request->getQueryParams());
 
         return $dataProvider ?: $searchModel;
     }
