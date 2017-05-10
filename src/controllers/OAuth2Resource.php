@@ -137,12 +137,19 @@ class OAuth2Resource extends \yii\rest\ActiveController
      */
     public function actions()
     {
-        return ArrayHelper::merge(parent::actions(), [
-            'index' => [
+        $index = $this->searchClass
+            ? [
                 'class' => actions\Index::class,
                 'searchClass' => $this->searchClass,
-                'formName' => $this->searchFormName
-            ],
+                'formName' => $this->searchFormName,
+            ]
+            : [
+                'class' => \yii\rest\IndexAction::class,
+                'modelClass' => $this->modelClass,
+                'prepareDataProvider' => [$this, 'indexProvider']
+            ];
+        return ArrayHelper::merge(parent::actions(), [
+            'index' => $index,
             'view' => [
                 'class' => actions\View::class,
                 'findModel' => [$this, 'findModel'],
