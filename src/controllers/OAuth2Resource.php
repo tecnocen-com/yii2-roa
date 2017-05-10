@@ -128,7 +128,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
                 'class' => PageCache::class,
                 'enabled' => $this->enableCache,
             ],
-            
+
         ]);
     }
 
@@ -148,26 +148,33 @@ class OAuth2Resource extends \yii\rest\ActiveController
                 'modelClass' => $this->modelClass,
                 'prepareDataProvider' => [$this, 'indexProvider']
             ];
-        return ArrayHelper::merge(parent::actions(), [
+        return [
             'index' => $index,
             'view' => [
                 'class' => actions\View::class,
+                'modelClass' => $this->modelClass,
                 'findModel' => [$this, 'findModel'],
             ],
             'update' => [
                 'class' => actions\Update::class,
+                'modelClass' => $this->modelClass,
                 'findModel' => [$this, 'findModel'],
                 'scenario' => $this->updateScenario,
             ],
             'create' => [
-                'class' => actions\Index::class,
+                'class' => actions\Create::class,
+                'modelClass' => $this->modelClass,
                 'scenario' => $this->createScenario
             ],
             'delete' => [
-                'class' => actions\Index::class,
+                'class' => actions\Delete::class,
+                'modelClass' => $this->modelClass,
                 'findModel' => [$this, 'findModel'],
             ],
-        ]);
+            'options' => [
+                'class' => 'yii\rest\OptionsAction',
+            ],
+        ];
     }
 
     /**

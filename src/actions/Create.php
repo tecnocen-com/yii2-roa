@@ -25,7 +25,7 @@ class Create extends Action
         $model = new $this->modelClass([
             'scenario' => $this->scenario,
         ]);
-        $model->load($request->queryParams(), '');
+        $model->load($request->getQueryParams(), '');
         $this->checkAccess($model, $request->getQueryParams());
         $model->load($request->getBodyParams(), '');
         if ($model->save()) {
