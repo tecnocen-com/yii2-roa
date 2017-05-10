@@ -141,6 +141,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
             'index' => [
                 'class' => actions\Index::class,
                 'searchClass' => $this->searchClass,
+                'formName' => $this->searchFormName
             ],
             'view' => [
                 'class' => actions\View::class,
