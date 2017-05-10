@@ -10,6 +10,8 @@ class Index extends Action
 {
     public $searchClass;
 
+    public $formName = '';
+
     public function init()
     {
         if (empty($this->searchClass)) {
@@ -28,9 +30,9 @@ class Index extends Action
         $searchModel = new $searchClass();
         $dataProvider = $searchModel->search(
             Yii::$app->request->queryParams,
-            $this->searchFormName
+            $this->formName
         );
-        $this->checkAccess($searchModel, $request->getQueryParams());
+        $this->checkAccess($searchModel, Yii::$app->request->getQueryParams());
 
         return $dataProvider ?: $searchModel;
     }
