@@ -5,7 +5,7 @@ namespace tecnocen\roa\modules;
 use DateTime;
 use Yii;
 use tecnocen\roa\controllers\ApiVersionController;
-use tecnocen\roa\UrlRule;
+use tecnocen\roa\urlRules\Resource as UrlRule;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\web\UrlManager;

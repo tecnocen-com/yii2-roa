@@ -1,10 +1,17 @@
 <?php
 
-namespace tecnocen\roa;
+namespace tecnocen\roa\urlRules;
 
 use Yii;
 
-class UrlRule extends \yii\rest\UrlRule
+/**
+ * Default Url Rule to handle resources with collections.
+ *
+ * Supports representative URL using ownership slug.
+*
+ * @author Angel (Faryshta) Guevara <aguevara@alquimiadigital.mx>
+ */
+class Resource extends \yii\rest\UrlRule
 {
     /**
      * @inheritdoc
