@@ -32,5 +32,6 @@ class File extends Resource
             '{id}' => '<id:\\d+>',
             '{ext}' => '<ext:[' . implode($this->extensions, '|') . ']>',
         ];
+        parent::init();
     }
 }

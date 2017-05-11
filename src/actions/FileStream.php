@@ -5,6 +5,7 @@ namespace tecnocen\roa\actions;
 use Yii;
 
 use tecnocen\roa\FileRecord;
+use yii\base\InvalidConfigException;
 
 /**
  * Access and show s the content of a file on the browser or download it.
