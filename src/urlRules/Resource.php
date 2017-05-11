@@ -21,6 +21,11 @@ class Resource extends \yii\rest\UrlRule
     /**
      * @inheritdoc
      */
+    public $tokens = ['{id}' => '<id:\d+>'];
+
+    /**
+     * @inheritdoc
+     */
     public function parseRequest($manager, $request)
     {
         $pathInfo = $request->getPathInfo();

@@ -14,24 +14,27 @@ class File extends Resource
      * @inheritdoc
      */
     public $patterns = [
-        'GET,HEAD' => 'view',
+        'PUT,PATCH {id}' => 'update',
+        'DELETE {id}' => 'delete',
+        'GET,HEAD {id}' => 'view',
+        'POST' => 'create',
+        'GET,HEAD' => 'index',
+        '{id}' => 'options',
+        'GET {id}.{ext}' => 'file-stream',
         '' => 'options',
     ];
 
     /**
      * @var string[] list of valid extensions that this rule can handle.
      */
-    public $extensions = ['png', 'jpg'];
+    public $ext = ['png', 'jpg'];
 
     /**
      * @inheritdoc
      */
     public function init()
     {
-        $this->tokens = [
-            '{id}' => '<id:\\d+>',
-            '{ext}' => '<ext:[' . implode($this->extensions, '|') . ']>',
-        ];
+        $this->tokens['{ext}'] = '<ext:(' . implode($this->ext, '|') . ')>';
         parent::init();
     }
 }

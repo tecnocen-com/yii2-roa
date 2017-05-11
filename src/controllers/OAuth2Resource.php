@@ -6,6 +6,7 @@ use Yii;
 use filsh\yii2\oauth2server\filters\ErrorToExceptionFilter;
 use filsh\yii2\oauth2server\filters\auth\CompositeAuth;
 use tecnocen\roa\actions;
+use tecnocen\roa\FileRecord;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 use yii\filters\AccessControl;
@@ -32,6 +33,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
         'create',
         'update',
         'delete',
+        'file-stream', // download files
         'options',
     ];
 
@@ -148,6 +150,15 @@ class OAuth2Resource extends \yii\rest\ActiveController
                 'modelClass' => $this->modelClass,
                 'prepareDataProvider' => [$this, 'indexProvider']
             ];
+        $interfaces = class_implements($this->modelClass);
+        $fileStream = isset($interfaces[FileRecord::class])
+            ? [
+                'class' => actions\FileStream::class,
+                'modelClass' => $this->modelClass,
+                'findModel' => [$this, 'findModel'],
+            ]
+            : null;
+
         return [
             'index' => $index,
             'view' => [
@@ -171,6 +182,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
                 'modelClass' => $this->modelClass,
                 'findModel' => [$this, 'findModel'],
             ],
+            'file-stream' => $fileStream,
             'options' => [
                 'class' => 'yii\rest\OptionsAction',
             ],
@@ -262,6 +274,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
             'create' => ['POST'],
             'update' => ['PUT', 'PATCH'],
             'delete' => ['DELETE'],
+            'file-stream' => ['GET'],
             'options' => ['OPTIONS'],
         ];
     }
