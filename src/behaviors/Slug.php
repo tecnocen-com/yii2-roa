@@ -11,6 +11,7 @@ use yii\web\NotFoundHttpException;
  *
  * @author Angel (Faryshta) Guevara <aguevara@alquimiadigital.mx>
  * @author Luis (Berkant) Campos <lcampos@artificesweb.com>
+ * @author Alejandro (Seether69) Márquez <amarquez@solmipro.com>
  */
 class Slug extends \yii\base\Behavior
 {
@@ -43,6 +44,11 @@ class Slug extends \yii\base\Behavior
      * @var string name of the identifier attribute
      */
     public $idAttribute = 'id';
+    
+    /**
+     * @var string parentNotFoundMessage for not found exception when the parent slug was not found
+     */
+    public $parentNotFoundMessage = 'The "{resourceName}" associated was not found';
 
     /**
      * @var ActiveRecord parent record.
@@ -106,6 +112,16 @@ class Slug extends \yii\base\Behavior
     {
         $relation = $this->parentSlugRelation;
         $this->parentSlug = $owner->$relation;
+        if (null === $this->parentSlug) {
+            throw new NotFoundHttpException(
+                strtr(
+                    $this->parentNotFoundMessage, 
+                    [
+                        '{resourceName}' => $this->parentSlugRelation
+                    ]
+                )
+            );
+        }
         $this->resourceLink = $this->parentSlug->selfLink
             . '/' . $this->resourceName;
     }
