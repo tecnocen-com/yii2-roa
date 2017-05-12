@@ -86,12 +86,20 @@ class ApiVersion extends \yii\base\Module
      * route to a resource. if no key is used, then the value will be the
      * pattern too.
      *
+     * Special properties:
+     *
+     * - urlRule array the configuration for how the routing url rules will be
+     *   created before attaching them to urlManager.
+     *
      * ```php
      * [
      *     'profile', // resources\ProfileResource
      *     'profile/history', // resources\profile\HistoryResource
-     *     'image/<image_id:[\d]+>.<ext:[jpg|png]> => resources\ImageFileResource::class,
-     *     'post' => resources\post\PostResource::class,
+     *     'profile/image' => [
+     *         'class' => resources\profile\ImageResource::class,
+     *         'urlRule' => ['class' => 'tecnocen\\roa\\urlRules\\File'],
+     *     ]
+     *     'post' => ['class' => resources\post\PostResource::class],
      *     'post/<post_id:[\d]+>/reply', // resources\post\ReplyResource
      * ]
      * ```
