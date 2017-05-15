@@ -10,13 +10,12 @@ settings:
     bootstrap: _bootstrap.php
     colors: true
     memory_limit: 1024M
-extensions:
-    enabled:
-        - Codeception\Extension\RunFailed
 modules:
     config:
-        Db:
-            dsn: ''
-            user: ''
-            password: ''
-            dump: tests/_data/dump.sql
+        Yii2:
+            configFile: 'tests/config-local.php'
+coverage:
+    enabled: true
+    remote: false
+    include:
+        - src/*
