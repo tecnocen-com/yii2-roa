@@ -37,11 +37,6 @@ class ApiVersion extends \yii\base\Module
     public $urlRuleClass = ResourceUrlRule::class;
 
     /**
-     * @var string[] routes allowed for this api version.
-     */
-    private $controllerRoutes = [];
-
-    /**
      * @var string date in Y-m-d format for the date at which this version
      * became stable
      */
@@ -112,7 +107,12 @@ class ApiVersion extends \yii\base\Module
      */
     public function getRoutes()
     {
-        return $this->controllerRoutes;
+        $routes = [$this->uniqueId];
+        foreach ($this->resources as $index => $value) {
+            $routes[] = $this->uniqueId . '/'
+                . (is_string($index) ? $index : $value);
+        }
+        return $routes;
     }
 
     /**
@@ -167,8 +167,31 @@ class ApiVersion extends \yii\base\Module
         }
     }
 
+    /**
+     * @return array list of configured urlrules by default
+     */
+    protected function extraRoutes()
+    {
+        return [
+            [
+                'class' => \yii\web\UrlRule::class,
+                'pattern' => $this->uniqueId,
+                'route' => $this->uniqueId . '/default/index',
+            ]
+        ];
+    }
+
+    /**
+     * Parse the routes and attaches the routing rules to a composite rule.
+     *
+     * @param VersionUrlRule $urlRule
+     */
     public function parseRoutes(VersionUrlRule $urlRule)
     {
+        foreach ($this->extraRoutes() as $ruleConfig) {
+            $urlRule->addRUle($ruleConfig);
+        }
+
         foreach ($this->resources as $route => $controller) {
             $route = is_int($route) ? $controller : $route;
             $controllerRoute = $this->buildControllerRoute($route);
@@ -191,38 +214,6 @@ class ApiVersion extends \yii\base\Module
                 ],
                 ArrayHelper::remove($controller, 'urlRule', [])
             ));
-            $this->controllerRoutes[] = $route;
-            $this->controllerMap[$controllerRoute] = $controller;
-        }
-    }
-
-    /**
-     * Attach routing rules.
-     *
-     * @param UrlManager $urlManager the manager at which the rules will be
-     * attached.
-     */
-    private function buildRoutes(UrlManager $urlManager)
-    {
-        foreach ($this->resources as $route => $controller) {
-            $route = is_int($route) ? $controller : $route;
-            $controllerRoute = $this->buildControllerRoute($route);
-            if (is_string($controller)) {
-                $controller = [
-                    'class' => $this->buildControllerClass($controllerRoute),
-                ];
-            }
-            $urlManager->addRules([array_merge(
-                [
-                    'class' => $this->urlRuleClass,
-                    'controller' => [
-                        $route =>  "{$this->uniqueId}/$controllerRoute"
-                    ],
-                    'prefix' => $this->uniqueId,
-                ],
-                ArrayHelper::remove($controller, 'urlRule', [])
-            )]);
-            $this->controllerRoutes[] = $route;
             $this->controllerMap[$controllerRoute] = $controller;
         }
     }
