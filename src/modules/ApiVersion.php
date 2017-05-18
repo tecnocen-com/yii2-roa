@@ -5,7 +5,8 @@ namespace tecnocen\roa\modules;
 use DateTime;
 use Yii;
 use tecnocen\roa\controllers\ApiVersionController;
-use tecnocen\roa\urlRules\Resource as UrlRule;
+use tecnocen\roa\urlRules\Version as VersionUrlRule;
+use tecnocen\roa\urlRules\Resource as ResourceUrlRule;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\web\UrlManager;
@@ -33,7 +34,7 @@ class ApiVersion extends \yii\base\Module
     /**
      * @var string full class name which will be used as default for routing.
      */
-    public $urlRuleClass = UrlRule::class;
+    public $urlRuleClass = ResourceUrlRule::class;
 
     /**
      * @var string[] routes allowed for this api version.
@@ -115,6 +116,22 @@ class ApiVersion extends \yii\base\Module
     }
 
     /**
+     * @return array stability, life cycle and resources for this version. 
+     */
+    public function getFactSheet()
+    {
+        return [
+            'stability' => $this->stability,
+            'lifeCycle' => [
+                'releaseDate' => $this->releaseDate,
+                'deprecationDate' => $this->deprecationDate,
+                'obsoleteDate' => $this->obsoleteDate,
+            ],
+            'routes' => $this->getRoutes(),
+        ];
+    }
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -148,9 +165,34 @@ class ApiVersion extends \yii\base\Module
                 $this->stability = self::STABILITY_STABLE;
             }
         }
+    }
 
-        if ($this->stability !== self::STABILITY_OBSOLETE) {
-            $this->buildRoutes(Yii::$app->urlManager);
+    public function parseRoutes(VersionUrlRule $urlRule)
+    {
+        foreach ($this->resources as $route => $controller) {
+            $route = is_int($route) ? $controller : $route;
+            $controllerRoute = $this->buildControllerRoute($route);
+            if (is_string($controller)) {
+                $controller = [
+                    'class' => $this->buildControllerClass($controllerRoute),
+                ];
+            } elseif (is_array($controller) && empty($controller['class'])) {
+                $controller['class'] = $this->buildControllerClass(
+                    $controllerRoute
+                );
+            }
+            $urlRule->addRule(array_merge(
+                [
+                    'class' => $this->urlRuleClass,
+                    'controller' => [
+                        $route =>  "{$this->uniqueId}/$controllerRoute"
+                    ],
+                    'prefix' => $this->uniqueId,
+                ],
+                ArrayHelper::remove($controller, 'urlRule', [])
+            ));
+            $this->controllerRoutes[] = $route;
+            $this->controllerMap[$controllerRoute] = $controller;
         }
     }
 
@@ -162,7 +204,6 @@ class ApiVersion extends \yii\base\Module
      */
     private function buildRoutes(UrlManager $urlManager)
     {
-        $this->controllerNamespace = rtrim($this->controllerNamespace, '\\') . '\\';
         foreach ($this->resources as $route => $controller) {
             $route = is_int($route) ? $controller : $route;
             $controllerRoute = $this->buildControllerRoute($route);
@@ -221,7 +262,7 @@ class ApiVersion extends \yii\base\Module
             $ns = substr($controllerRoute, 0, $lastSeparator + 2);
         }
         return $this->controllerNamespace
-            . strtr($ns, ['--' => '\\'])
+            . '\\' . strtr($ns, ['--' => '\\'])
             . str_replace(' ', '', ucwords(str_replace('-', ' ', $lastClass)))
             . $this->controllerSubfix;
     }
@@ -242,21 +283,5 @@ class ApiVersion extends \yii\base\Module
          }
 
          return $dt->getTimestamp();
-    }
-
-    /**
-     * @return array stability, life cycle and resources for this version. 
-     */
-    public function getFactSheet()
-    {
-        return [
-            'stability' => $this->stability,
-            'lifeCycle' => [
-                'releaseDate' => $this->releaseDate,
-                'deprecationDate' => $this->deprecationDate,
-                'obsoleteDate' => $this->obsoleteDate,
-            ],
-            'routes' => $this->getRoutes(),
-        ];
     }
 }

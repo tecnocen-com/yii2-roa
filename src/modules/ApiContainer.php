@@ -2,10 +2,11 @@
 
 namespace tecnocen\roa\modules;
 
+use Yii;
 use tecnocen\roa\controllers\ApiContainerController;
+use tecnocen\roa\urlRules\Version as VersionUrlRule;
 use yii\helpers\ArrayHelper;
 use yii\rest\UrlRule;
-use Yii;
 
 /**
  * @author Angel (Faryshta) Guevara <aguevara@tecnocen.com>
@@ -17,6 +18,11 @@ class ApiContainer extends \yii\base\Module
      * @var string
      */
     public $identityClass;
+
+    /**
+     * @var string
+     */
+    public $versionUrlRuleClass = VersionUrlRule::class;
 
     /**
      * @inheritdoc
@@ -46,9 +52,13 @@ class ApiContainer extends \yii\base\Module
         if (empty($this->errorAction)) {
             $this->errorAction = $this->uniqueId . '/index/error';
         }
+        $urlRuleClass = $this->versionUrlRuleClass;
         foreach ($this->versions as $route => $config) {
             $this->setModule($route, $config);
             $this->versions[$route] = $this->getModule($route);
+            $app->urlManager->addRules([
+                new $urlRuleClass(['apiVersion' => $this->versions[$route]])
+            ]);
         }
     }
 
