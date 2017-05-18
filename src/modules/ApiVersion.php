@@ -176,7 +176,7 @@ class ApiVersion extends \yii\base\Module
             [
                 'class' => \yii\web\UrlRule::class,
                 'pattern' => $this->uniqueId,
-                'route' => $this->uniqueId . '/default/index',
+                'route' => $this->uniqueId,
             ]
         ];
     }
