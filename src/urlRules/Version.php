@@ -3,6 +3,7 @@
 namespace tecnocen\roa\urlRules;
 
 use Yii;
+use yii\web\NotFoundHttpException;
 
 /**
  * Internal url rule to handle the 
@@ -31,7 +32,7 @@ class Version extends \yii\web\CompositeUrlRule
     public function parseRequest($manager, $request)
     {
         // only parse rules which start with the version id
-        if (0 !== strpos($this->apiVersion->uniqueId, $request->pathInfo)) {
+        if (0 !== strpos($request->pathInfo, $this->apiVersion->uniqueId)) {
             return false;
         }
         if (empty($this->rules)) { // attach version rules
@@ -40,7 +41,7 @@ class Version extends \yii\web\CompositeUrlRule
         $result = parent::parseRequest($manager, $request);
         if ($result === false) {
             throw new NotFoundHttpException(
-                "Unknown resource for '{$this->versionId}'"
+                "Unknown resource for '{$this->apiVersion->uniqueId}'"
             );
         }
         return $result;
@@ -66,7 +67,7 @@ class Version extends \yii\web\CompositeUrlRule
    public function createUrl($manager, $route, $params)
     {
         // only parse rules which start with the version id
-        if (strpos($this->versionId, $route) !== 0) {
+        if (0 !== strpos($route, $this->apiVersion->uniqueId)) {
             return false;
         }
         if (empty($this->rules)) {
