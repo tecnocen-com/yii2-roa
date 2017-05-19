@@ -12,18 +12,12 @@ use yii\web\NotFoundHttpException;
  *
  * @author Angel (Faryshta) Guevara <aguevara@alquimiadigital.mx>
  */
-class Version extends \yii\web\CompositeUrlRule
+class Container extends \yii\web\CompositeUrlRule
 {
     /**
      * @var ApiVersion api version module that will be handled this rule
      */
-    private $apiVersion;
-
-    /**
-     * @var string
-     */
-    public $apiVersionId;
-
+    public $apiContainer;
     /**
      * @inheritdoc
      */
@@ -32,20 +26,11 @@ class Version extends \yii\web\CompositeUrlRule
         return []; // rules will be added on execution
     }
 
-    private function ensureRules();
+    private function ensureRules()
     {
-       if (null !== $this->apiVersion) { // was already set
-           return;
+       if (empty($this->rules)) {
+           $this->apiContainer->parseRoutes($this);
        }
-       $this->apiVersion = Yii::$app->getModule($this->apiVersionId);
-       if (null === $this->apiVersion
-           || !$this->apiVersion instanceof ApiVersion
-       ) {
-           throw new InvalidConfigException(
-               "'{$this->apiVersionId}' is not a valid api version"
-           );
-       }
-       $this->apiVersion->parseRoutes($this);
     }
 
     /**
@@ -54,14 +39,14 @@ class Version extends \yii\web\CompositeUrlRule
     public function parseRequest($manager, $request)
     {
         // only parse rules which start with the version id
-        if (0 !== strpos($request->pathInfo, $this->apiVersionId)) {
+        if (0 !== strpos($request->pathInfo, $this->apiContainer->uniqueId)) {
             return false;
         }
         $this->ensureRules();
         $result = parent::parseRequest($manager, $request);
         if ($result === false) {
             throw new NotFoundHttpException(
-                "Unknown resource for '{$this->apiVersion->uniqueId}'"
+                "Unknown resource for '{$this->apiContainer->uniqueId}'"
             );
         }
         return $result;

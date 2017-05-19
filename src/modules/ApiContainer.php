@@ -4,6 +4,7 @@ namespace tecnocen\roa\modules;
 
 use Yii;
 use tecnocen\roa\controllers\ApiContainerController;
+use tecnocen\roa\urlRules\Container as ContainerUrlRule;
 use tecnocen\roa\urlRules\Version as VersionUrlRule;
 use yii\helpers\ArrayHelper;
 use yii\rest\UrlRule;
@@ -18,6 +19,11 @@ class ApiContainer extends \yii\base\Module
      * @var string
      */
     public $identityClass;
+
+    /**
+     * @var string
+     */
+    public $containerUrlRuleClass = ContainerUrlRule::class;
 
     /**
      * @var string
@@ -52,24 +58,35 @@ class ApiContainer extends \yii\base\Module
         if (empty($this->errorAction)) {
             $this->errorAction = $this->uniqueId . '/index/error';
         }
-        $urlRuleClass = $this->versionUrlRuleClass;
-        foreach ($this->versions as $route => $config) {
-            $this->setModule($route, $config);
-            $this->versions[$route] = $this->getModule($route);
-            $app->urlManager->addRules([
-                new $urlRuleClass(['apiVersion' => $this->versions[$route]])
-            ]);
-        }
+        $app->urlManager->addRules([[
+            'class' => $this->containerUrlRuleClass,
+            'apiContainer' => $this,
+        ]]);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function createController($route)
+    public function getVersionModules()
+    {
+        $versions = [];
+        foreach ($this->versions as $route => $config) {
+            if (!$this->hasModule($route)) {
+                $this->setModule($route, $config);
+            }
+            $versions[$route] = $this->getModule($route);
+        }
+        return $versions;
+    }
+
+    public function parseRules(ContainerUrlRule $urlRule)
     {
         // change the error handler and identityClass
         Yii::$app->errorHandler->errorAction = $this->errorAction;
         Yii::$app->user->identityClass = $this->identityClass;
-        return parent::createController($route);
+        foreach ($this->versions as $route => $config) {
+            $this->setModule($route, $config);
+            $urlRule->addRule([
+               'class' => $this->versionUrlRuleClass,
+               'apiVersionId' => "{$this->uniqueId}/$route"
+            ]);
+        }
     }
 }

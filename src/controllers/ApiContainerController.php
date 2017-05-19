@@ -2,9 +2,9 @@
 
 namespace tecnocen\roa\controllers;
 
+use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NoutFoundHttpException;
-use Yii;
 
 /**
  * Lists all the available versions for an api and handles error responses.
@@ -21,7 +21,11 @@ class ApiContainerController extends \yii\rest\Controller
      */
     public function actionIndex()
     {
-        return ArrayHelper::map($this->module->versions, 'id', 'factSheet');
+        return ArrayHelper::map(
+            $this->module->versionModules,
+            'id',
+            'factSheet'
+        );
     }
 
     /**

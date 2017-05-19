@@ -94,7 +94,7 @@ class ApiVersion extends \yii\base\Module
      *     'profile/image' => [
      *         'class' => resources\profile\ImageResource::class,
      *         'urlRule' => ['class' => 'tecnocen\\roa\\urlRules\\File'],
-     *     ]
+     *     ],
      *     'post' => ['class' => resources\post\PostResource::class],
      *     'post/<post_id:[\d]+>/reply', // resources\post\ReplyResource
      * ]
@@ -190,6 +190,14 @@ class ApiVersion extends \yii\base\Module
     {
         foreach ($this->extraRoutes() as $ruleConfig) {
             $urlRule->addRUle($ruleConfig);
+        }
+        if ($this->stability == self::STABILITY_OBSOLETE) {
+            $urlRule->addRule([
+                'class' => \yii\web\UrlRule::class,
+                'pattern' => $this->uniqueId . '/<route:*+>',
+                'route' => $this->uniqueId . '/index/gone',
+            ]);
+            return;
         }
 
         foreach ($this->resources as $route => $controller) {
