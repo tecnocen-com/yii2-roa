@@ -32,7 +32,7 @@ class Version extends \yii\web\CompositeUrlRule
         return []; // rules will be added on execution
     }
 
-    private function ensureRules();
+    private function ensureRules()
     {
        if (null !== $this->apiVersion) { // was already set
            return;

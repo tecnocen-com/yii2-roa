@@ -29,7 +29,7 @@ class Container extends \yii\web\CompositeUrlRule
     private function ensureRules()
     {
        if (empty($this->rules)) {
-           $this->apiContainer->parseRoutes($this);
+           $this->apiContainer->parseRules($this);
        }
     }
 
