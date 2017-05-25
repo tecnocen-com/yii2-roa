@@ -69,7 +69,7 @@ class Container extends \yii\web\CompositeUrlRule
    public function createUrl($manager, $route, $params)
     {
         // only parse rules which start with the version id
-        if (0 !== strpos($route, $this->apiVersionId)) {
+        if (0 !== strpos($route, $this->apiContainer->uniqueId)) {
             return false;
         }
         $this->ensureRules();
