@@ -5,6 +5,7 @@ namespace tecnocen\roa\controllers;
 use Yii;
 use tecnocen\roa\actions\ProfileView;
 use tecnocen\roa\actions\ProfileUpdate;
+use tecnocen\roa\actions\CambiaPassword;
 use yii\helpers\ArrayHelper;
 
 class ProfileResource extends OAuth2Resource
@@ -23,6 +24,9 @@ class ProfileResource extends OAuth2Resource
     {
         $verbs = parent::verbs();
         unset($verbs['index'], $verbs['create'], $verbs['delete']);
+        $verbs['cambio_password'] = [
+            'patch'
+        ];
         return $verbs;
     }
 
@@ -34,6 +38,7 @@ class ProfileResource extends OAuth2Resource
         return [
             'view' => ['class' => ProfileView::class],
             'update' => ['class' => ProfileUpdate::class],
+            'cambio_password' => ['class' => CambiaPassword::class]
         ];
     }
 }
