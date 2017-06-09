@@ -3,11 +3,10 @@
 namespace tecnocen\roa\actions;
 
 use Yii;
-use yii\rest\Serializer;
 use yii\web\Response;
 use backend\api\models\Usuario;
 
-//ACTON PERSONALIZADO PARA CAMBIAR CONTRASEÑA
+//ACTION PERSONALIZADO PARA CAMBIAR CONTRASEÑA EN ALQUIMIA V3
 class CambiaPassword extends \yii\rest\Action
 {
 
@@ -43,6 +42,12 @@ class CambiaPassword extends \yii\rest\Action
                 'passConfirm' => 'Las conraseñas no coinciden',
                 'password' => 'Las conraseñas no coinciden',
             ]);
+            return $model;
+        }
+
+        //Valida la password actual introducida con la registrada
+        if ($model->validatePassword($request->post('password'))) {
+            $model->addError('password', 'La nueva contraseña ya se encuentra en uso');
             return $model;
         }
         
