@@ -5,8 +5,9 @@ namespace tecnocen\roa\modules;
 use DateTime;
 use Yii;
 use tecnocen\roa\controllers\ApiVersionController;
-use tecnocen\roa\urlRules\Version as VersionUrlRule;
+use tecnocen\roa\urlRules\Composite as CompositeUrlRule;
 use tecnocen\roa\urlRules\Resource as ResourceUrlRule;
+use tecnocen\roa\urlRules\UrlRuleCreator;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\web\UrlManager;
@@ -19,7 +20,7 @@ use yii\web\UrlManager;
  *
  * The resources are declared using the `$resources` array property
  */
-class ApiVersion extends \yii\base\Module
+class ApiVersion extends \yii\base\Module implements UrlRuleCreator
 {
     const STABILITY_DEVELOPMENT = 'development';
     const STABILITY_STABLE = 'stable';
@@ -107,10 +108,10 @@ class ApiVersion extends \yii\base\Module
      */
     public function getRoutes()
     {
-        $routes = [$this->uniqueId];
+        $routes = ["/"];
         foreach ($this->resources as $index => $value) {
-            $routes[] = $this->uniqueId . '/'
-                . (is_string($index) ? $index : $value);
+            $routes[] = 
+                (is_string($index) ? $index : $value);
         }
         return $routes;
     }
@@ -170,34 +171,31 @@ class ApiVersion extends \yii\base\Module
     /**
      * @return array list of configured urlrules by default
      */
-    protected function extraRoutes()
+    protected function defaultUrlRules()
     {
         return [
-            [
+            Yii::createObject([
                 'class' => \yii\web\UrlRule::class,
                 'pattern' => $this->uniqueId,
                 'route' => $this->uniqueId,
-            ]
+                'normalizer' => ['class' => \yii\web\UrlNormalizer::class],
+            ])
         ];
     }
 
     /**
-     * Parse the routes and attaches the routing rules to a composite rule.
-     *
-     * @param VersionUrlRule $urlRule
+     * @inheritdoc
      */
-    public function parseRoutes(VersionUrlRule $urlRule)
+    public function createUrlRules(CompositeUrlRule $urlRule)
     {
-        foreach ($this->extraRoutes() as $ruleConfig) {
-            $urlRule->addRUle($ruleConfig);
-        }
+        $rules = $this->defaultUrlRules();
         if ($this->stability == self::STABILITY_OBSOLETE) {
-            $urlRule->addRule([
+            $rules[] = Yii::createObject([
                 'class' => \yii\web\UrlRule::class,
                 'pattern' => $this->uniqueId . '/<route:*+>',
                 'route' => $this->uniqueId . '/index/gone',
             ]);
-            return;
+            return $rules;
         }
 
         foreach ($this->resources as $route => $controller) {
@@ -212,7 +210,7 @@ class ApiVersion extends \yii\base\Module
                     $controllerRoute
                 );
             }
-            $urlRule->addRule(array_merge(
+            $rules[] = Yii::createObject(array_merge(
                 [
                     'class' => $this->urlRuleClass,
                     'controller' => [
@@ -224,6 +222,8 @@ class ApiVersion extends \yii\base\Module
             ));
             $this->controllerMap[$controllerRoute] = $controller;
         }
+
+        return $rules;
     }
 
     /**

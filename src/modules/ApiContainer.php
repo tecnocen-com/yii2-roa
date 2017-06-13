@@ -4,8 +4,9 @@ namespace tecnocen\roa\modules;
 
 use Yii;
 use tecnocen\roa\controllers\ApiContainerController;
-use tecnocen\roa\urlRules\Container as ContainerUrlRule;
-use tecnocen\roa\urlRules\Version as VersionUrlRule;
+use tecnocen\roa\urlRules\Composite as CompositeUrlRule;
+use tecnocen\roa\urlRules\Modular as ModularUrlRule;
+use tecnocen\roa\urlRules\UrlRuleCreator;
 use yii\helpers\ArrayHelper;
 use yii\rest\UrlRule;
 
@@ -13,7 +14,7 @@ use yii\rest\UrlRule;
  * @author Angel (Faryshta) Guevara <aguevara@tecnocen.com>
  */
 class ApiContainer extends \yii\base\Module
-    implements \yii\base\BootstrapInterface
+    implements UrlRuleCreator, \yii\base\BootstrapInterface
 {
     /**
      * @var string
@@ -23,12 +24,12 @@ class ApiContainer extends \yii\base\Module
     /**
      * @var string
      */
-    public $containerUrlRuleClass = ContainerUrlRule::class;
+    public $versionUrlRuleClass = ModularUrlRule::class;
 
     /**
      * @var string
      */
-    public $versionUrlRuleClass = VersionUrlRule::class;
+    public $containerUrlRuleClass = ModularUrlRule::class;
 
     /**
      * @inheritdoc
@@ -60,10 +61,14 @@ class ApiContainer extends \yii\base\Module
         }
         $app->urlManager->addRules([[
             'class' => $this->containerUrlRuleClass,
-            'apiContainer' => $this,
+            'moduleId' => $this->uniqueId,
         ]]);
     }
 
+    /**
+     * @return ApiVersion[] return all the versions attached to the container
+     * indexed by their respective id.
+     */
     public function getVersionModules()
     {
         $versions = [];
@@ -76,17 +81,37 @@ class ApiContainer extends \yii\base\Module
         return $versions;
     }
 
-    public function parseRules(ContainerUrlRule $urlRule)
+    /**
+     * @return \yii\web\UrlRuleInterface[]
+     */
+    protected function defaultUrlRules()
+    {
+        return [
+            Yii::createObject([
+                'class' => \yii\web\UrlRule::class,
+                'pattern' => $this->uniqueId,
+                'route' => $this->uniqueId,
+                'normalizer' => ['class' => \yii\web\UrlNormalizer::class],
+            ])
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function createUrlRules(CompositeUrlRule $urlRule)
     {
         // change the error handler and identityClass
         Yii::$app->errorHandler->errorAction = $this->errorAction;
         Yii::$app->user->identityClass = $this->identityClass;
+        $rules = $this->defaultUrlRules();
         foreach ($this->versions as $route => $config) {
             $this->setModule($route, $config);
-            $urlRule->addRule([
+            $rules[] = Yii::createObject([
                'class' => $this->versionUrlRuleClass,
-               'apiVersionId' => "{$this->uniqueId}/$route"
+               'moduleId' => "{$this->uniqueId}/$route"
             ]);
         }
+        return $rules;
     }
 }
