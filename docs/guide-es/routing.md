@@ -24,7 +24,7 @@ class V1 extends \tecnocen\roa\modules\ApiVersion {
 }
 ```
 
-Esto permite envia runa petición `api/v1/documento/1.doc` para ejecutar acción
+Esto permite enviar una petición `api/v1/documento/1.doc` para ejecutar acción
 `file-stream` del recurso `DocumentoResource`.
 
 Las clases provistas en este repositorio son
@@ -43,7 +43,7 @@ extensión valida configurada en la propiedad `$ext` de la clase.
 
 ### tecnocen\roa\urlRules\SingleRecord
 
-Enroutamiento que sóolo soporta un registro y no colección, es decir acción
+Enroutamiento que sólo soporta un registro y no colección, es decir acción
 `index` no esta soportada por ejemplo para acceder a `perfil` que sólo es un
 registro para cada usuario que acceda al sistema.
 
