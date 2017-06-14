@@ -1,7 +1,7 @@
 Slug Behavior
 =============
 
-Algunos recursos necesitan estar configurados de forma "aninada" de forma que la
+Algunos recursos necesitan estar configurados de forma "aninada" con el fin de que la
 ruta representacional incluya la información de los padres para su consumo.
 
 `tienda/1/almacen/3/seccion/5`
