@@ -7,4 +7,7 @@ Yii2 ROA Library
 - [Enh] `tecnocen\roa\urlRules\Composite`, `tecnocen\roa\urlRules\Modular`
   `tecnocen\roa\urlRules\UrlRuleCreator` created for easier creation of routing
   rules (Faryshta)
+- [Enh] `tecnocen\roa\urlRules\Composite`, `tecnocen\roa\urlRules\Modular`
+  strict mode.
 - [Enh] `tecnocen\roa\tests` namespace created for tests, still in blank.
+- [Enh] `tecnocen\roa\urlRules\Composite` supports UrlNormalization.

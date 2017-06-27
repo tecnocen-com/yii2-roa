@@ -9,6 +9,7 @@ use tecnocen\roa\urlRules\Modular as ModularUrlRule;
 use tecnocen\roa\urlRules\UrlRuleCreator;
 use yii\helpers\ArrayHelper;
 use yii\rest\UrlRule;
+use yii\web\UrlNormalizer;
 
 /**
  * @author Angel (Faryshta) Guevara <aguevara@tecnocen.com>
@@ -62,6 +63,9 @@ class ApiContainer extends \yii\base\Module
         $app->urlManager->addRules([[
             'class' => $this->containerUrlRuleClass,
             'moduleId' => $this->uniqueId,
+            'normalizer' => [
+                'action' => UrlNormalizer::ACTION_REDIRECT_PERMANENT
+            ],
         ]]);
     }
 
@@ -89,9 +93,8 @@ class ApiContainer extends \yii\base\Module
         return [
             Yii::createObject([
                 'class' => \yii\web\UrlRule::class,
-                'pattern' => $this->uniqueId,
-                'route' => $this->uniqueId,
-                'normalizer' => ['class' => \yii\web\UrlNormalizer::class],
+                'pattern' => $this->getUniqueId(),
+                'route' => $this->getUniqueId(),
             ])
         ];
     }
@@ -109,9 +112,17 @@ class ApiContainer extends \yii\base\Module
             $this->setModule($route, $config);
             $rules[] = Yii::createObject([
                'class' => $this->versionUrlRuleClass,
-               'moduleId' => "{$this->uniqueId}/$route"
+               'moduleId' => "{$this->uniqueId}/$route",
             ]);
         }
         return $rules;
+    }
+
+    /**
+     * @return string HTTP Url linking to this module
+     */
+    public function getSelfLink()
+    {
+        return Url::to(['//' . $this->getUniqueId()]);
     }
 }

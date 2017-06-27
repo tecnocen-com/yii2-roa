@@ -56,7 +56,7 @@ class ApiContainerController extends \yii\rest\Controller
     {
         throw new GoneHttpException(
             'The resource you seek is obsolete, visit '
-                . Url::to(['index'])
+                . $this->module->getSelfLink()
                 . ' to get the fact sheets of all available versions.'
         );
     }

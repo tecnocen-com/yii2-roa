@@ -2,8 +2,11 @@
 
 namespace tecnocen\roa\urlRules;
 
+use Yii;
 use yii\base\Object as BaseObject;
+use yii\base\InvalidConfigException;
 use yii\web\NotFoundHttpException;
+use yii\web\UrlNormalizer;
 
 /**
  * Url rule that can call children rule when applicable.
@@ -19,6 +22,11 @@ abstract class Composite extends \yii\web\CompositeUrlRule
     public $strict = true;
 
     /**
+     * @var UrlNormalizer|null
+     */
+    public $normalizer = null;
+
+    /**
      * @var string message used to create the `NotFoundHttpException` when
      * `$strict` equals `true` and no children rules could parse the request.
      */
@@ -30,6 +38,19 @@ abstract class Composite extends \yii\web\CompositeUrlRule
     public function init()
     {
         BaseObject::init();
+        if (is_array($this->normalizer)) {
+            $this->normalizer = Yii::createObject(array_merge(
+                ['class' => UrlNormalizer::class],
+                $this->normalizer
+            ));
+        }
+        if (!empty($this->normalizer)
+            && !$this->normalizer instanceof UrlNormalizer
+        ) {
+            throw new InvalidConfigException(
+                'Invalid config for `normalizer`.'
+            );
+        }
     }
 
     /**
@@ -59,12 +80,23 @@ abstract class Composite extends \yii\web\CompositeUrlRule
         if (!$this->isApplicable($request->pathInfo)) {
             return false;
         }
+        $normalized = false;
+        if ($this->hasNormalizer($manager)) {
+            $request->pathInfo = $this->getNormalizer($manager)
+                ->normalizePathInfo(
+                    $request->pathInfo,
+                    $this->moduleId,
+                    $normalized
+                );
+        }
         $this->ensureRules();
         $result = parent::parseRequest($manager, $request);
         if ($result === false && $this->strict === true) {
             throw $this->createNotFoundException();
         }
-        return $result;
+        return $normalized
+            ? $this->getNormalizer($manager)->normalizeRoute($result)
+            : $result;
     }
  
     /**
@@ -81,9 +113,30 @@ abstract class Composite extends \yii\web\CompositeUrlRule
     }
 
     /**
+     * @param UrlManager $manager the URL manager
+     * @return bool
+     */
+    protected function hasNormalizer($manager)
+    {
+        return $this->getNormalizer($manager) instanceof UrlNormalizer;
+    }
+
+    /**
+     * @param UrlManager $manager the URL manager
+     * @return UrlNormalizer|null
+     */
+    protected function getNormalizer($manager)
+    {
+        if ($this->normalizer === null) {
+            return $manager->normalizer;
+        }
+        return $this->normalizer;
+    }
+
+    /**
      * @return NotFoundHttpException
      */
-    public function createNotFoundException()
+    protected function createNotFoundException()
     {
         return new NotFoundHttpException($this->notFoundMessage);
     }

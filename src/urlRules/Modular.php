@@ -63,7 +63,7 @@ class Modular extends Composite
     /**
      * @inheritdoc
      */
-    public function createNotFoundException()
+    protected function createNotFoundException()
     {
         return new NotFoundHttpException(
             strtr($this->notFoundMessage, ['{moduleId}' => $this->moduleId])
