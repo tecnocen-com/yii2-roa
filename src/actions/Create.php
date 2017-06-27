@@ -14,6 +14,11 @@ class Create extends Action
     public $scenario = Model::SCENARIO_DEFAULT;
 
     /**
+     * @var string[] that defines which columns will be recibe files
+     */
+    public $fileAttributes = [];
+
+    /**
      * Creates a new model.
      * @return \yii\db\ActiveRecordInterface the model newly created
      * @throws ServerErrorHttpException if there is any error when creating the model
@@ -28,6 +33,16 @@ class Create extends Action
         $model->load($request->getQueryParams(), '');
         $this->checkAccess($model, $request->getQueryParams());
         $model->load($request->getBodyParams(), '');
+        foreach ($this->fileAttributes as $attribute => $value) {
+            if (is_int($attribute)) {
+                $attribute = $value;
+            }
+            if (null !== ($uploadedFile = UploadedFile::getInstanceByName(
+                $value
+            ))) {
+                $model->$attribute = $uploadedFile;
+            }
+        }
         if ($model->save()) {
             $response = Yii::$app->getResponse();
             $response->setStatusCode(201);
