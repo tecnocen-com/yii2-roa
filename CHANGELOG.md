@@ -8,3 +8,7 @@ Yii2 ROA Library
   `tecnocen\roa\urlRules\UrlRuleCreator` created for easier creation of routing
   rules (Faryshta)
 - [Enh] `tecnocen\roa\tests` namespace created for tests, still in blank.
+- [Enh] `tecnocen\roa\actions\Create` added the posibility to upload an create
+  N files with dynamic columns (jose1824)
+- [Enh] `tecnocen\roa\actions\Update` added the posibility to upload an update
+  N files with dynamic columns (jose1824)
