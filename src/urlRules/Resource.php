@@ -35,9 +35,11 @@ class Resource extends \yii\rest\UrlRule
                 $result = $rule->parseRequest($manager, $request);
                 if (YII_DEBUG) {
                     Yii::trace([
-                        'rule' => method_exists($rule, '__toString') ? $rule->__toString() : get_class($rule),
+                        'rule' => method_exists($rule, '__toString')
+                            ? (string)$rule
+                            : get_class($rule),
                         'match' => $result !== false,
-                        'parent' => self::className()
+                        'parent' => static::class
                     ], __METHOD__);
                 }
                 if ($result !== false) {

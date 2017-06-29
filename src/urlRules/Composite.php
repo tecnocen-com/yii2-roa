@@ -85,7 +85,7 @@ abstract class Composite extends \yii\web\CompositeUrlRule
             $request->pathInfo = $this->getNormalizer($manager)
                 ->normalizePathInfo(
                     $request->pathInfo,
-                    $this->moduleId,
+                    '',
                     $normalized
                 );
         }
