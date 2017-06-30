@@ -2,6 +2,7 @@
 
 namespace tecnocen\roa\behaviors;
 
+use yii\base\InvalidConfigException;
 use yii\db\ActiveRecord;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
@@ -41,14 +42,21 @@ class Slug extends \yii\base\Behavior
     public $resourceName;
 
     /**
-     * @var string name of the identifier attribute
+     * @var string|array name of the identifier attribute
      */
     public $idAttribute = 'id';
+
+    /**
+     * @var string separator to create the route for resources with multiple id
+     * attributes.
+     */
+    public $idAttributeSeparator = '/';
     
     /**
-     * @var string parentNotFoundMessage for not found exception when the parent slug was not found
+     * @var string parentNotFoundMessage for not found exception when the parent
+     * slug was not found
      */
-    public $parentNotFoundMessage = 'The "{resourceName}" associated was not found';
+    public $parentNotFoundMessage = '"{resourceName}" not found';
 
     /**
      * @var ActiveRecord parent record.
@@ -59,6 +67,19 @@ class Slug extends \yii\base\Behavior
      * @var string url to resource
      */
     protected $resourceLink;
+
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        if (empty($this->resourceName)) {
+            throw new InvalidConfigException(
+                self::class . '::$resourceName must be defined.'
+            );
+        }
+        $this->idAttribute = (array)$this->idAttribute;
+    }
 
     /**
      * @inheritdoc
@@ -131,7 +152,11 @@ class Slug extends \yii\base\Behavior
      */
     public function getResourceRecordId()
     {
-        return $this->owner->getAttribute($this->idAttribute);
+        $attributeValues = [];
+        foreach ($this->idAttribute as $attribute) {
+            $attributeValues[] = $this->owner->$attribute;
+        }
+        return implode($attributeValues, $this->idAttributeSeparator);
     }
 
     /**
@@ -147,7 +172,10 @@ class Slug extends \yii\base\Behavior
      */
     public function getSelfLink()
     {
-        return $this->resourceLink . '/' . $this->getResourceRecordId();
+        $resourceRecordId = $this->getResourceRecordId();
+        return $resourceRecordId
+            ? "{$this->resourceLink}/$resourceRecordId"
+            : $this->resourceLink;
     }
 
     /**
@@ -158,13 +186,13 @@ class Slug extends \yii\base\Behavior
         $this->ensureSlug($this->owner, true);
         $selfLinks = [
             'self' => $this->getSelfLink(),
-            $this->resourceName . '_list' => $this->resourceLink,
+            $this->resourceName . '_collection' => $this->resourceLink,
         ];
         if (null === $this->parentSlug) {
             return $selfLinks;
         }
         $parentLinks = $this->parentSlug->getSlugLinks();
-        $parentLinks['parent_' . $this->parentSlugRelation]
+        $parentLinks[$this->parentSlugRelation . '_record']
             = $parentLinks['self'];
         unset($parentLinks['self']);
         // preserve order
