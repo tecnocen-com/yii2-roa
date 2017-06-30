@@ -11,7 +11,6 @@ Yii2 ROA Library
   strict mode.
 - [Enh] `tecnocen\roa\tests` namespace created for tests, still in blank.
 - [Enh] `tecnocen\roa\urlRules\Composite` supports UrlNormalization.
-- [Enh] `tecnocen\roa\actions\Create` added the posibility to upload an create
-  N files with dynamic columns (jose1824)
-- [Enh] `tecnocen\roa\actions\Update` added the posibility to upload an update
-  N files with dynamic columns (jose1824)
+- [Enh] `tecnocen\roa\actions\Create`, `tecnocen\roa\actions\Update`
+  added the posibility to upload an update files with dynamic columns (jose1824)
+- [Enh] `tecnocen\roa\behaviors\Slug::$idAttribute` array support. (Faryshta)
