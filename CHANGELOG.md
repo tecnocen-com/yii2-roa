@@ -1,6 +1,12 @@
 Yii2 ROA Library
 ================
 
+0.0.3
+-----
+
+- [Enh] `tecnocen\roa\action\LoadFileTrait` trait to unify the procedure of
+  loading uploaded files to the roa actions. (Faryshta)
+
 0.0.2
 -----
 

@@ -7,8 +7,14 @@ use yii\base\Model;
 use yii\db\ActiveRecord;
 use yii\web\ServerErrorHttpException;
 
+/**
+ * Action to update the attributes in a record.
+ * @author Angel (Faryshta) Guevara <aguevara@alquimiadigital.mx>
+ */
 class Update extends Action
 {
+    use LoadFileTrait;
+
     /**
      * @var string the scenario to be assigned to the model before it is validated and updated.
      */
@@ -32,17 +38,10 @@ class Update extends Action
         $request = Yii::$app->getRequest();
         $this->checkAccess($model, $request->getQueryParams());
         $model->scenario = $this->scenario;
-        $model->load($request->getBodyParams(), '');
-        foreach ($this->fileAttributes as $attribute => $value) {
-            if (is_int($attribute)) {
-                $attribute = $value;
-            }
-            if (null !== ($uploadedFile = UploadedFile::getInstanceByName(
-                $value
-            ))) {
-                $model->$attribute = $uploadedFile;
-            }
-        }
+        $model->load(
+            $request->getBodyParams() + $this->parseFileAttributes(),
+            ''
+        );
         if ($model->save() === false && !$model->hasErrors()) {
             throw new ServerErrorHttpException('Failed to update the object for unknown reason.');
         }

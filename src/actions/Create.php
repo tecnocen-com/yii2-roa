@@ -6,17 +6,18 @@ use Yii;
 use yii\base\Model;
 use yii\web\ServerErrorHttpException;
 
+/**
+ * Action to create a record.
+ * @author Angel (Faryshta) Guevara <aguevara@alquimiadigital.mx>
+ */
 class Create extends Action
 {
+    use LoadFileTrait;
+
     /**
      * @var string the scenario to be assigned to the new model before it is validated and saved.
      */
     public $scenario = Model::SCENARIO_DEFAULT;
-
-    /**
-     * @var string[] that defines which columns will be recibe files
-     */
-    public $fileAttributes = [];
 
     /**
      * Creates a new model.
@@ -30,19 +31,12 @@ class Create extends Action
         $model = new $this->modelClass([
             'scenario' => $this->scenario,
         ]);
-        $model->load($request->getQueryParams(), '');
+        $model->load($request->getQueryParams());
         $this->checkAccess($model, $request->getQueryParams());
-        $model->load($request->getBodyParams(), '');
-        foreach ($this->fileAttributes as $attribute => $value) {
-            if (is_int($attribute)) {
-                $attribute = $value;
-            }
-            if (null !== ($uploadedFile = UploadedFile::getInstanceByName(
-                $value
-            ))) {
-                $model->$attribute = $uploadedFile;
-            }
-        }
+        $model->load(
+            $request->getBodyParams() + $this->parseFileAttributes(),
+            ''
+        );
         if ($model->save()) {
             $response = Yii::$app->getResponse();
             $response->setStatusCode(201);
