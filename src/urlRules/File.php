@@ -14,7 +14,7 @@ class File extends Resource
      * @inheritdoc
      */
     public $patterns = [
-        'PUT,PATCH {id}' => 'update',
+        'PUT,PATCH,POST {id}' => 'update',
         'DELETE {id}' => 'delete',
         'GET,HEAD {id}' => 'view',
         'POST' => 'create',
