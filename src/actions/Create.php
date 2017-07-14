@@ -5,6 +5,7 @@ namespace tecnocen\roa\actions;
 use Yii;
 use yii\base\Model;
 use yii\web\ServerErrorHttpException;
+use yii\web\UploadedFile;
 
 /**
  * Action to create a record.
