@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecord;
 use yii\web\ServerErrorHttpException;
+use yii\web\UploadedFile;
 
 /**
  * Action to update the attributes in a record.
