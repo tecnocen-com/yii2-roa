@@ -82,19 +82,10 @@ class Slug extends \yii\base\Behavior
     }
 
     /**
-     * @inheritdoc
-     */
-    public function attach($owner)
-    {
-        parent::attach($owner);
-        $this->ensureSlug($owner);
-    }
-
-    /**
      * Ensures the parent record is attached to the behavior.
      *
      * @param  ActiveRecord $owner
-     * @param  boolean $force whether to force finding the parent of the owner
+     * @param  boolean $force whether to force finding the slug parent record
      * when `$parentSlugRelation` is defined
      */
     private function ensureSlug($owner, $force = false)
@@ -106,23 +97,6 @@ class Slug extends \yii\base\Behavior
         ) {
             $this->populateSlugParent($owner);
         }
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function events()
-    {
-        return [ActiveRecord::EVENT_AFTER_FIND => 'afterFind'];
-    }
-
-    /**
-     * Handles the event `ActiveRecord::EVENT_AFTER_FIND` by ensuring the
-     * record's parent exists when `parentSlugRelation` is set.
-     */
-    public function afterFind()
-    {
-        $this->ensureSlug($this->owner, true);
     }
 
     /**
@@ -143,7 +117,7 @@ class Slug extends \yii\base\Behavior
                 )
             );
         }
-        $this->resourceLink = $this->parentSlug->selfLink
+        $this->resourceLink = $this->parentSlug->getSelfLink()
             . '/' . $this->resourceName;
     }
 
@@ -164,6 +138,7 @@ class Slug extends \yii\base\Behavior
      */
     public function getResourceLink()
     {
+        $this->ensureSlug($this->owner, true);
         return $this->resourceLink;
     }
 
@@ -173,9 +148,10 @@ class Slug extends \yii\base\Behavior
     public function getSelfLink()
     {
         $resourceRecordId = $this->getResourceRecordId();
+        $resourceLink = $this->getResourceLink();
         return $resourceRecordId
-            ? "{$this->resourceLink}/$resourceRecordId"
-            : $this->resourceLink;
+            ? "$resourceLink/$resourceRecordId"
+            : $resourceLink;
     }
 
     /**
@@ -214,14 +190,5 @@ class Slug extends \yii\base\Behavior
         if (null !== $this->parentSlug) {
             $this->parentSlug->checkAccess($params);
         }
-    }
-
-
-    /**
-     * @return $this
-     */
-    public function getSlugBehavior()
-    {
-        return $this;
     }
 }
