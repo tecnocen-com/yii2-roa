@@ -39,7 +39,7 @@ trait LoadFileTrait
             if (is_int($attribute)) {
                 $attribute = $value;
             }
-            if (null !== ($uploadedFile = UploadedFile::getInstanceByName(
+            if (null !== ($uploadedFile = Update::getInstanceByName(
                 $value
             ))) {
                 $files[$attribute] = $uploadedFile;
