@@ -29,7 +29,7 @@ interface FileRecord
      * Full path for the file.
      *
      * @param string $ext the requested extension.
-     * @return string 
+     * @return string
      */
     public function fileMimeType($ext);
 }

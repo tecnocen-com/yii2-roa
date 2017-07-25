@@ -6,12 +6,26 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\base\InvalidConfigException;
 
+/**
+ * Action to retreive a filtered and sorted collection based on a `$searchClass`
+ *
+ * @author Angel (Faryshta) Guevara <aguevara@alquimiadigital.mx>
+ */
 class Index extends Action
 {
+    /**
+     * @var string model class to retreive the records on the collection.
+     */
     public $searchClass;
 
+    /**
+     * @var string name of the form containing the filter data.
+     */
     public $formName = '';
 
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
         if (empty($this->searchClass)) {

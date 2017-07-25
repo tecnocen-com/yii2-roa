@@ -27,6 +27,9 @@ use yii\web\MethodNotAllowedHttpException;
  */
 class OAuth2Resource extends \yii\rest\ActiveController
 {
+    /**
+     * @var string[] list of rest actions defined by default.
+     */
     const DEFAULT_REST_ACTIONS = [
         'index',
         'view',
@@ -209,7 +212,6 @@ class OAuth2Resource extends \yii\rest\ActiveController
         if (empty($this->searchClass)) {
             return new ActiveDataProvider(['query' => $this->indexQuery()]);
         }
-
     }
 
     /**
