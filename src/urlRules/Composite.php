@@ -3,7 +3,6 @@
 namespace tecnocen\roa\urlRules;
 
 use Yii;
-use yii\base\Object as BaseObject;
 use yii\base\InvalidConfigException;
 use yii\web\NotFoundHttpException;
 use yii\web\UrlNormalizer;
@@ -37,7 +36,6 @@ abstract class Composite extends \yii\web\CompositeUrlRule
      */
     public function init()
     {
-        BaseObject::init();
         if (is_array($this->normalizer)) {
             $this->normalizer = Yii::createObject(array_merge(
                 ['class' => UrlNormalizer::class],
@@ -66,9 +64,9 @@ abstract class Composite extends \yii\web\CompositeUrlRule
      */
     private function ensureRules()
     {
-       if (empty($this->rules)) {
-           $this->rules = $this->createRules();
-       }
+        if (empty($this->rules)) {
+            $this->rules = $this->createRules();
+        }
     }
 
     /**
@@ -98,7 +96,7 @@ abstract class Composite extends \yii\web\CompositeUrlRule
             ? $this->getNormalizer($manager)->normalizeRoute($result)
             : $result;
     }
- 
+
     /**
      * @inheritdoc
      */
