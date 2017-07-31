@@ -5,6 +5,7 @@ namespace tecnocen\roa\actions;
 use Yii;
 use yii\base\Model;
 use yii\web\ServerErrorHttpException;
+use yii\web\UploadedFile;
 
 /**
  * Trait to configure and load uploaded files to a model.
@@ -39,7 +40,7 @@ trait LoadFileTrait
             if (is_int($attribute)) {
                 $attribute = $value;
             }
-            if (null !== ($uploadedFile = Update::getInstanceByName(
+            if (null !== ($uploadedFile = UploadedFile::getInstanceByName(
                 $value
             ))) {
                 $files[$attribute] = $uploadedFile;
