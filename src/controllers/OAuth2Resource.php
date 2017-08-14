@@ -304,7 +304,8 @@ class OAuth2Resource extends \yii\rest\ActiveController
             'Access-Control-Max-Age' => 86400,
             'Access-Control-Expose-Headers' => [
                 'x-pagination-current-page', 
-                'x-pagination-page-count', 
+                'x-pagination-page-count',
+                'x-pagination-per-page',
                 'x-pagination-total-count'
             ],
         ];
