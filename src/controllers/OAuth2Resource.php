@@ -2,23 +2,22 @@
 
 namespace tecnocen\roa\controllers;
 
-use Yii;
-use filsh\yii2\oauth2server\filters\ErrorToExceptionFilter;
 use filsh\yii2\oauth2server\filters\auth\CompositeAuth;
+use filsh\yii2\oauth2server\filters\ErrorToExceptionFilter;
 use tecnocen\roa\actions;
 use tecnocen\roa\FileRecord;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
 use yii\filters\AccessControl;
+use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
 use yii\filters\Cors;
 use yii\filters\HostControl;
 use yii\filters\HttpCache;
 use yii\filters\PageCache;
-use yii\filters\auth\HttpBearerAuth;
-use yii\filters\auth\QueryParamAuth;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
-use yii\web\MethodNotAllowedHttpException;
 
 /**
  * Resource Controller with OAuth2 Support.
@@ -41,7 +40,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
     ];
 
     /**
-     * @var boolean whether to enable http and page cache.
+     * @var bool whether to enable http and page cache.
      */
     public $enableCache = false;
 
@@ -74,6 +73,11 @@ class OAuth2Resource extends \yii\rest\ActiveController
      * results on a search request.
      */
     public $searchFormName = '';
+
+    /**
+     * @var string[] $attribute => $param pairs to filter the queries.
+     */
+    public $filterParams = [];
 
     /**
      * @var string scenario to be used when updating a record.
@@ -151,7 +155,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
             : [
                 'class' => \yii\rest\IndexAction::class,
                 'modelClass' => $this->modelClass,
-                'prepareDataProvider' => [$this, 'indexProvider']
+                'prepareDataProvider' => [$this, 'indexProvider'],
             ];
         $interfaces = class_implements($this->modelClass);
         $fileStream = isset($interfaces[FileRecord::class])
@@ -178,7 +182,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
             'create' => [
                 'class' => actions\Create::class,
                 'modelClass' => $this->modelClass,
-                'scenario' => $this->createScenario
+                'scenario' => $this->createScenario,
             ],
             'delete' => [
                 'class' => actions\Delete::class,
@@ -193,11 +197,14 @@ class OAuth2Resource extends \yii\rest\ActiveController
     }
 
     /**
-     * @return integer unix timestamp
+     * @return int unix timestamp
+     * @param mixed $action
+     * @param mixed $params
      */
     public function lastModifiedIndex($action, $params)
     {
         $modelClass = $this->modelClass;
+
         return $modelClass::find()->max($this->updatedAtAttribute);
     }
 
@@ -216,7 +223,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
 
     /**
      * Finds the record based on the provided id or throws an exception.
-     * @param integer $id the unique identifier for the record.
+     * @param int $id the unique identifier for the record.
      * @return ActiveRecord
      * @throws NotFoundHttpException if the record can't be found.
      */
@@ -227,13 +234,14 @@ class OAuth2Resource extends \yii\rest\ActiveController
                 strtr($this->notFoundMessage, ['{id}' => $id])
             );
         }
+
         return $model;
     }
 
     /**
      * Creates the query to be used by the `findOne()` method.
      *
-     * @param integer $id the unique identifier
+     * @param int $id the unique identifier
      * @return ActiveQuery
      */
     public function findQuery($id)
@@ -259,9 +267,20 @@ class OAuth2Resource extends \yii\rest\ActiveController
     {
         $modelClass = $this->modelClass;
         $query = $modelClass::find();
+
+        $condition = [];
+        foreach ($this->filterParams as $attribute => $param) {
+            if (is_int($attribute)) {
+                $attribute = $param;
+            }
+            $condition[$attribute] = Yii::$app->request->getQueryParam($param);
+        }
+        $query->andFilterWhere($condition);
+
         if (isset($this->userAttribute)) {
             $query->andWhere([$this->userAttribute => Yii::$app->user->id]);
         }
+
         return $query;
     }
 
@@ -325,6 +344,7 @@ class OAuth2Resource extends \yii\rest\ActiveController
         foreach ($this->verbs() as $verbMethods) {
             $methods = array_unique(array_merge($methods, $verbMethods));
         }
+
         return $methods;
     }
 }

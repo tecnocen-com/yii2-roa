@@ -1,6 +1,18 @@
 Yii2 ROA Library
 ================
 
+0.0.8
+-----
+
+- [Enh] `tecnocen\roa\controllers\OAuth2Resource::$filterParams` parameters to
+  filter the records using GET parameters. (Faryshta)
+
+0.0.7
+-----
+
+- [Bug] `tecnocen\roa\actions\LoadFileTrait` missing use `yii\web\UploadedFile`.
+  (jose1824)
+
 0.0.3
 -----
 
