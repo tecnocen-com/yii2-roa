@@ -3,11 +3,11 @@
 namespace tecnocen\roa\modules;
 
 use DateTime;
-use Yii;
 use tecnocen\roa\controllers\ApiVersionController;
 use tecnocen\roa\urlRules\Composite as CompositeUrlRule;
 use tecnocen\roa\urlRules\Resource as ResourceUrlRule;
 use tecnocen\roa\urlRules\UrlRuleCreator;
+use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\web\UrlManager;
@@ -108,11 +108,12 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
      */
     public function getRoutes()
     {
-        $routes = ["/"];
+        $routes = ['/'];
         foreach ($this->resources as $index => $value) {
-            $routes[] = 
+            $routes[] =
                 (is_string($index) ? $index : $value);
         }
+
         return $routes;
     }
 
@@ -179,7 +180,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
                 'pattern' => $this->uniqueId,
                 'route' => $this->uniqueId,
                 'normalizer' => ['class' => \yii\web\UrlNormalizer::class],
-            ])
+            ]),
         ];
     }
 
@@ -195,6 +196,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
                 'pattern' => $this->uniqueId . '/<route:*+>',
                 'route' => $this->uniqueId . '/index/gone',
             ]);
+
             return $rules;
         }
 
@@ -214,7 +216,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
                 [
                     'class' => $this->urlRuleClass,
                     'controller' => [
-                        $route =>  "{$this->uniqueId}/$controllerRoute"
+                        $route => "{$this->uniqueId}/$controllerRoute",
                     ],
                     'prefix' => $this->uniqueId,
                 ],
@@ -260,6 +262,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
             $lastClass = substr($controllerRoute, $lastSeparator + 2);
             $ns = substr($controllerRoute, 0, $lastSeparator + 2);
         }
+
         return $this->controllerNamespace
             . '\\' . strtr($ns, ['--' => '\\'])
             . str_replace(' ', '', ucwords(str_replace('-', ' ', $lastClass)))
@@ -268,19 +271,20 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
 
     /**
      * @param string date in 'Y-m-d' format
-     * @return integer unix timestamp
+     * @param mixed $date
+     * @return int unix timestamp
      */
     private function calcTime($date)
     {
-         if ($date === null) {
-             return null;
-         }
-         if (false === ($dt = DateTime::createFromFormat('Y-m-d', $date))) {
-             throw new InvalidConfigException(
+        if ($date === null) {
+            return null;
+        }
+        if (false === ($dt = DateTime::createFromFormat('Y-m-d', $date))) {
+            throw new InvalidConfigException(
                  'Dates must use the "Y-m-d" format.'
              );
-         }
+        }
 
-         return $dt->getTimestamp();
+        return $dt->getTimestamp();
     }
 }

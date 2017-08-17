@@ -51,7 +51,7 @@ class Slug extends \yii\base\Behavior
      * attributes.
      */
     public $idAttributeSeparator = '/';
-    
+
     /**
      * @var string parentNotFoundMessage for not found exception when the parent
      * slug was not found
@@ -78,14 +78,14 @@ class Slug extends \yii\base\Behavior
                 self::class . '::$resourceName must be defined.'
             );
         }
-        $this->idAttribute = (array)$this->idAttribute;
+        $this->idAttribute = (array) $this->idAttribute;
     }
 
     /**
      * Ensures the parent record is attached to the behavior.
      *
      * @param  ActiveRecord $owner
-     * @param  boolean $force whether to force finding the slug parent record
+     * @param  bool $force whether to force finding the slug parent record
      * when `$parentSlugRelation` is defined
      */
     private function ensureSlug($owner, $force = false)
@@ -93,7 +93,7 @@ class Slug extends \yii\base\Behavior
         if (null === $this->parentSlugRelation) {
             $this->resourceLink = Url::to([$this->resourceName . '/'], true);
         } elseif ($force
-            ||$owner->isRelationPopulated($this->parentSlugRelation)
+            || $owner->isRelationPopulated($this->parentSlugRelation)
         ) {
             $this->populateSlugParent($owner);
         }
@@ -110,9 +110,9 @@ class Slug extends \yii\base\Behavior
         if (null === $this->parentSlug) {
             throw new NotFoundHttpException(
                 strtr(
-                    $this->parentNotFoundMessage, 
+                    $this->parentNotFoundMessage,
                     [
-                        '{resourceName}' => $this->parentSlugRelation
+                        '{resourceName}' => $this->parentSlugRelation,
                     ]
                 )
             );
@@ -130,6 +130,7 @@ class Slug extends \yii\base\Behavior
         foreach ($this->idAttribute as $attribute) {
             $attributeValues[] = $this->owner->$attribute;
         }
+
         return implode($attributeValues, $this->idAttributeSeparator);
     }
 
@@ -139,6 +140,7 @@ class Slug extends \yii\base\Behavior
     public function getResourceLink()
     {
         $this->ensureSlug($this->owner, true);
+
         return $this->resourceLink;
     }
 
@@ -149,6 +151,7 @@ class Slug extends \yii\base\Behavior
     {
         $resourceRecordId = $this->getResourceRecordId();
         $resourceLink = $this->getResourceLink();
+
         return $resourceRecordId
             ? "$resourceLink/$resourceRecordId"
             : $resourceLink;

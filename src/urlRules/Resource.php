@@ -8,7 +8,7 @@ use Yii;
  * Default Url Rule to handle resources with collections.
  *
  * Supports representative URL using ownership slug.
-*
+ *
  * @author Angel (Faryshta) Guevara <aguevara@alquimiadigital.mx>
  */
 class Resource extends \yii\rest\UrlRule
@@ -36,10 +36,10 @@ class Resource extends \yii\rest\UrlRule
                 if (YII_DEBUG) {
                     Yii::trace([
                         'rule' => method_exists($rule, '__toString')
-                            ? (string)$rule
+                            ? (string) $rule
                             : get_class($rule),
                         'match' => $result !== false,
-                        'parent' => static::class
+                        'parent' => static::class,
                     ], __METHOD__);
                 }
                 if ($result !== false) {
@@ -47,6 +47,7 @@ class Resource extends \yii\rest\UrlRule
                 }
             }
         }
+
         return false;
     }
 }

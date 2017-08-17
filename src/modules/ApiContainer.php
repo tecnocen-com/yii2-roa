@@ -2,13 +2,11 @@
 
 namespace tecnocen\roa\modules;
 
-use Yii;
 use tecnocen\roa\controllers\ApiContainerController;
 use tecnocen\roa\urlRules\Composite as CompositeUrlRule;
 use tecnocen\roa\urlRules\Modular as ModularUrlRule;
 use tecnocen\roa\urlRules\UrlRuleCreator;
-use yii\helpers\ArrayHelper;
-use yii\rest\UrlRule;
+use Yii;
 use yii\web\UrlNormalizer;
 
 /**
@@ -64,7 +62,7 @@ class ApiContainer extends \yii\base\Module
             'class' => $this->containerUrlRuleClass,
             'moduleId' => $this->uniqueId,
             'normalizer' => [
-                'action' => UrlNormalizer::ACTION_REDIRECT_PERMANENT
+                'action' => UrlNormalizer::ACTION_REDIRECT_PERMANENT,
             ],
         ]]);
     }
@@ -82,6 +80,7 @@ class ApiContainer extends \yii\base\Module
             }
             $versions[$route] = $this->getModule($route);
         }
+
         return $versions;
     }
 
@@ -95,7 +94,7 @@ class ApiContainer extends \yii\base\Module
                 'class' => \yii\web\UrlRule::class,
                 'pattern' => $this->getUniqueId(),
                 'route' => $this->getUniqueId(),
-            ])
+            ]),
         ];
     }
 
@@ -115,6 +114,7 @@ class ApiContainer extends \yii\base\Module
                'moduleId' => "{$this->uniqueId}/$route",
             ]);
         }
+
         return $rules;
     }
 

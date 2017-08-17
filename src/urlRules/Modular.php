@@ -3,9 +3,7 @@
 namespace tecnocen\roa\urlRules;
 
 use Yii;
-use tecnocen\roa\modules\ApiVersion;
 use yii\base\InvalidConfigException;
-use yii\base\Object as BaseObject;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -35,6 +33,7 @@ class Modular extends Composite
      * or return `false` inmediately.
      *
      * @return bool
+     * @param mixed $route
      */
     protected function isApplicable($route)
     {
@@ -57,6 +56,7 @@ class Modular extends Composite
                     . UrlRuleCreator::class
             );
         }
+
         return $module->createUrlRules($this);
     }
 

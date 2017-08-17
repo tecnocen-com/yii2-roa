@@ -2,8 +2,6 @@
 
 namespace tecnocen\roa\controllers;
 
-use Yii;
-
 /**
  * Resource which enables file upload to be stored and associated to a record.
  *
@@ -31,6 +29,7 @@ class OAuth2FileResource extends OAuth2Resource
         $actions = parent::actions();
         $actions['create']['fileAttributes'] = $this->createFileAttributes;
         $actions['update']['fileAttributes'] = $this->updateFileAttributes;
+
         return $actions;
     }
 
@@ -41,6 +40,7 @@ class OAuth2FileResource extends OAuth2Resource
     {
         $verbs = parent::verbs();
         $verbs['update'][] = 'POST';
+
         return $verbs;
     }
 }

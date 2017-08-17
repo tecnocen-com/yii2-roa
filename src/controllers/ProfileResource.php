@@ -2,11 +2,8 @@
 
 namespace tecnocen\roa\controllers;
 
-use Yii;
-use tecnocen\roa\actions\ProfileView;
 use tecnocen\roa\actions\ProfileUpdate;
-use tecnocen\roa\actions\CambiaPassword;
-use yii\helpers\ArrayHelper;
+use tecnocen\roa\actions\ProfileView;
 
 class ProfileResource extends OAuth2Resource
 {
@@ -20,10 +17,11 @@ class ProfileResource extends OAuth2Resource
     /**
      * @inheridoc
      */
-    public final function verbs()
+    final public function verbs()
     {
         $verbs = parent::verbs();
         unset($verbs['index'], $verbs['create'], $verbs['delete']);
+
         return $verbs;
     }
 

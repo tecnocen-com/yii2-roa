@@ -8,6 +8,7 @@ class View extends Action
 {
     /**
      * @return ActiveDataProvider
+     * @param mixed $id
      */
     public function run($id)
     {
@@ -15,6 +16,7 @@ class View extends Action
         $model = $this->findModel($id);
         $request = Yii::$app->getRequest();
         $this->checkAccess($model, $request->getQueryParams());
+
         return $model;
     }
 }

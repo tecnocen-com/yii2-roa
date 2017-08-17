@@ -6,7 +6,6 @@ use Yii;
 use yii\base\Model;
 use yii\db\ActiveRecord;
 use yii\web\ServerErrorHttpException;
-use yii\web\UploadedFile;
 
 /**
  * Action to update the attributes in a record.
@@ -46,6 +45,7 @@ class Update extends Action
         if ($model->save() === false && !$model->hasErrors()) {
             throw new ServerErrorHttpException('Failed to update the object for unknown reason.');
         }
+
         return $model;
     }
 }

@@ -31,6 +31,7 @@ class Restore extends Action
                 'Failed to restore the object for unknown reason.'
             );
         }
+
         return $model;
     }
 }

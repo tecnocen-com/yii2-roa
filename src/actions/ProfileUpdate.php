@@ -36,6 +36,7 @@ class ProfileUpdate extends \yii\rest\Action
         if ($model->save() === false && !$model->hasErrors()) {
             throw new ServerErrorHttpException('Failed to update the object for unknown reason.');
         }
+
         return $model;
     }
 }

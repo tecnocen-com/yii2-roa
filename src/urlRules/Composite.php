@@ -15,7 +15,7 @@ use yii\web\UrlNormalizer;
 abstract class Composite extends \yii\web\CompositeUrlRule
 {
     /**
-     * @var boolean whether this rule must throw an `NotFoundHttpException` when
+     * @var bool whether this rule must throw an `NotFoundHttpException` when
      * parse request fails.
      */
     public $strict = true;
@@ -56,6 +56,7 @@ abstract class Composite extends \yii\web\CompositeUrlRule
      * or return `false` inmediately.
      *
      * @return bool
+     * @param mixed $route
      */
     abstract protected function isApplicable($route);
 
@@ -92,6 +93,7 @@ abstract class Composite extends \yii\web\CompositeUrlRule
         if ($result === false && $this->strict === true) {
             throw $this->createNotFoundException();
         }
+
         return $normalized
             ? $this->getNormalizer($manager)->normalizeRoute($result)
             : $result;
@@ -107,6 +109,7 @@ abstract class Composite extends \yii\web\CompositeUrlRule
             return false;
         }
         $this->ensureRules();
+
         return parent::createUrl($manager, $route, $params);
     }
 
@@ -128,6 +131,7 @@ abstract class Composite extends \yii\web\CompositeUrlRule
         if ($this->normalizer === null) {
             return $manager->normalizer;
         }
+
         return $this->normalizer;
     }
 

@@ -2,9 +2,7 @@
 
 namespace tecnocen\roa\actions;
 
-use Yii;
 use yii\base\Model;
-use yii\web\ServerErrorHttpException;
 use yii\web\UploadedFile;
 
 /**
@@ -46,6 +44,7 @@ trait LoadFileTrait
                 $files[$attribute] = $uploadedFile;
             }
         }
+
         return $files;
     }
 }

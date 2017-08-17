@@ -4,7 +4,6 @@ namespace tecnocen\roa\controllers;
 
 use Yii;
 use yii\helpers\ArrayHelper;
-use yii\web\NoutFoundHttpException;
 
 /**
  * Lists all the available versions for an api and handles error responses.
@@ -60,4 +59,4 @@ class ApiContainerController extends \yii\rest\Controller
                 . ' to get the fact sheets of all available versions.'
         );
     }
-}	
+}

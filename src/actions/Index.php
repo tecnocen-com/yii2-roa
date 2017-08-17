@@ -3,8 +3,8 @@
 namespace tecnocen\roa\actions;
 
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\base\InvalidConfigException;
+use yii\data\ActiveDataProvider;
 
 /**
  * Action to retreive a filtered and sorted collection based on a `$searchClass`
