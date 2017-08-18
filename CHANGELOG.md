@@ -6,6 +6,8 @@ Yii2 ROA Library
 
 - [Enh] `tecnocen\roa\controllers\OAuth2Resource::$filterParams` parameters to
   filter the records using GET parameters. (Faryshta)
+- [Enh] `tecnocen\roa\hal\JsonResponseFormatter` formatter to return json using
+  'Content-Type:application/hal+json'. (Faryshta)
 - [Enh] `tecnocen\roa\hal\Embeddable`, `tecnocen\roa\hal\EmbeddableTrait`
   interface and trait to create arrays using `_embedded` property and nesting.
 
