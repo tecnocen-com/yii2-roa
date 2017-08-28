@@ -57,15 +57,15 @@ public function getAlmacen()
 Metodo checkAccess()
 --------------------
 
-El metodo `tecnocen\roa\Slug::checkAccess()` sirve para que cada registro
-compruebe si esta disponible para su acceso. Este metodo se manda invocar
-retroactivamente en los recursos que tengan declarada al registro como
-relacion `parentSlugRelation`.
+El metodo `tecnocen\roa\behaviors\Slug::checkAccess()` sirve para que cada
+registro compruebe si esta disponible para su acceso. Este metodo se manda
+invocar retroactivamente en los recursos que tengan declarada al registro
+como relacion `parentSlugRelation`.
 
 `tienda/1/almacen/3/seccion/5`
 
 Al invocar `checkAccess()` se invoca para los registros tienda con id 1,
-almacen con id 3 y seccin con id 5.
+almacen con id 3 y sección con id 5.
 
 El metodo recibe como parametro un `array` con las los parametros `GET`
 recibidos en  la petición. Y debe arrojar excepciones `yii\web\HttpException`
