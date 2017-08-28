@@ -27,8 +27,21 @@ public function behaviors()
             'parentSlugRelation' => 'almacen', // relación de anidado.
             'checkAccess' => function ($params) {
                 $user = Yii::$app->getUser();
-                return $user->can('manager')
-                    || $this->responsable_id == $user->id;
+                if (!$user->can('manager')
+                    && !$this->responsable_id == $user->id
+                ) {
+                    throw new \yii\web\ForbiddenHttpException(
+                        'No tiene permisos para editar este registro.'
+                    );
+                }
+
+                if (isset($params['almacen_id'])
+                    && $this->id != $params['almacen_id']
+                ) {
+                    throw new \yii\web\NotFoundHttpException(
+                        "Registro no asociado al almacen {$params['almacen_id']}."
+                    );
+                }
             }
         ]
     ];
@@ -38,6 +51,32 @@ public function behaviors()
 public function getAlmacen()
 {
     return $this->hasOne(Almacen::class, ['id' => 'almacen_id']);
+}
+```
+
+Metodo checkAccess()
+--------------------
+
+El metodo `tecnocen\roa\Slug::checkAccess()` sirve para que cada registro
+compruebe si esta disponible para su acceso. Este metodo se manda invocar
+retroactivamente en los recursos que tengan declarada al registro como
+relacion `parentSlugRelation`.
+
+`tienda/1/almacen/3/seccion/5`
+
+Al invocar `checkAccess()` se invoca para los registros tienda con id 1,
+almacen con id 3 y seccin con id 5.
+
+El metodo recibe como parametro un `array` con las los parametros `GET`
+recibidos en  la petición. Y debe arrojar excepciones `yii\web\HttpException`
+cuando no se permita el acceso.
+
+La firma completa de la firma es
+
+```php
+function checkAccess(string[] $params)
+    throws \yii\web\HttpException
+{
 }
 ```
 
