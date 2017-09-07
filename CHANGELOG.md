@@ -1,6 +1,13 @@
 Yii2 ROA Library
 ================
 
+0.0.9
+-----
+
+- [Enh] `tecnocen\roa\test` namespace with classes to enhance codeception Cest
+  classes and improve `Codeception\Actor` to easily create automated tests for
+  roa resources. (Faryshta)
+
 0.0.8
 -----
 
