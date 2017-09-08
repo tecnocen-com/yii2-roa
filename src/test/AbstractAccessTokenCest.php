@@ -12,11 +12,11 @@ abstract class AbstractAccessTokenCest
      *
      * @param Tester $I
      * @param Example $example must contain keys:
-     * - client
-     * - clientPass
-     * - user
-     * - userPass
-     * - tokenName
+     * - client: string http client.
+     * - clientPass: string http password.
+     * - user: string system user.
+     * - userPass: string user password.
+     * - tokenName: token name used to store the auth token.
      */
     protected function generateToken(Tester $I, Example $example)
     {

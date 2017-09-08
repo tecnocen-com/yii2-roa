@@ -34,7 +34,8 @@ abstract class AbstractResourceCest
      * Authenticates a user identified by 'authUser' index in the `$example`.
      *
      * @param Tester $I
-     * @param Example $example
+     * @param Example $example data used for the testing. It uses the keys
+     * - tokenName: (optional) string name of the token used to authenticate.
      */
     protected function authUser(Tester $I, Example $example)
     {
@@ -46,7 +47,10 @@ abstract class AbstractResourceCest
     /**
      * Parses the Route for the test using `$urlManager` and `getRoutePattern()`
      *
-     * @param Example $example
+     * @param Example $example data used for the testing. It uses the keys
+     * - url: (optional) string if provided it will be used directly.
+     * - urlParams: (optional) string[] GET params to parse the url rule with
+     *   `getRoutePattern()`.
      * @return string the url which will be used for the service.
      */
     protected function parseUrl(Example $example)
@@ -64,7 +68,13 @@ abstract class AbstractResourceCest
      * Handles the internal logic when running a test on a collection resource.
      *
      * @param Tester $I
-     * @param Example $example
+     * @param Example $example data used for the testing. It uses the keys
+     * - tokenName: (optional) string name of the token used to authenticate.
+     * - url: (optional) string if provided it will be used directly.
+     * - urlParams: (optional) string[] GET params to parse the url rule with
+     *   `getRoutePattern()`.
+     * - headers: (optional) string[] pairs of header => value expected in the
+     *   response.
      */
     protected function internalIndex(Tester $I, Example $example)
     {
@@ -85,7 +95,14 @@ abstract class AbstractResourceCest
      * Handles the internal logic when running a test on a creating a record.
      *
      * @param Tester $I
-     * @param Example $example
+     * @param Example $example data used for the testing. It uses the keys
+     * - tokenName: (optional) string name of the token used to authenticate.
+     * - url: (optional) string if provided it will be used directly.
+     * - urlParams: (optional) string[] GET params to parse the url rule with
+     *   `getRoutePattern()`.
+     * - data: (optional) POST data sent on the request.
+     * - headers: (optional) string[] pairs of header => value expected in the
+     *   response.
      */
     protected function internalCreate(Tester $I, Example $example)
     {
@@ -109,7 +126,18 @@ abstract class AbstractResourceCest
      * Handles the internal logic when running a test on a record resource.
      *
      * @param Tester $I
-     * @param Example $example
+     * @param Example $example data used for the testing. It uses the keys
+     * - tokenName: (optional) string name of the token used to authenticate.
+     * - url: string if provided it will be used directly.
+     * - urlParams: string[] GET params to parse the url rule with
+     *   `getRoutePattern()`.
+     * - httpCode: integer expected Http Code response. If the httpCode is
+     *   a key in `$responses` parameter then the method defined there will be
+     *   used to analyze the response. Otherwise `checkErrorResponse()` will be
+     *   used.
+     * - error: string|string[] expected json being contained in the response.
+     * - headers: (optional) string[] pairs of header => value expected in the
+     *   response.
      */
     protected function internalView(Tester $I, Example $example)
     {
@@ -136,7 +164,14 @@ abstract class AbstractResourceCest
      * @param array $responses pairs of 'httpCode' => 'responseMethod' which
      * will determine how to check the response.
      * @param Tester $I
-     * @param Example $example
+     * @param Example $example data used for the testing. It uses the keys
+     * - httpCode: integer expected Http Code response. If the httpCode is
+     *   a key in `$responses` parameter then the method defined there will be
+     *   used to analyze the response. Otherwise `checkErrorResponse()` will be
+     *   used.
+     * - error: (optional) mixed expected json being contained in the response.
+     * - headers: (optional) string[] pairs of header => value expected in the
+     *   response.
      */
     protected function checkResponse(
         array $responses,
@@ -149,6 +184,11 @@ abstract class AbstractResourceCest
             $this->$responseMethod($I, $example);
         } else {
             $this->checkErrorResponse($I, $example);
+        }
+        if (isset($example['headers'])) {
+            foreach ($example['headers'] as $header => $value) {
+                $I->seeHttpHeader($header, $value);
+            }
         }
     }
 
@@ -196,7 +236,9 @@ abstract class AbstractResourceCest
      * Checks an expected response containing validation errors.
      *
      * @param Tester $I
-     * @param Example $example
+     * @param Example $example data used for the testing. It uses the keys
+     * - validationErrors: string[] (optional) pairs of field => message
+     *   validation errors.
      */
     protected function checkValidationResponse(Tester $I, Example $example)
     {
@@ -219,7 +261,8 @@ abstract class AbstractResourceCest
      * Checks an expected error response from user input.
      *
      * @param Tester $I
-     * @param Example $example
+     * @param Example $example data used for the testing. It uses the keys
+     * - error: (optional) mixed expected json being contained in the response.
      */
     protected function checkErrorResponse(Tester $I, Example $example)
     {
