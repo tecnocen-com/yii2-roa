@@ -56,9 +56,9 @@ propiedad `_links`.
 Propiedad `$searchClass`
 ------------------------
 
-Propiedad que define el modelo que crea el dataprovider para las busquedas y
+Propiedad que define el modelo que crea el dataprovider para las búsquedas y
 paginados del sitio así como el contrato de los atributos que se pueden enviar
-a una busqueda.
+a una búsqueda.
 
 Si esta propiedad es nula entonces el recurso creará un dataprovider mediante
 los metodos `baseQuery()` e `indexQuery()`.
@@ -66,20 +66,20 @@ los metodos `baseQuery()` e `indexQuery()`.
 El modelo debe implementar un metodo `search()` que devuelva una instancia de
 `yii\data\DataProviderInterface`.
 
-Metodo `verbs()`
+Método `verbs()`
 ----------------
 
 Define los verbos y por lo tanto las acciones soportadas por el recurso.
 
 Se pueden desactivar acciones simplemente invocando `unset()`.
 
-Metodo `checkAcess()`
+Método `checkAcess()`
 ---------------------
 
 Permite extender la funcionalidad de RBAC para evaluar los permisos del registro
 accedido por el recurso.
 
-Metodo `cors()`
+Método `cors()`
 ---------------
 
 Define las cabeceras empleadas para poder implementar Cross Origin Resource
