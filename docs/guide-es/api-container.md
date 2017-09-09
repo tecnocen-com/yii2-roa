@@ -1,14 +1,14 @@
 Contenedor de API
 -----------------
 
-El contenedor de versiones de api se configura como modulo de la aplicación.
+El contenedor de versiones de api se configura como módulo de la aplicación.
 
 Dentro del contenedor se definen las versiones soportadas por el api.
 
-El modulo de contendedor de versiones debe extender la clase
+El módulo de contendedor de versiones debe extender la clase
 `tecnocen\roa\modules\ApiContainer`.
 
-Ejemplo de Modulo Contenedor de Api
+Ejemplo de Módulo Contenedor de Api
 -----------------------------------
 
 > backend/config/main.php
@@ -36,18 +36,18 @@ Propiedad `$versions`
 ---------------------
 
 La propiedad `$versions` declarara las versiones soportadas y las clases de
-los modulos asociados a cada versión.
+los módulos asociados a cada versión.
 
-El indice determina el identificador de las versiones así como la ruta de
+El índice determina el identificador de las versiones así como la ruta de
 consumo de cada versión.
 
 Propiedad `$identiyClass`
 -------------------------
 
-Esta propiedad declaral a clase usada para identificar al usuario que consume
+Esta propiedad declara a la clase usada para identificar al usuario que consume
 el api.
 
-Permite el modulo de api reescribe la propiedad `Yii::$app->identityClass` con
+Permite al módulo de api rescribir la propiedad `Yii::$app->identityClass` con
 este valor antes de crear los recursos del api.
 
 Esto permite cambiar la forma de acceso del usuario para usar tokens en lugar de
@@ -61,4 +61,4 @@ de las versiones incluyendo su estabilidad.
 
 ![Detalle de Versiones](../versions-detail.png)
 
-[Documentación de Modulos de Version](api-version.md)
+[Documentación de Módulos de Version](api-version.md)
