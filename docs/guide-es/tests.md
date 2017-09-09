@@ -1,16 +1,16 @@
 Clases de Pruebas
 =================
 
-Se proveén clases e interfaces de ayuda para facilitar escribir pruebas de
+Se proveen clases e interfaces de ayuda para facilitar escribir pruebas de
 [Codeception Yii] enfocadas en [Pruebas Rest].
 
 `tecnocen\roa\test\Tester`
 --------------------------
 
-Interfaz que solicita metodos especificos para ROA a `Codeception\Actor`. Se usa
+Interfaz que solicita métodos específicos para ROA a `Codeception\Actor`. Se usa
 al solicitarle a la clase `ApiTester` que la implemente.
 
-También se proveé un trait `tecnocen\roa\test\TesterTrait` el cual implementa
+También se provee un trait `tecnocen\roa\test\TesterTrait` el cual implementa
 todos los métodos necesarios.
 
 ```php
@@ -31,7 +31,7 @@ class ApiTester extends Actor implements RoaTester
 `tecnocen\roa\test\AbstractAccessTokenCest`
 -------------------------------------------
 
-Clase abstracta que proveé métodos protegidos que facilitan pruebas de creación
+Clase abstracta que provee métodos protegidos que facilitan pruebas de creación
 de tokens.
 
 ```php
@@ -64,7 +64,7 @@ class V1TokenCest extends \tecnocen\roa\test\AbstractAccessTokenCest
 `tecnocen\roa\test\AbstractResourceCest`
 -------------------------------------------
 
-Clase abstracta que proveé métodos protegidos que facilitan pruebas de recursos
+Clase abstracta que provee métodos protegidos que facilitan pruebas de recursos
 ROA y sus respectivos verbos.
 
 ```php
