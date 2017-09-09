@@ -54,20 +54,20 @@ public function getAlmacen()
 }
 ```
 
-Metodo checkAccess()
+Método checkAccess()
 --------------------
 
-El metodo `tecnocen\roa\behaviors\Slug::checkAccess()` sirve para que cada
-registro compruebe si esta disponible para su acceso. Este metodo se manda
+El método `tecnocen\roa\behaviors\Slug::checkAccess()` sirve para que cada
+registro compruebe si esta disponible para su acceso. Este método se manda
 invocar retroactivamente en los recursos que tengan declarada al registro
-como relacion `parentSlugRelation`.
+como relación `parentSlugRelation`.
 
 `tienda/1/almacen/3/seccion/5`
 
 Al invocar `checkAccess()` se invoca para los registros tienda con id 1,
 almacen con id 3 y sección con id 5.
 
-El metodo recibe como parametro un `array` con las los parametros `GET`
+El método recibe como parámetro un `array` con las los parámetros `GET`
 recibidos en  la petición. Y debe arrojar excepciones `yii\web\HttpException`
 cuando no se permita el acceso.
 
@@ -83,6 +83,6 @@ function checkAccess(string[] $params)
 Links
 -----
 
-Slug behavior tiene metodos `getSelfLink()` y `getSlugLinks()` los cuales
+Slug behavior tiene métodos `getSelfLink()` y `getSlugLinks()` los cuales
 automatizan la creación de enlaces relacionales mandando a llamar recursivamente
 los enlaces relacionades de las relaciones definidas en `parentSlugRelation`
