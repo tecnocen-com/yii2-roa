@@ -154,6 +154,62 @@ abstract class AbstractResourceCest
     }
 
     /**
+     * Handles the internal logic when running a test on a updating a record.
+     *
+     * @param Tester $I
+     * @param Example $example data used for the testing. It uses the keys
+     * - tokenName: (optional) string name of the token used to authenticate.
+     * - url: (optional) string if provided it will be used directly.
+     * - urlParams: (optional) string[] GET params to parse the url rule with
+     *   `getRoutePattern()`.
+     * - data: (optional) POST data sent on the request.
+     * - expected: (optional) expected in the JSON response body.
+     * - headers: (optional) string[] pairs of header => value expected in the
+     *   response.
+     */
+    protected function internalUpdate(Tester $I, Example $example)
+    {
+        // Authenticates configured user.
+        $this->authUser($I, $example);
+
+        // Send request
+        $I->sendPATCH($this->parseUrl($example), $example['data']);
+
+        // Checks the response has the required headers and body.
+        $this->checkResponse([
+            HttpCode::OK => 'checkSuccessViewResponse',
+            HttpCode::UNPROCESSABLE_ENTITY => 'checkValidationResponse',
+        ], $I, $example);
+
+        if (isset($example['expected'])) {
+            $I->seeResponseContainsJson($example['expected']);
+        }
+    }
+
+    /**
+     * Handles the internal logic when running a test on a updating a record.
+     *
+     * @param Tester $I
+     * @param Example $example data used for the testing. It uses the keys
+     * - tokenName: (optional) string name of the token used to authenticate.
+     * - url: (optional) string if provided it will be used directly.
+     * - urlParams: (optional) string[] GET params to parse the url rule with
+     *   `getRoutePattern()`.
+     * - httpCode: integer expected Http Code response.
+     */
+    protected function internalDelete(Tester $I, Example $example)
+    {
+        // Authenticates configured user.
+        $this->authUser($I, $example);
+
+        // Send request
+        $I->sendDELETE($this->parseUrl($example));
+
+        // Check response code.
+        $I->seeResponseCodeIs($example['httpCode']);
+    }
+
+    /**
      * Checks the response Http code and the response based on the Http code and
      * a list of pairs 'httpCode' => 'responseMethod' provided in the
      * `$responses` parameter.
