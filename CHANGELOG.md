@@ -1,6 +1,13 @@
 Yii2 ROA Library
 ================
 
+0.1.0
+-----
+
+- [Brk] `composer.json` Upgrade php requirement to 5.6 (Faryshta)
+- [Brk] `tecnocen\roa\actions\Create` load GET and POST data before calling
+  `checkAccess()` (Faryshta)
+
 0.0.9
 -----
 

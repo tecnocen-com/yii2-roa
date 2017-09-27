@@ -31,12 +31,12 @@ class Create extends Action
         $model = new $this->modelClass([
             'scenario' => $this->scenario,
         ]);
-        $model->load($request->getQueryParams(), '');
-        $this->checkAccess($model, $request->getQueryParams());
         $model->load(
-            $request->getBodyParams() + $this->parseFileAttributes(),
+            $request->getQueryParams() + $request->getBodyParams(),
             ''
         );
+        $this->checkAccess($model, $request->getQueryParams());
+        $model->load($this->parseFileAttributes(), '');
         if ($model->save()) {
             $response = Yii::$app->getResponse();
             $response->setStatusCode(201);
