@@ -1,4 +1,8 @@
-class_name: ApiTester
+actor: ApiTester
 modules:
     enabled:
-        - \tecnocen\roa\tests\Helper\Api
+        - REST:
+            url: http://localhost:8080
+            depends: Yii2
+        - Yii2:
+            cleanup: false

@@ -16,9 +16,9 @@
  *
  * @SuppressWarnings(PHPMD)
 */
-class ApiTester extends \Codeception\Actor
+class FunctionalTester extends \Codeception\Actor
 {
-    use _generated\ApiTesterActions;
+    use _generated\FunctionalTesterActions;
 
    /**
     * Define custom actions here

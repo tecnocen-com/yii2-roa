@@ -1,11 +1,9 @@
-namespace: tecnocen\roa\tests
 actor: Tester
 paths:
     tests: tests
     log: tests/_output
     data: tests/_data
-    support: tests/_support
-    envs: tests/_envs
+    helpers: tests/_support
 settings:
     bootstrap: _bootstrap.php
     colors: true
@@ -13,9 +11,10 @@ settings:
 modules:
     config:
         Yii2:
-            configFile: 'tests/config-local.php'
+            configFile: 'tests/_app/config/test.php'
+            cleanup: false
 coverage:
     enabled: true
-    remote: false
-    include:
-        - src/*
+    whitelist:
+        include:
+            - src/*
