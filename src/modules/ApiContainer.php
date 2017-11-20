@@ -2,15 +2,19 @@
 
 namespace tecnocen\roa\modules;
 
+use tecnocen\oauth2server\Module as OAuth2Module;
 use tecnocen\roa\controllers\ApiContainerController;
 use tecnocen\roa\urlRules\Composite as CompositeUrlRule;
 use tecnocen\roa\urlRules\Modular as ModularUrlRule;
 use tecnocen\roa\urlRules\UrlRuleCreator;
 use Yii;
+use yii\base\InvalidParamException;
 use yii\web\UrlNormalizer;
 
 /**
  * @author Angel (Faryshta) Guevara <aguevara@tecnocen.com>
+ *
+ * @var OAuth2Module $oauth2Module
  */
 class ApiContainer extends \yii\base\Module
     implements UrlRuleCreator, \yii\base\BootstrapInterface
@@ -51,10 +55,72 @@ class ApiContainer extends \yii\base\Module
     public $errorAction;
 
     /**
+     * @var string the module id for the oauth2 server module.
+     */
+    public $oauth2ModuleId = 'oauth2';
+
+    /**
+     * @var array default OAuth2Module configuration.
+     */
+    private $oauth2Module = [
+        'class' => OAuth2Module::class,
+        'tokenParamName' => 'accessToken',
+        'tokenAccessLifetime' => 3600 * 24,
+        'storageMap' => [
+        ],
+        'grantTypes' => [
+            'user_credentials' => [
+                'class' => \OAuth2\GrantType\UserCredentials::class,
+            ],
+            'refresh_token' => [
+                'class' => \OAuth2\GrantType\RefreshToken::class,
+                'always_issue_new_refresh_token' => true
+            ],
+        ],
+    ];
+
+    /**
+     * @var array module
+     */
+    public function setOauth2Module($module)
+    {
+        if (is_array($module)) {
+            $this->setModule($this->oauth2ModuleId, array_merge(
+                $this->oauth2Module,
+                ['storageMap' => ['user_credentials' => $this->identityClass]],
+                $module
+            ));
+        } elseif (!$module instanceof OAuth2Module) {
+            $this->setModule($this->oauth2ModuleId, $module);
+        } else {
+            throw new InvalidParamException(
+                static::class
+                    . '::$oauth2Module must be an array or instance of '
+                    . OAuth2Module::class
+            );
+        }
+    }
+
+    /**
+     * @var \tecnocen\oauth2server\Module
+     */
+    public function getOauth2Module()
+    {
+        if (!$this->hasModule($this->oauth2ModuleId)) {
+            $this->oauth2Module['storageMap']['user_credentials']
+                = $this->identityClass;
+            $this->setModule($this->oauth2ModuleId, $this->oauth2Module);
+        }
+
+        return $this->getModule($this->oauth2ModuleId);
+    }
+
+    /**
      * @inheritdoc
      */
     public function bootstrap($app)
     {
+        $this->getOauth2Module()->bootstrap($app);
         if (empty($this->errorAction)) {
             $this->errorAction = $this->uniqueId . '/index/error';
         }
@@ -70,7 +136,7 @@ class ApiContainer extends \yii\base\Module
     /**
      * @return ApiVersion[] return all the versions attached to the container
      * indexed by their respective id.
-     */
+      */
     public function getVersionModules()
     {
         $versions = [];
