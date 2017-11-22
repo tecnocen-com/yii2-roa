@@ -4,7 +4,7 @@ use tecnocen\roa\modules\ApiVersion;
 use tecnocen\roa\controllers\ProfileResource;
 
 return [
-    'id' => 'yii2-oauth2-server-tests',
+    'id' => 'yii2-roa-tests',
     'basePath' => dirname(__DIR__),
     'language' => 'en-US',
     'aliases' => [

@@ -2,8 +2,8 @@
 
 namespace tecnocen\roa\controllers;
 
-use filsh\yii2\oauth2server\filters\auth\CompositeAuth;
-use filsh\yii2\oauth2server\filters\ErrorToExceptionFilter;
+use tecnocen\oauth2server\filters\auth\CompositeAuth;
+use tecnocen\oauth2server\filters\ErrorToExceptionFilter;
 use tecnocen\roa\actions;
 use tecnocen\roa\FileRecord;
 use Yii;
