@@ -19,7 +19,7 @@ use yii\web\ResponseFormatterInterface;
  *     // ...
  *     'formatters' => [
  *         \yii\web\Response::FORMAT_JSON => [
- *              'class' => 'yii\web\JsonResponseFormatter',
+ *              'class' => 'tecnocen\roa\hal\JsonResponseFormatter',
  *              'prettyPrint' => YII_DEBUG, // use "pretty" output in debug mode
  *              // ...
  *         ],
