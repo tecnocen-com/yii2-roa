@@ -99,11 +99,16 @@ class OAuth2Resource extends \yii\rest\ActiveController
      */
     public function behaviors()
     {
+        $oauth2Module = $this->module // ApiVersion
+            ->module // ApiContainer
+            ->getOauth2Module();
+
         return ArrayHelper::merge(parent::behaviors(), [
             // throw 405 on any action not into the 'verbs()' method.
             'verbFilter' => ['actions' => ['*' => []]],
             'authenticator' => [
                 'class' => CompositeAuth::class,
+                'oauth2Module' => $oauth2Module,
                 'authMethods' => [
                     ['class' => HttpBearerAuth::class],
                     [
@@ -113,7 +118,10 @@ class OAuth2Resource extends \yii\rest\ActiveController
                     ],
                 ],
             ],
-            'exceptionFilter' => ['class' => ErrorToExceptionFilter::class],
+            'exceptionFilter' => [
+                'class' => ErrorToExceptionFilter::class,
+                'oauth2Module' => $oauth2Module,
+            ],
             'access' => [
                 'class' => AccessControl::class,
                 'except' => ['options'],
