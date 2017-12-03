@@ -284,7 +284,7 @@ abstract class AbstractResourceCest
         $this->checkSuccessViewResponse($I, $example);
         $I->seeHttpHeaderOnce('Location');
         $I->seeResponseContainsJson(['_links' => [
-            'self' => $I->grabHttpHeader('Location'),
+            'self' => ['href' => $I->grabHttpHeader('Location')],
         ]]);
     }
 
@@ -298,10 +298,10 @@ abstract class AbstractResourceCest
      */
     protected function checkValidationResponse(Tester $I, Example $example)
     {
-        $I->seeResponseMatchesJsonType([[
+        $I->seeResponseMatchesJsonType([
             'field' => 'string',
             'message' => 'string',
-        ]]);
+        ]);
         if (empty($example['validationErrors'])) {
             return;
         }
