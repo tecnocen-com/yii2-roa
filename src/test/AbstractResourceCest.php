@@ -305,12 +305,15 @@ abstract class AbstractResourceCest
         if (empty($example['validationErrors'])) {
             return;
         }
+        $expected = [];
         foreach ($example['validationErrors'] as $field => $message) {
-            $I->seeResponseContainsJson([
+            $expected[] = [
                 'field' => $field,
                 'message' => $message,
-            ]);
+            ];
         }
+        $I->seeResponseContainsJson($expected);
+
     }
 
     /**
