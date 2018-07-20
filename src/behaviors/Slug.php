@@ -174,6 +174,7 @@ class Slug extends \yii\base\Behavior
         $parentLinks[$this->parentSlugRelation . '_record']
             = $parentLinks['self'];
         unset($parentLinks['self']);
+
         // preserve order
         return array_merge($selfLinks, $parentLinks);
     }
