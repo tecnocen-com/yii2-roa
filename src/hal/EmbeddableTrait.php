@@ -3,6 +3,8 @@
 namespace tecnocen\roa\hal;
 
 use yii\base\Arrayable;
+use yii\base\ArrayableTrait;
+use yii\helpers\ArrayHelper;
 use yii\web\Link;
 use yii\web\Linkable;
 
@@ -13,23 +15,10 @@ use yii\web\Linkable;
  */
 trait EmbeddableTrait
 {
+    use ArrayableTrait;
+
     /**
-     * Converts the model into an array.
-     *
-     * This method will first identify which fields to be included in the
-     * resulting array by calling [[fields()]] and [[extraFields()]].
-     * If the model implements the [[Linkable]] interface, the resulting array will also have a `_link` element
-     * which refers to a list of links as specified by the interface.
-     *
-     * @param array $fields the fields being requested. If empty, all fields as
-     * specified by [[fields()]] will be returned.
-     * @param array $expand the additional fields being requested for exporting.
-     * Only fields declared in [[extraFields()]] will be considered.
-     * @param bool $recursive whether to recursively return array representation
-     * of embedded objects.
-     * @param string $expandEnvelope array key which will contain properties
-     * declared in `$expand`.
-     * @return array the array representation of the object
+     * @inheritdoc
      */
     public function toArray(
         array $fields = [],
@@ -37,59 +26,49 @@ trait EmbeddableTrait
         $recursive = true
     ) {
         $data = [];
-        $parsedExpand = [];
-
-        // resolve fields
-        foreach ($this->fields() as $field => $definition) {
-            if (is_int($field)) {
-                $field = $definition;
-            }
-            if (empty($fields) || in_array($field, $fields, true)) {
-                $data[$field] = $this->processField($field, $definition);
-            }
+        foreach ($this->resolveFieldList($fields) as $field => $definition) {
+            $data[$field] = $this->processField($field, $definition);
         }
 
-        // resolve expand
-        foreach ($expand as $property) {
-            $propertyBreak = explode('.', $property, 2);
-            $propertyName = $propertyBreak[0];
-            if (!isset($parsedExpand[$propertyName])) {
-                $parsedExpand[$propertyName] = [];
-            }
-            if ($recursive && isset($propertyBreak[1])) {
-                $parsedExpand[$propertyName][] = $propertyBreak[1];
-            }
-        }
-        foreach ($this->extraFields() as $field => $definition) {
-            if (is_int($field)) {
-                $field = $definition;
-            }
-            if (isset($parsedExpand[$field])) {
-                $fieldData = $this->processField($field, $definition);
-                if ($fieldData instanceof Arrayable) {
-                    // resolve expand from expanded property when `$recursive`
-                    $fieldData = $fieldData->toArray(
-                        [],
-                        $parsedExpand[$field],
-                        $recursive
+        foreach ($this->resolveExpandList($expand) as $field => $definition) {
+            $attribute = $this->processField($field, $definition);
+
+            if ($recursive) {
+                $nestedFields = $this->extractFieldsFor($fields, $field);
+                $nestedExpand = $this->extractFieldsFor($expand, $field);
+                if ($attribute instanceof Arrayable) {
+                    $attribute = $attribute->toArray(
+                        $nestedFields,
+                        $nestedExpand
+                    );
+                } elseif (is_array($attribute)) {
+                    $attribute = array_map(
+                        function ($item) use ($nestedFields, $nestedExpand) {
+                            if ($item instanceof Arrayable) {
+                                return $item->toArray(
+                                    $nestedFields,
+                                    $nestedExpand
+                                );
+                            }
+                            return $item;
+                        },
+                        $attribute
                     );
                 }
-                if ($expandEnvelope = $this->getExpandEnvelope()) {
-                    // store based on $expandEnvelope
-                    $data[$expandEnvelope][$field] = $fieldData;
-                } else {
-                    $data[$field] = $fieldData;
-                }
+            }
+
+            if ($envelope = $this->getExpandEnvelope()) {
+                $data[$envelope][$field] = $attribute;
+            } else {
+                $data[$field] = $attribute;
             }
         }
 
         if ($this instanceof Linkable) {
-            $data[Embeddable::LINKS_PROPERTY] = Link::serialize(
-                $this->getLinks()
-            );
+            $data['_links'] = Link::serialize($this->getLinks());
         }
 
-        return $data;
+        return $recursive ? ArrayHelper::toArray($data) : $data;
     }
 
     /**
@@ -98,6 +77,68 @@ trait EmbeddableTrait
     public function getExpandEnvelope()
     {
         return Embeddable::EMBEDDED_PROPERTY;
+    }
+
+    /**
+     * Determines which fields can be returned by [[toArray()]].
+     * This method will first extract the root fields from the given fields.
+     * Then it will check the requested root fields against those declared in
+     * [[fields()]] to determine which fields can be returned.
+     *
+     * @param array $fields the fields being requested for exporting
+     * @return array the list of fields to be exported. The array keys are the
+     * field names, and the array values are the corresponding object property
+     * names or PHP callables returning the field values.
+     */
+    protected function resolveFieldList($fields)
+    {
+        $fields = $this->extractRootFields($fields);
+        $result = [];
+
+        foreach ($this->fields() as $field => $definition) {
+             if (is_int($field)) {
+                 $field = $definition;
+             }
+
+             if (empty($fields) || in_array($field, $fields, true)) {
+                 $result[$field] = $definition;
+             }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Determines which expand fields can be returned by [[toArray()]].
+     * This method will first extract the root fields from the given expand.
+     * Then it will check the requested root fields against those declared in
+     * [[extraFields()]] to determine which fields can be returned.
+     *
+     * @param array $expand the expand fields being requested for exporting
+     * @return array the list of fields to be exported. The array keys are the
+     * field names, and the array values are the corresponding object property
+     * names or PHP callables returning the field values.
+     */
+    protected function resolveExpandList($expand)
+    {
+        if (empty($expand)) {
+            return [];
+        }
+
+        $fields = $this->extractRootFields($expand);
+        $result = [];
+
+        foreach ($this->extraFields() as $field => $definition) {
+             if (is_int($field)) {
+                 $field = $definition;
+             }
+
+             if (in_array($field, $fields, true)) {
+                 $result[$field] = $definition;
+             }
+        }
+
+        return $result;
     }
 
     /**
@@ -114,6 +155,6 @@ trait EmbeddableTrait
     {
         return is_string($definition)
             ? $this->$definition
-            : call_user_func($definition, $this, $field);
+            : $definition($this, $field);
     }
 }
