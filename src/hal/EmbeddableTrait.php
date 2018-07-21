@@ -20,6 +20,16 @@ trait EmbeddableTrait
     /**
      * @inheritdoc
      */
+    public abstract function fields();
+
+    /**
+     * @inheritdoc
+     */
+    public abstract function extraFields();
+
+    /**
+     * @inheritdoc
+     */
     public function toArray(
         array $fields = [],
         array $expand = [],
