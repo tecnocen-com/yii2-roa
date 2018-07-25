@@ -68,8 +68,8 @@ You can run a live demo on a freshly installed project to help you run testing
 or understand the responses returned by the server. The live demo is initialized
 with the command.
 
-yii2-formgenerator
-yii2-workflow
+- [yii2-formgenerator](https://github.com/tecnocen-com/yii2-formgenerator)
+- [yii2-workflow](https://github.com/tecnocen-com/yii2-workflow)
 
 ## Use Cases
 
