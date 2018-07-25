@@ -6,7 +6,7 @@ using the Yii2 framework.
 
 [![Latest Stable Version](https://poser.pugx.org/tecnocen/yii2-roa/v/stable)](https://packagist.org/packages/tecnocen/yii2-roa)
 [![Total Downloads](https://poser.pugx.org/tecnocen/yii2-roa/downloads)](https://packagist.org/packages/tecnocen/yii2-roa)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tecnocen-com/yii2-formgenerator/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tecnocen-com/yii2-formgenerator/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/?branch=master)
 
 Scrutinizer [![Build Status Scrutinizer](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/badges/build.png?b=master&style=flat)](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/build-status/master)
 Travis [![Build Status Travis](https://api.travis-ci.org/tecnocen-com/yii2-roa.svg?branch=master&style=flat?style=for-the-badge)](https://travis-ci.org/tecnocen-com/yii2-roa)
@@ -62,11 +62,10 @@ TODO
 
 TODO
 
-## Live Demo
+## Examples
 
 You can run a live demo on a freshly installed project to help you run testing
-or understand the responses returned by the server. The live demo is initialized
-with the command.
+or understand the responses returned by the server. You can clone the following repositories and use the live demo they provide
 
 - [yii2-formgenerator](https://github.com/tecnocen-com/yii2-formgenerator)
 - [yii2-workflow](https://github.com/tecnocen-com/yii2-workflow)
@@ -110,4 +109,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 * TO DO - Inspiration
 * TO DO - etc
 
-[![yii2-workflow](https://img.shields.io/badge/Powered__by-Tecnocen.com-orange.svg?style=for-the-badge)](https://www.tecnocen.com/)
+[![yii2-roa](https://img.shields.io/badge/Powered__by-Tecnocen.com-orange.svg?style=for-the-badge)](https://www.tecnocen.com/)
