@@ -7,7 +7,7 @@ use yii\helpers\Json;
 use yii\web\ResponseFormatterInterface;
 
 /**
- * @inheritdoc
+ * @deprecated use yii\web\JsonResponseFormatter
  */
 class JsonResponseFormatter extends \yii\web\JsonResponseFormatter
 {
