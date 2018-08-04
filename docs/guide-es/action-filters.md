@@ -5,6 +5,7 @@ Las clases que extienden [ActionFilter] definen comportamientos para
 ejecutarse antes y despues de ejecutarse una accion.
 
 ActionFilter en Yii2
+--------------------
 
 La mayoria de los filtros tales como [Cors], [HostControl], [HttpCache],
 [PageCache] y [RateLimiter] no tienen implementacion por defecto y se pueden
@@ -255,9 +256,9 @@ class ShopResource extends \tecnocen\roa\controllers\Resource
 }
 ```
 
-Notese que si se define la autenticacion usando mas de un metodo descrito,
-todos se ejecutaran a la vez por lo que es necesario usar `$except` y `$only`
-para evitar colisiones.
+> Si se us algun ActionFilter con mas de uno de los metodos descritos,
+> todos se ejecutaran a la vez por lo que es necesario usar `$except` y `$only`
+> para evitar colisiones.
 
 [ActionFilter]: https://www.yiiframework.com/doc/api/2.0/yii-base-actionfilter
 [Cors]: https://www.yiiframework.com/doc/api/2.0/yii-base-cors
@@ -267,4 +268,5 @@ para evitar colisiones.
 [RateLimmiter]: https://www.yiiframework.com/doc/api/2.0/yii-base-actionfilter
 [Guia de Yii2]: https://www.yiiframework.com/doc/guide/2.0/en/structure-filters
 [OAuth2]: https://oauth.net/2/
+[RBAC]: https://www.yiiframework.com/doc/guide/2.0/en/security-authorization#rbac
 [Articulo de Control de Acceso en ROA]: access-control.md
