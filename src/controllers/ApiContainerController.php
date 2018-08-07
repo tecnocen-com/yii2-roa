@@ -13,6 +13,14 @@ use yii\helpers\ArrayHelper;
 class ApiContainerController extends \yii\rest\Controller
 {
     /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [];
+    }
+
+    /**
      * Lists the available versions and their respective stability for the
      * parent module.
      *

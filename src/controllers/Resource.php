@@ -2,30 +2,20 @@
 
 namespace tecnocen\roa\controllers;
 
-use tecnocen\oauth2server\filters\auth\CompositeAuth;
-use tecnocen\oauth2server\filters\ErrorToExceptionFilter;
 use tecnocen\roa\actions;
 use tecnocen\roa\FileRecord;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
-use yii\filters\AccessControl;
-use yii\filters\auth\HttpBearerAuth;
-use yii\filters\auth\QueryParamAuth;
-use yii\filters\Cors;
-use yii\filters\HostControl;
-use yii\filters\HttpCache;
-use yii\filters\PageCache;
-use yii\helpers\ArrayHelper;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 /**
  * Resource Controller with OAuth2 Support.
  *
  * @author  Angel (Faryshta) Guevara <aguevara@tecnocen.com>
- * @deprecated use Resource instead.
  */
-class OAuth2Resource extends \yii\rest\ActiveController
+class Resource extends \yii\rest\ActiveController
 {
     /**
      * @var string[] list of rest actions defined by default.
@@ -39,17 +29,6 @@ class OAuth2Resource extends \yii\rest\ActiveController
         'file-stream', // download files
         'options',
     ];
-
-    /**
-     * @var bool whether to enable http and page cache.
-     */
-    public $enableCache = false;
-
-    /**
-     * @var string name of the attribute for the model. It will be used by the
-     * cache behaviors.
-     */
-    public $updatedAtAttribute = 'updated_at';
 
     /**
      * @var string name of the attribute to be used on `findModel()`.
@@ -91,6 +70,18 @@ class OAuth2Resource extends \yii\rest\ActiveController
     public $createScenario = ActiveRecord::SCENARIO_DEFAULT;
 
     /**
+     * @var string[] array used in `actions\Create::fileAttributes`
+     * @see actions\LoadFileTrait::$fileAttributes
+     */
+    public $createFileAttributes = [];
+
+    /**
+     * @var string[] array used in `actions\Update::fileAttributes`
+     * @see actions\LoadFileTrait::$fileAttributes
+     */
+    public $updateFileAttributes = [];
+
+    /**
      * @var string the message shown when no register is found.
      */
     public $notFoundMessage = 'The record "{id}" does not exists.';
@@ -100,55 +91,16 @@ class OAuth2Resource extends \yii\rest\ActiveController
      */
     public function behaviors()
     {
-        $oauth2Module = $this->module // ApiVersion
-            ->module // ApiContainer
-            ->getOauth2Module();
-
-        return ArrayHelper::merge(parent::behaviors(), [
-            // throw 405 on any action not into the 'verbs()' method.
-            'verbFilter' => ['actions' => ['*' => []]],
-            'authenticator' => [
-                'class' => CompositeAuth::class,
-                'oauth2Module' => $oauth2Module,
-                'authMethods' => [
-                    ['class' => HttpBearerAuth::class],
-                    [
-                        'class' => QueryParamAuth::class,
-                        // !Important, GET request parameter to get the token.
-                        'tokenParam' => 'accessToken',
-                    ],
-                ],
+        return [
+            // content negotiator, autenticator, etc moved by default to
+            // api container
+            'verbFilter' => [
+                'class' => VerbFilter::class,
+                'actions' => $this->verbs(),
             ],
-            'exceptionFilter' => [
-                'class' => ErrorToExceptionFilter::class,
-                'oauth2Module' => $oauth2Module,
-            ],
-            'access' => [
-                'class' => AccessControl::class,
-                'except' => ['options'],
-                'rules' => $this->accessRules(),
-            ],
-            'cors' => [
-                'class' => Cors::class,
-                'cors' => $this->cors(),
-            ],
-            'allowedHosts' => [
-                'class' => HostControl::class,
-                'allowedHosts' => $this->allowedHosts(),
-            ],
-            'httpIndexCache' => [
-                'class' => HttpCache::class,
-                'only' => ['index'],
-                'enabled' => $this->enableCache,
-                'lastModified' => [$this, 'lastModifiedIndex'],
-            ],
-            'pageIndexCache' => [
-                'class' => PageCache::class,
-                'enabled' => $this->enableCache,
-            ],
-
-        ]);
+        ];
     }
+
 
     /**
      * @inheritdoc
@@ -187,11 +139,13 @@ class OAuth2Resource extends \yii\rest\ActiveController
                 'modelClass' => $this->modelClass,
                 'findModel' => [$this, 'findModel'],
                 'scenario' => $this->updateScenario,
+                'fileAttributes' = $this->updateFileAttributes,
             ],
             'create' => [
                 'class' => actions\Create::class,
                 'modelClass' => $this->modelClass,
                 'scenario' => $this->createScenario,
+                'fileAttributes' = $this->createFileAttributes,
             ],
             'delete' => [
                 'class' => actions\Delete::class,
@@ -200,34 +154,19 @@ class OAuth2Resource extends \yii\rest\ActiveController
             ],
             'file-stream' => $fileStream,
             'options' => [
-                'class' => 'yii\rest\OptionsAction',
+                'class' => \yii\rest\OptionsAction::class,
             ],
         ];
     }
 
     /**
-     * @return int unix timestamp
-     * @param mixed $action
-     * @param mixed $params
-     */
-    public function lastModifiedIndex($action, $params)
-    {
-        $modelClass = $this->modelClass;
-
-        return $modelClass::find()->max($this->updatedAtAttribute);
-    }
-
-    /**
      * Creates a data provider for the request.
      *
-     * @return ActiveRecord|ActiveDataProvider the search model if there are
-     * validation errors and the data provider in any other case.
+     * @return ActiveDataProvider
      */
     public function indexProvider()
     {
-        if (empty($this->searchClass)) {
-            return new ActiveDataProvider(['query' => $this->indexQuery()]);
-        }
+        return new ActiveDataProvider(['query' => $this->indexQuery()]);
     }
 
     /**
@@ -302,63 +241,10 @@ class OAuth2Resource extends \yii\rest\ActiveController
             'index' => ['GET', 'HEAD'],
             'view' => ['GET', 'HEAD'],
             'create' => ['POST'],
-            'update' => ['PUT', 'PATCH'],
+            'update' => ['PUT', 'PATCH', 'POST'],
             'delete' => ['DELETE'],
             'file-stream' => ['GET'],
             'options' => ['OPTIONS'],
         ];
-    }
-
-    /**
-     * @return array list of rules to access the controller.
-     * @see http://www.yiiframework.com/doc-2.0/yii-filters-accesscontrol.html#$rules-detail
-     */
-    protected function accessRules()
-    {
-        return [['allow' => true, 'roles' => ['@']]];
-    }
-
-    /**
-     * @return array list of CORS headers
-     * @see http://www.yiiframework.com/doc-2.0/yii-filters-cors.html#$cors-detail
-     */
-    protected function cors()
-    {
-        return  [
-            'Origin' => ['localhost', Yii::$app->request->serverName],
-            'Access-Control-Request-Method' => $this->httpMethods(),
-            'Access-Control-Request-Headers' => ['*'],
-            'Access-Control-Allow-Credentials' => null,
-            'Access-Control-Max-Age' => 86400,
-            'Access-Control-Expose-Headers' => [
-                'x-pagination-current-page',
-                'x-pagination-page-count',
-                'x-pagination-per-page',
-                'x-pagination-total-count'
-            ],
-        ];
-    }
-
-    /**
-     * @return string[] list of allowed hosts to generate links.
-     * @see http://www.yiiframework.com/doc-2.0/yii-filters-hostcontrol.html#allowedHosts-detail
-     */
-    protected function allowedHosts()
-    {
-        return [Yii::$app->request->serverName];
-    }
-
-    /**
-     * @return string[] list of allowed http methods for this controller.
-     * @see verbs()
-     */
-    private function httpMethods()
-    {
-        $methods = [];
-        foreach ($this->verbs() as $verbMethods) {
-            $methods = array_unique(array_merge($methods, $verbMethods));
-        }
-
-        return $methods;
     }
 }

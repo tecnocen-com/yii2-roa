@@ -2,13 +2,20 @@
 
 namespace tecnocen\roa\modules;
 
+use tecnocen\oauth2server\filters\auth\CompositeAuth;
 use tecnocen\oauth2server\Module as OAuth2Module;
 use tecnocen\roa\controllers\ApiContainerController;
 use tecnocen\roa\urlRules\Composite as CompositeUrlRule;
 use tecnocen\roa\urlRules\Modular as ModularUrlRule;
 use tecnocen\roa\urlRules\UrlRuleCreator;
 use Yii;
+use yii\base\BootstrapInterface;
 use yii\base\InvalidParamException;
+use yii\base\Module;
+use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
+use yii\filters\ContentNegotiator;
+use yii\web\Response;
 use yii\web\UrlNormalizer;
 
 /**
@@ -16,8 +23,7 @@ use yii\web\UrlNormalizer;
  *
  * @var OAuth2Module $oauth2Module
  */
-class ApiContainer extends \yii\base\Module
-    implements UrlRuleCreator, \yii\base\BootstrapInterface
+class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
 {
     /**
      * @var string
@@ -78,6 +84,36 @@ class ApiContainer extends \yii\base\Module
             ],
         ],
     ];
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'contentNegotiator' => [
+                'class' => ContentNegotiator::class,
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                    'application/xml' => Response::FORMAT_XML,
+                ],
+            ],
+            'authenticator' => [
+                'class' => CompositeAuth::class,
+                'oauth2Module' => $this->getUniqueId() . '/'
+                    . $this->oauth2ModuleId,
+                'authMethods' => [
+                    'bearer' => ['class' => HttpBearerAuth::class],
+                    'queryParam' => [
+                        'class' => QueryParamAuth::class,
+                        // !Important, GET request parameter to get the token.
+                        'tokenParam' => 'accessToken',
+                    ],
+                ],
+                'except' => ['oauth2/*', 'index/*'],
+            ],
+        ];
+    }
 
     /**
      * @var array module
@@ -173,7 +209,10 @@ class ApiContainer extends \yii\base\Module
         Yii::$app->errorHandler->errorAction = $this->errorAction;
         Yii::$app->user->identityClass = $this->identityClass;
         $rules = $this->defaultUrlRules();
+        $auth = $this->getBehavior('authenticator');
+
         foreach ($this->versions as $route => $config) {
+            $auth->except[] = $route . '/index/*';
             $this->setModule($route, $config);
             $rules[] = Yii::createObject([
                'class' => $this->versionUrlRuleClass,
