@@ -10,7 +10,11 @@ use tecnocen\roa\urlRules\UrlRuleCreator;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
+use yii\web\JsonResponseFormatter;
+use yii\web\Response;
 use yii\web\UrlManager;
+use yii\web\XmlResponseFormatter;
 
 /**
  * Class to attach a version to an `ApiContainer` module.
@@ -54,6 +58,27 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
      * became obsolete
      */
     public $obsoleteDate;
+
+    /**
+     * @var string URL where the api documentation can be found.
+     */
+    public $apidoc = null;
+
+    /**
+     * @var array|ResponseFormatterInterface[] response formatters which will
+     * be attached to `Yii::$app->response->formatters`. By default just enable
+     * HAL responses.
+     */
+    public $responseFormatters = [
+        Response::FORMAT_JSON => [
+            'class' => JsonResponseFormatter::class,
+            'contentType' => JsonResponseFormatter::CONTENT_TYPE_HAL_JSON,
+        ],
+        Response::FORMAT_XML => [
+            'class' => XmlResponseFormatter::class,
+            'contentType' => 'application/hal+xml',
+        ],
+    ];
 
     /**
      * @var string the stability level
@@ -118,7 +143,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
     }
 
     /**
-     * @return array stability, life cycle and resources for this version. 
+     * @return array stability, life cycle and resources for this version.
      */
     public function getFactSheet()
     {
@@ -130,6 +155,10 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
                 'obsoleteDate' => $this->obsoleteDate,
             ],
             'routes' => $this->getRoutes(),
+            '_links' => [
+                'self' => $this->getSelfLink(),
+                'apidoc' => $this->apidoc,
+            ],
         ];
     }
 
@@ -167,6 +196,22 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
                 $this->stability = self::STABILITY_STABLE;
             }
         }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function beforeAction($action)
+    {
+        if (!parent::beforeAction($action)) {
+            return false;
+        }
+
+        foreach ($this->responseFormatters as $id => $responseFormatter) {
+            Yii::$app->response->formatters[$id] = $responseFormatter;
+        }
+
+        return true;
     }
 
     /**
@@ -286,5 +331,13 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
         }
 
         return $dt->getTimestamp();
+    }
+
+    /**
+     * @return string HTTP Url linking to this module
+     */
+    public function getSelfLink()
+    {
+        return Url::to(['//' . $this->getUniqueId()], true);
     }
 }

@@ -23,6 +23,8 @@ V1Version extends \tecnocen\roa\modules\ApiVersion
         'user/avatar', // UserAvatarResource
         'user/avatar.<ext:[jpg|png]>' => UserAvatarFileResource::class,
     ];
+
+    public $apidoc = 'http://mockapi.com/api/v1';
 }
 ```
 
@@ -34,7 +36,13 @@ que consiste en un arreglo donde cada elemento declara un recurso.
 
 Cada elemento de `$resources` puede consistir de una cadena para declarar la
 ruta y automáticamente se deduce el controlador asociado o de una pareja
-`'ruta' => 'clase'` para especificar una controlador específico.
+`'ruta' => 'recurso'` donde `'recurso'` es una especificacion como se define en
+la [guia de recurso](resource.md).
+
+Api Documentation
+-----------------
+
+La propiedad `$apidoc` puede almacenar una URL para la documentacion del api.
 
 Ciclo de Vida
 -------------
@@ -149,3 +157,9 @@ versión de depreciada a no soportada.
 
 Este proceso es automático en cuanto el contenedor detecta una versión con una
 fecha `$obsoleteDate` menor a la fecha actual.
+
+Recurso de informacion de version
+---------------------------------
+
+Al acceder a la ruta base de la version se puede encontrar la documentacion de
+sus ciclo de vida, coleccion de rutas y el apidoc.

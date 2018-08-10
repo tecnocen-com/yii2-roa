@@ -8,7 +8,9 @@ use tecnocen\roa\urlRules\Composite as CompositeUrlRule;
 use tecnocen\roa\urlRules\Modular as ModularUrlRule;
 use tecnocen\roa\urlRules\UrlRuleCreator;
 use Yii;
+use yii\base\BootstrapInterface;
 use yii\base\InvalidParamException;
+use yii\base\Module;
 use yii\web\UrlNormalizer;
 
 /**
@@ -16,8 +18,7 @@ use yii\web\UrlNormalizer;
  *
  * @var OAuth2Module $oauth2Module
  */
-class ApiContainer extends \yii\base\Module
-    implements UrlRuleCreator, \yii\base\BootstrapInterface
+class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
 {
     /**
      * @var string
@@ -172,6 +173,7 @@ class ApiContainer extends \yii\base\Module
         // change the error handler and identityClass
         Yii::$app->errorHandler->errorAction = $this->errorAction;
         Yii::$app->user->identityClass = $this->identityClass;
+
         $rules = $this->defaultUrlRules();
         foreach ($this->versions as $route => $config) {
             $this->setModule($route, $config);

@@ -24,6 +24,7 @@ return [
                             'class' => ProfileResource::class,
                         ],
                     ],
+                    'apidoc' => 'http://mockapi.com/v1',
                 ],
                 'dev' => [
                     'class' => ApiVersion::class,
