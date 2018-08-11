@@ -35,7 +35,8 @@
         "codeception/base": "^2.2.1",
         "codeception/verify": "~0.3.1|~1.0.0",
         "flow/jsonpath": "~0.3",
-        "phpunit/php-code-coverage": "5.3.*",
+        "tecnocen/yii2-migrate": "*",
+        "phpunit/php-code-coverage": "*",
         "yiisoft/yii2-debug": "*"
     },
     "scripts": {
