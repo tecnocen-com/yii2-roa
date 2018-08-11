@@ -326,8 +326,8 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
         }
         if (false === ($dt = DateTime::createFromFormat('Y-m-d', $date))) {
             throw new InvalidConfigException(
-                 'Dates must use the "Y-m-d" format.'
-             );
+                    'Dates must use the "Y-m-d" format.'
+                );
         }
 
         return $dt->getTimestamp();

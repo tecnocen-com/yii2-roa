@@ -139,13 +139,13 @@ class Resource extends \yii\rest\ActiveController
                 'modelClass' => $this->modelClass,
                 'findModel' => [$this, 'findModel'],
                 'scenario' => $this->updateScenario,
-                'fileAttributes' = $this->updateFileAttributes,
+                'fileAttributes' => $this->updateFileAttributes,
             ],
             'create' => [
                 'class' => actions\Create::class,
                 'modelClass' => $this->modelClass,
                 'scenario' => $this->createScenario,
-                'fileAttributes' = $this->createFileAttributes,
+                'fileAttributes' => $this->createFileAttributes,
             ],
             'delete' => [
                 'class' => actions\Delete::class,

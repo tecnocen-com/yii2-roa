@@ -162,7 +162,7 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
     /**
      * @return ApiVersion[] return all the versions attached to the container
      * indexed by their respective id.
-      */
+     */
     public function getVersionModules()
     {
         $versions = [];
@@ -206,8 +206,8 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
             $auth->except[] = $route . '/index/*';
             $this->setModule($route, $config);
             $rules[] = Yii::createObject([
-               'class' => $this->versionUrlRuleClass,
-               'moduleId' => "{$this->uniqueId}/$route",
+                'class' => $this->versionUrlRuleClass,
+                'moduleId' => "{$this->uniqueId}/$route",
             ]);
         }
 
