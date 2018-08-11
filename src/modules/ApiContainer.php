@@ -12,8 +12,6 @@ use Yii;
 use yii\base\BootstrapInterface;
 use yii\base\InvalidParamException;
 use yii\base\Module;
-use yii\filters\auth\HttpBearerAuth;
-use yii\filters\auth\QueryParamAuth;
 use yii\filters\ContentNegotiator;
 use yii\web\Response;
 use yii\web\UrlNormalizer;
@@ -102,14 +100,6 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
                 'class' => CompositeAuth::class,
                 'oauth2Module' => $this->getUniqueId() . '/'
                     . $this->oauth2ModuleId,
-                'authMethods' => [
-                    'bearer' => ['class' => HttpBearerAuth::class],
-                    'queryParam' => [
-                        'class' => QueryParamAuth::class,
-                        // !Important, GET request parameter to get the token.
-                        'tokenParam' => 'accessToken',
-                    ],
-                ],
                 'except' => ['oauth2/*', 'index/*'],
             ],
         ];
@@ -208,6 +198,7 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
         // change the error handler and identityClass
         Yii::$app->errorHandler->errorAction = $this->errorAction;
         Yii::$app->user->identityClass = $this->identityClass;
+
         $rules = $this->defaultUrlRules();
         $auth = $this->getBehavior('authenticator');
 

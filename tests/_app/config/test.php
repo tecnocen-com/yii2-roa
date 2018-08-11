@@ -21,6 +21,7 @@ return yii\helpers\ArrayHelper::merge(
                                 'urlRule' => ['class' => SingleRecord::class],
                             ],
                         ],
+                        'apidoc' => 'http://mockapi.com/v1',
                     ],
                     'dev' => [
                         'class' => ApiVersion::class,
