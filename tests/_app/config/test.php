@@ -1,8 +1,8 @@
 <?php
 
 use tecnocen\roa\controllers\ProfileResource;
-use tecnocen\roa\modules\ApiVersion;
 use tecnocen\roa\urlRules\SingleRecord;
+use app\api\modules\Version;
 
 return yii\helpers\ArrayHelper::merge(
     require __DIR__ . '/common.php',
@@ -14,26 +14,19 @@ return yii\helpers\ArrayHelper::merge(
                 'class' => tecnocen\roa\modules\ApiContainer::class,
                 'versions' => [
                     'v1' => [
-                        'class' => ApiVersion::class,
-                        'resources' => [
-                            'profile' => [
-                                'class' => ProfileResource::class,
-                                'urlRule' => ['class' => SingleRecord::class],
-                            ],
-                        ],
-                        'apidoc' => 'http://mockapi.com/v1',
+                        'class' => Version::class,
                     ],
                     'dev' => [
-                        'class' => ApiVersion::class,
+                        'class' => Version::class,
                     ],
                     'stable' => [
-                        'class' => ApiVersion::class,
+                        'class' => Version::class,
                     ],
                     'deprecated' => [
-                        'class' => ApiVersion::class,
+                        'class' => Version::class,
                     ],
                     'obsolete' => [
-                        'class' => ApiVersion::class,
+                        'class' => Version::class,
                     ],
                 ],
             ],

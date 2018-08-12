@@ -2,10 +2,10 @@
 
 namespace app\api\models;
 
-use src\behaviors\Curies;
-use src\behaviors\Slug;
-use src\hal\Embeddable;
-use src\hal\EmbeddableTrait;
+use tecnocen\roa\behaviors\Curies;
+use tecnocen\roa\behaviors\Slug;
+use tecnocen\roa\hal\Embeddable;
+use tecnocen\roa\hal\EmbeddableTrait;
 use yii\web\Linkable;
 /**
  * ROA contract to handle shop employee records.

@@ -1,5 +1,7 @@
 <?php
+
 namespace app\models;
+
 /**
  * Model class for table `{{%shop}}`
  *

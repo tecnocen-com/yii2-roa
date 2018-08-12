@@ -2,10 +2,10 @@
 
 namespace app\api\models;
 
-use src\behaviors\Curies;
-use src\behaviors\Slug;
-use src\Embeddable;
-use src\EmbeddableTrait;
+use tecnocen\roa\behaviors\Curies;
+use tecnocen\roa\behaviors\Slug;
+use tecnocen\roa\hal\Embeddable;
+use tecnocen\roa\hal\EmbeddableTrait;
 use yii\web\Linkable;
 use yii\web\NotFoundHttpException;
 /**
@@ -14,7 +14,7 @@ use yii\web\NotFoundHttpException;
  * @method string[] getSlugLinks()
  * @method string getSelfLink()
  */
-class Shop extends app\models\Shop implements Linkable, Embeddable
+class Shop extends \app\models\Shop implements Linkable, Embeddable
 {
     use EmbeddableTrait {
         EmbeddableTrait::toArray as embedArray;

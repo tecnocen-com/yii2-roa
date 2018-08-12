@@ -8,13 +8,13 @@ use app\api\resources\EmployeeResource;
 class Version extends \tecnocen\roa\modules\ApiVersion
 {
     const SHOP_ROUTE = 'shop';
-    const EMPLOYEE_ROUTE = self::EMPLOYEE_ROUTE . '/<shop_id:\d+>/employee';
+    const EMPLOYEE_ROUTE = self::SHOP_ROUTE . '/<shop_id:\d+>/employee';
 
     /**
      * @inheritdoc
      */
     public $resources = [
-        self::CREDIT_ROUTE => ['class' => ShopResource::class],
+        self::SHOP_ROUTE => ['class' => ShopResource::class],
         self::EMPLOYEE_ROUTE => ['class' => EmployeeResource::class],
     ];
 }
