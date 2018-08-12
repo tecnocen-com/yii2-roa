@@ -17,7 +17,7 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
         $I->amBearerAuthenticated(OauthAccessTokensFixture::SIMPLE_TOKEN);
     }
     /**
-     * @depends shopCest:fixtures
+     * @depends ShopCest:fixtures
      */
     public function fixtures(ApiTester $I)
     {
@@ -256,6 +256,6 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
      */
     protected function getRoutePattern()
     {
-        return 'v1/shop/<shop_id:\d+>/Employee';
+        return 'v1/shop/<shop_id:\d+>/employee';
     }
 }

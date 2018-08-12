@@ -10,7 +10,7 @@ class V1Cest
     public function routes(ApiTester $I)
     {
         $I->wantTo('Check the v1 version has routes.');
-        $I->sendGET('/api/v1', []);
+        $I->sendGET('/v1', []);
         $I->seeResponseCodeIs(HttpCode::OK);
         $I->seeResponseIsJson();
         $I->haveHttpHeader('Content-Type', 'application/hal+json');

@@ -6,7 +6,7 @@ use app\models\Employee;
 
 class EmployeeFixture extends \yii\test\ActiveFixture
 {
-	public $depends = [ShopFixture::class];
+	public $depends = ['app\fixtures\ShopFixture'];
 
     public $modelClass = Employee::class;
     

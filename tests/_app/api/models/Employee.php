@@ -13,7 +13,7 @@ use yii\web\Linkable;
  * @method string[] getSlugLinks()
  * @method string getSelfLink()
  */
-class Employee extends app\models\Employee implements Linkable, Embeddable
+class Employee extends \app\models\Employee implements Linkable, Embeddable
 {
     use EmbeddableTrait {
         EmbeddableTrait::toArray as embedArray;
