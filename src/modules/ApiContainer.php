@@ -10,9 +10,10 @@ use tecnocen\roa\urlRules\Modular as ModularUrlRule;
 use tecnocen\roa\urlRules\UrlRuleCreator;
 use Yii;
 use yii\base\BootstrapInterface;
-use yii\base\InvalidParamException;
+use yii\base\InvalidArgumentException;
 use yii\base\Module;
 use yii\filters\ContentNegotiator;
+use yii\helpers\Url;
 use yii\web\Response;
 use yii\web\UrlNormalizer;
 
@@ -119,7 +120,7 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
         } elseif (!$module instanceof OAuth2Module) {
             $this->setModule($this->oauth2ModuleId, $module);
         } else {
-            throw new InvalidParamException(
+            throw new InvalidArgumentException(
                 static::class
                     . '::$oauth2Module must be an array or instance of '
                     . OAuth2Module::class

@@ -315,8 +315,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
     }
 
     /**
-     * @param string date in 'Y-m-d' format
-     * @param mixed $date
+     * @param string $date in 'Y-m-d' format
      * @return int unix timestamp
      */
     private function calcTime($date)
@@ -326,8 +325,8 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
         }
         if (false === ($dt = DateTime::createFromFormat('Y-m-d', $date))) {
             throw new InvalidConfigException(
-                    'Dates must use the "Y-m-d" format.'
-                );
+                'Dates must use the "Y-m-d" format.'
+            );
         }
 
         return $dt->getTimestamp();

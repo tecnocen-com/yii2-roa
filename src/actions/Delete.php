@@ -13,18 +13,21 @@ use yii\web\ServerErrorHttpException;
 class Delete extends Action
 {
     /**
-     * Applies the `softDelete()` method to a record.
+     * Applies the `delete()` method to a record.
      *
      * @param mixed $id the identifier value.
      */
     public function run($id)
     {
-        /* @var $model ActiveRecord */
-        $model = $this->findModel($id);
-        $this->checkAccess($model, Yii::$app->request->getQueryParams());
+        $this->checkAccess(
+            ($model = $this->findModel($id)),
+            Yii::$app->request->getQueryParams()
+        );
 
         if (false === $model->delete()) {
-            throw new ServerErrorHttpException('Failed to delete the object for unknown reason.');
+            throw new ServerErrorHttpException(
+                'Failed to delete the object for unknown reason.'
+            );
         }
         Yii::$app->getResponse()->setStatusCode(204);
     }

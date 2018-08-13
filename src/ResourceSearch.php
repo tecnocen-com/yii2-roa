@@ -9,7 +9,7 @@ interface ResourceSearch
      *
      * @param array $params search parameters.
      * @param ?string $formName the name of the form to load into the model
-     * @return ?DataProviderInterface
+     * @return ?\yii\data\DataProviderInterface
      */
     public function search(array $params, $formName = null);
 }

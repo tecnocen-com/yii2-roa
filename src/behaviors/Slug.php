@@ -131,7 +131,7 @@ class Slug extends \yii\base\Behavior
             $attributeValues[] = $this->owner->$attribute;
         }
 
-        return implode($attributeValues, $this->idAttributeSeparator);
+        return implode($this->idAttributeSeparator, $attributeValues);
     }
 
     /**

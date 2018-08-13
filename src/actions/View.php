@@ -12,7 +12,7 @@ class View extends Action
      */
     public function run($id)
     {
-        /* @var $model ActiveRecord */
+        /* @var $model \yii\db\ActiveRecordInterface */
         $model = $this->findModel($id);
         $request = Yii::$app->getRequest();
         $this->checkAccess($model, $request->getQueryParams());

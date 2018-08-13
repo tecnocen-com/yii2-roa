@@ -25,9 +25,10 @@ class SoftDelete extends Action
             Yii::$app->request->queryParams
         );
 
-
         if (false === $model->softDelete()) {
-            throw new ServerErrorHttpException('Failed to delete the object for unknown reason.');
+            throw new ServerErrorHttpException(
+                'Failed to delete the object for unknown reason.'
+            );
         }
         Yii::$app->getResponse()->setStatusCode(204);
     }
