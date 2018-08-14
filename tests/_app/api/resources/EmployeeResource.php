@@ -9,16 +9,18 @@ use app\api\models\EmployeeSearch;
 /**
  * Resource to
  */
-class EmployeeResource extends \tecnocen\roa\controllers\OAuth2Resource
+class EmployeeResource extends \tecnocen\roa\controllers\Resource
 {
     /**
      * @inheritdoc
      */
     public $modelClass = Employee::class;
+
     /**
      * @inheritdoc
      */
     public $searchClass = EmployeeSearch::class;
+
     /**
      * @inheritdoc
      */

@@ -16,23 +16,12 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
     {
         $I->amBearerAuthenticated(OauthAccessTokensFixture::SIMPLE_TOKEN);
     }
-    /**
-     * @depends ShopCest:fixtures
-     */
-    public function fixtures(ApiTester $I)
-    {
-        $I->haveFixtures([
-            'employee' => [
-                'class' => EmployeeFixture::class,
-                'depends' => []
-            ],
-        ]);
-    }
+
     /**
      * @param  ApiTester $I
      * @param  Example $example
      * @dataprovider indexDataProvider
-     * @depends fixtures
+     * @depends ShopCest:fixtures
      * @before authToken
      */
     public function index(ApiTester $I, Example $example)
@@ -40,6 +29,7 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
         $I->wantTo('Retrieve list of Employee records.');
         $this->internalIndex($I, $example);
     }
+
     /**
      * @return array<string,array> for test `index()`.
      */
@@ -64,8 +54,8 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
             ],
             'filter by name' => [
                 'urlParams' => [
-                    'shop_id' => 1,
-                    'name' => 'Miniso',
+                    'shop_id' => 2,
+                    'name' => 'Robert',
                 ],
                 'httpCode' => HttpCode::OK,
                 'headers' => [
@@ -78,7 +68,7 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
      * @param  ApiTester $I
      * @param  Example $example
      * @dataprovider viewDataProvider
-     * @depends fixtures
+     * @depends ShopCest:fixtures
      * @before authToken
      */
     public function view(ApiTester $I, Example $example)
@@ -121,7 +111,7 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
      * @param  ApiTester $I
      * @param  Example $example
      * @dataprovider createDataProvider
-     * @depends fixtures
+     * @depends ShopCest:fixtures
      * @before authToken
      */
     public function create(ApiTester $I, Example $example)
@@ -149,7 +139,8 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
                 'data' => ['name' => 'Employee 3'],
                 'httpCode' => HttpCode::UNPROCESSABLE_ENTITY,
                 'validationErrors' => [
-                    'name' => 'The combination "1"-"Employee 3" of Shop ID and Employee name has already been taken.'
+                    'name' =>
+                        'Employee Name "Employee 3" has already been taken.'
                 ],
             ],
             'to short' => [
@@ -159,7 +150,8 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
                 'data' => ['name' => 'wo'],
                 'httpCode' => HttpCode::UNPROCESSABLE_ENTITY,
                 'validationErrors' => [
-                    'name' => 'Employee name should contain at least 6 characters.'
+                    'name' =>
+                        'Employee Name should contain at least 6 characters.'
                 ],
             ],
             'not blank' => [
@@ -168,7 +160,7 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
                 ],
                 'httpCode' => HttpCode::UNPROCESSABLE_ENTITY,
                 'validationErrors' => [
-                    'name' => 'Employee name cannot be blank.'
+                    'name' => 'Employee Name cannot be blank.'
                 ],
             ],
         ];
@@ -177,7 +169,7 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
      * @param  ApiTester $I
      * @param  Example $example
      * @dataprovider updateDataProvider
-     * @depends fixtures
+     * @depends ShopCest:fixtures
      * @before authToken
      */
     public function update(ApiTester $I, Example $example)
@@ -201,7 +193,7 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
                 'data' => ['name' => 'em'],
                 'httpCode' => HttpCode::UNPROCESSABLE_ENTITY,
                 'validationErrors' => [
-                    'name' => 'Employee name should contain at least 6 characters.'
+                    'name' => 'Employee Name should contain at least 6 characters.'
                 ],
             ],
         ];
@@ -210,7 +202,7 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
      * @param  ApiTester $I
      * @param  Example $example
      * @dataprovider deleteDataProvider
-     * @depends fixtures
+     * @depends ShopCest:fixtures
      * @before authToken
      */
     public function delete(ApiTester $I, Example $example)
@@ -225,15 +217,15 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
     {
         return [
             'shop not found' => [
-                'url' => '/v1/shop/10/Employee/1',
+                'url' => '/v1/shop/10/employee/1',
                 'httpCode' => HttpCode::NOT_FOUND,
             ],
-            'delete Employee 8' => [
-                'url' => '/v1/shop/1/Employee/8',
+            'delete Employee 7' => [
+                'url' => '/v1/shop/1/employee/7',
                 'httpCode' => HttpCode::NO_CONTENT,
             ],
             'not found' => [
-                'url' => '/v1/shop/1/Employee/8',
+                'url' => '/v1/shop/1/employee/7',
                 'httpCode' => HttpCode::NOT_FOUND,
                 'validationErrors' => [
                     'name' => 'The record "8" does not exists.'

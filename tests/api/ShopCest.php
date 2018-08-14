@@ -4,6 +4,7 @@ use Codeception\Example;
 use Codeception\Util\HttpCode;
 use app\fixtures\OauthAccessTokensFixture;
 use app\fixtures\ShopFixture;
+use app\fixtures\EmployeeFixture;
 
 /**
  * Cest to shop resource.
@@ -16,11 +17,16 @@ class ShopCest extends \tecnocen\roa\test\AbstractResourceCest
     {
         $I->amBearerAuthenticated(OauthAccessTokensFixture::SIMPLE_TOKEN);
     }
+
     public function fixtures(ApiTester $I)
     {
         $I->haveFixtures([
             'access_tokens' => OauthAccessTokensFixture::class,
             'shop' => ShopFixture::class,
+            'employee' => [
+                'class' => EmployeeFixture::class,
+                'depends' => [],
+            ],
         ]);
     }
     /**
@@ -35,6 +41,7 @@ class ShopCest extends \tecnocen\roa\test\AbstractResourceCest
         $I->wantTo('Retrieve list of Shop records.');
         $this->internalIndex($I, $example);
     }
+
     /**
      * @return array<string,array> for test `index()`.
      */
@@ -79,7 +86,7 @@ class ShopCest extends \tecnocen\roa\test\AbstractResourceCest
         return [
             'expand employees' => [
                 'urlParams' => [
-                    'id' => '1',
+                    'id' => 1,
                     'expand' => 'employees'
                 ],
                 'httpCode' => HttpCode::OK,
@@ -119,20 +126,20 @@ class ShopCest extends \tecnocen\roa\test\AbstractResourceCest
                 'data' => ['name' => 'Shop 4'],
                 'httpCode' => HttpCode::UNPROCESSABLE_ENTITY,
                 'validationErrors' => [
-                    'name' => 'Shop name "Shop 4" has already been taken.'
+                    'name' => 'Shop Name "Shop 4" has already been taken.'
                 ],
             ],
             'to short' => [
                 'data' => ['name' => 'Shop'],
                 'httpCode' => HttpCode::UNPROCESSABLE_ENTITY,
                 'validationErrors' => [
-                    'name' => 'Shop name should contain at least 6 characters.'
+                    'name' => 'Shop Name should contain at least 6 characters.'
                 ],
             ],
             'not blank' => [
                 'httpCode' => HttpCode::UNPROCESSABLE_ENTITY,
                 'validationErrors' => [
-                    'name' => 'Shop name cannot be blank.'
+                    'name' => 'Shop Name cannot be blank.'
                 ],
             ],
         ];
@@ -165,7 +172,7 @@ class ShopCest extends \tecnocen\roa\test\AbstractResourceCest
                 'data' => ['name' => 'Shop'],
                 'httpCode' => HttpCode::UNPROCESSABLE_ENTITY,
                 'validationErrors' => [
-                    'name' => 'Shop name should contain at least 6 characters.'
+                    'name' => 'Shop Name should contain at least 6 characters.'
                 ],
             ],
         ];
@@ -189,11 +196,11 @@ class ShopCest extends \tecnocen\roa\test\AbstractResourceCest
     {
         return [
             'delete shop 1' => [
-                'urlParams' => ['id' => '1'],
+                'urlParams' => ['id' => 4],
                 'httpCode' => HttpCode::NO_CONTENT,
             ],
             'not found' => [
-                'urlParams' => ['id' => '1'],
+                'urlParams' => ['id' => 4],
                 'httpCode' => HttpCode::NOT_FOUND,
                 'validationErrors' => [
                     'name' => 'The record "1" does not exists.'

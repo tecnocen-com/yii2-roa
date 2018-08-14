@@ -8,7 +8,7 @@ namespace app\models;
  *
  * @property Shop $shop
  */
-class Employee extends \tecnocen\rmdb\models\Entity
+class Employee extends \yii\db\ActiveRecord
 {
     /**
      * @var string full class name of the model used in the relation

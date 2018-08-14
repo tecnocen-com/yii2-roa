@@ -1,8 +1,9 @@
 <?php
 
-use tecnocen\roa\controllers\ProfileResource;
-use tecnocen\roa\urlRules\SingleRecord;
 use app\api\modules\Version;
+use app\models\User;
+use tecnocen\roa\modules\ApiVersion;
+use tecnocen\roa\urlRules\SingleRecord;
 
 return yii\helpers\ArrayHelper::merge(
     require __DIR__ . '/common.php',
@@ -12,21 +13,22 @@ return yii\helpers\ArrayHelper::merge(
         'modules' => [
             'api' => [
                 'class' => tecnocen\roa\modules\ApiContainer::class,
+                'identityClass' => User::class,
                 'versions' => [
                     'v1' => [
                         'class' => Version::class,
                     ],
                     'dev' => [
-                        'class' => Version::class,
+                        'class' => ApiVersion::class,
                     ],
                     'stable' => [
-                        'class' => Version::class,
+                        'class' => ApiVersion::class,
                     ],
                     'deprecated' => [
-                        'class' => Version::class,
+                        'class' => ApiVersion::class,
                     ],
                     'obsolete' => [
-                        'class' => Version::class,
+                        'class' => ApiVersion::class,
                     ],
                 ],
             ],

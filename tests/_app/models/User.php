@@ -2,12 +2,14 @@
 
 namespace app\models;
 
-use tecnocen\oauth2server\models\OauthAccessTokens as AccessToken;
 use OAuth2\Storage\UserCredentialsInterface;
+use tecnocen\oauth2server\models\OauthAccessTokens as AccessToken;
 use Yii;
 use yii\web\IdentityInterface;
 
-class User extends \yii\db\ActiveRecord implements UserCredentialsInterface
+class User extends \yii\db\ActiveRecord implements
+    UserCredentialsInterface,
+    IdentityInterface
 {
     public static function tableName()
     {
@@ -19,7 +21,7 @@ class User extends \yii\db\ActiveRecord implements UserCredentialsInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['id' => $id]);
     }
 
     /**
@@ -73,7 +75,7 @@ class User extends \yii\db\ActiveRecord implements UserCredentialsInterface
             return false;
         }
 
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
 
         return $timestamp + $expire >= time();
@@ -174,7 +176,7 @@ class User extends \yii\db\ActiveRecord implements UserCredentialsInterface
     }
 
     /**
-     * @return yii\db\ActiveQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getAccessTokens()
     {

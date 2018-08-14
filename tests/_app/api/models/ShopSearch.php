@@ -9,7 +9,7 @@ use yii\data\ActiveDataProvider;
  *
  * @author Carlos (neverabe) Llamosas <carlos@tecnocen.com>
  */
-class ShopSearch extends Shop implements \src\ResourceSearch
+class ShopSearch extends Shop implements \tecnocen\roa\ResourceSearch
 {
     /**
      * @inhertidoc
@@ -30,6 +30,7 @@ class ShopSearch extends Shop implements \src\ResourceSearch
             return null;
         }
         $class = get_parent_class();
+
         return new ActiveDataProvider([
             'query' => $class::find()->andFilterWhere(
                 ['like', 'name', $this->name]
