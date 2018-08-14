@@ -4,7 +4,6 @@ namespace tecnocen\roa\actions;
 
 use Yii;
 use yii\base\Model;
-use yii\db\ActiveRecord;
 use yii\web\ServerErrorHttpException;
 
 class ProfileUpdate extends \yii\rest\Action
@@ -29,12 +28,14 @@ class ProfileUpdate extends \yii\rest\Action
      */
     public function run()
     {
-        /* @var $model ActiveRecord */
+        /* @var $model \yii\db\ActiveRecordInterface */
         $model = Yii::$app->user->identity;
         $model->scenario = $this->scenario;
         $model->load(Yii::$app->getRequest()->getBodyParams(), '');
         if ($model->save() === false && !$model->hasErrors()) {
-            throw new ServerErrorHttpException('Failed to update the object for unknown reason.');
+            throw new ServerErrorHttpException(
+                'Failed to update the object for unknown reason.'
+            );
         }
 
         return $model;

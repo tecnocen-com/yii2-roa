@@ -15,7 +15,7 @@ todos los métodos necesarios.
 
 ```php
 
-use Codeception\Actor
+use Codeception\Actor;
 use tecnocen\roa\test\Tester as RoaTester;
 use tecnocen\roa\test\TesterTrait as RoaTesterTrait;
 use tecnocen\roa\test\AbstractResourceCest;

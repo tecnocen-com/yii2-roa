@@ -6,6 +6,7 @@ namespace tecnocen\roa\controllers;
  * Resource which enables file upload to be stored and associated to a record.
  *
  * @author  Angel (Faryshta) Guevara <aguevara@alquimiadigital.mx>
+ * @deprecated use Resource instead.
  */
 class OAuth2FileResource extends OAuth2Resource
 {

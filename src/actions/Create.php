@@ -27,8 +27,9 @@ class Create extends Action
     public function run()
     {
         $request = Yii::$app->getRequest();
-        /* @var $model \yii\db\ActiveRecord */
-        $model = new $this->modelClass([
+        $modelClass = $this->modelClass;
+        /* @var $model \yii\db\ActiveRecordInterface */
+        $model = new $modelClass([
             'scenario' => $this->scenario,
         ]);
         $model->load(

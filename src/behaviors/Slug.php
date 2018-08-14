@@ -78,7 +78,7 @@ class Slug extends \yii\base\Behavior
                 self::class . '::$resourceName must be defined.'
             );
         }
-        $this->idAttribute = (array) $this->idAttribute;
+        $this->idAttribute = (array)$this->idAttribute;
     }
 
     /**
@@ -131,7 +131,7 @@ class Slug extends \yii\base\Behavior
             $attributeValues[] = $this->owner->$attribute;
         }
 
-        return implode($attributeValues, $this->idAttributeSeparator);
+        return implode($this->idAttributeSeparator, $attributeValues);
     }
 
     /**

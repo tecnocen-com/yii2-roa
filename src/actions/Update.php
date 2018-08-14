@@ -4,7 +4,6 @@ namespace tecnocen\roa\actions;
 
 use Yii;
 use yii\base\Model;
-use yii\db\ActiveRecord;
 use yii\web\ServerErrorHttpException;
 
 /**
@@ -33,7 +32,7 @@ class Update extends Action
      */
     public function run($id)
     {
-        /* @var $model ActiveRecord */
+        /* @var $model \yii\db\ActiveRecordInterface */
         $model = $this->findModel($id);
         $request = Yii::$app->getRequest();
         $this->checkAccess($model, $request->getQueryParams());

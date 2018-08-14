@@ -2,6 +2,7 @@
 
 namespace tecnocen\roa\modules;
 
+use tecnocen\oauth2server\filters\auth\CompositeAuth;
 use tecnocen\oauth2server\Module as OAuth2Module;
 use tecnocen\roa\controllers\ApiContainerController;
 use tecnocen\roa\urlRules\Composite as CompositeUrlRule;
@@ -9,8 +10,11 @@ use tecnocen\roa\urlRules\Modular as ModularUrlRule;
 use tecnocen\roa\urlRules\UrlRuleCreator;
 use Yii;
 use yii\base\BootstrapInterface;
-use yii\base\InvalidParamException;
+use yii\base\InvalidArgumentException;
 use yii\base\Module;
+use yii\filters\ContentNegotiator;
+use yii\helpers\Url;
+use yii\web\Response;
 use yii\web\UrlNormalizer;
 
 /**
@@ -81,6 +85,28 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
     ];
 
     /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'contentNegotiator' => [
+                'class' => ContentNegotiator::class,
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                    'application/xml' => Response::FORMAT_XML,
+                ],
+            ],
+            'authenticator' => [
+                'class' => CompositeAuth::class,
+                'oauth2Module' => $this->getUniqueId() . '/'
+                    . $this->oauth2ModuleId,
+                'except' => ['oauth2/*', 'index/*'],
+            ],
+        ];
+    }
+
+    /**
      * @var array module
      */
     public function setOauth2Module($module)
@@ -94,7 +120,7 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
         } elseif (!$module instanceof OAuth2Module) {
             $this->setModule($this->oauth2ModuleId, $module);
         } else {
-            throw new InvalidParamException(
+            throw new InvalidArgumentException(
                 static::class
                     . '::$oauth2Module must be an array or instance of '
                     . OAuth2Module::class
@@ -137,7 +163,7 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
     /**
      * @return ApiVersion[] return all the versions attached to the container
      * indexed by their respective id.
-      */
+     */
     public function getVersionModules()
     {
         $versions = [];
@@ -175,11 +201,14 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
         Yii::$app->user->identityClass = $this->identityClass;
 
         $rules = $this->defaultUrlRules();
+        $auth = $this->getBehavior('authenticator');
+
         foreach ($this->versions as $route => $config) {
+            $auth->except[] = $route . '/index/*';
             $this->setModule($route, $config);
             $rules[] = Yii::createObject([
-               'class' => $this->versionUrlRuleClass,
-               'moduleId' => "{$this->uniqueId}/$route",
+                'class' => $this->versionUrlRuleClass,
+                'moduleId' => "{$this->uniqueId}/$route",
             ]);
         }
 

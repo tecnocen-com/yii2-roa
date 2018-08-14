@@ -41,6 +41,7 @@ class Index extends Action
     public function run()
     {
         $searchClass = $this->searchClass;
+        /* @var $searchModel \yii\db\ActiveRecordInterface */
         $searchModel = new $searchClass();
         $dataProvider = $searchModel->search(
             Yii::$app->request->queryParams,

@@ -106,13 +106,13 @@ trait EmbeddableTrait
         $result = [];
 
         foreach ($this->fields() as $field => $definition) {
-             if (is_int($field)) {
-                 $field = $definition;
-             }
+                if (is_int($field)) {
+                    $field = $definition;
+                }
 
-             if (empty($fields) || in_array($field, $fields, true)) {
-                 $result[$field] = $definition;
-             }
+                if (empty($fields) || in_array($field, $fields, true)) {
+                    $result[$field] = $definition;
+                }
         }
 
         return $result;
@@ -139,13 +139,13 @@ trait EmbeddableTrait
         $result = [];
 
         foreach ($this->extraFields() as $field => $definition) {
-             if (is_int($field)) {
-                 $field = $definition;
-             }
+                if (is_int($field)) {
+                    $field = $definition;
+                }
 
-             if (in_array($field, $fields, true)) {
-                 $result[$field] = $definition;
-             }
+                if (in_array($field, $fields, true)) {
+                    $result[$field] = $definition;
+                }
         }
 
         return $result;

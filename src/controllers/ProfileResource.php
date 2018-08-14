@@ -5,7 +5,7 @@ namespace tecnocen\roa\controllers;
 use tecnocen\roa\actions\ProfileUpdate;
 use tecnocen\roa\actions\ProfileView;
 
-class ProfileResource extends OAuth2Resource
+class ProfileResource extends Resource
 {
     /**
      * @inheridoc

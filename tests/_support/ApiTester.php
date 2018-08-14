@@ -1,5 +1,7 @@
 <?php
 
+use tecnocen\roa\test\Tester as RoaTester;
+use tecnocen\roa\test\TesterTrait as RoaTesterTrait;
 
 /**
  * Inherited Methods
@@ -16,11 +18,12 @@
  *
  * @SuppressWarnings(PHPMD)
 */
-class ApiTester extends \Codeception\Actor
+class ApiTester extends \Codeception\Actor implements RoaTester
 {
     use _generated\ApiTesterActions;
+    use RoaTesterTrait;
 
-   /**
-    * Define custom actions here
-    */
+    /**
+     * Define custom actions here
+     */
 }

@@ -4,14 +4,26 @@ namespace tecnocen\roa\controllers;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\web\GoneHttpException;
+use yii\web\NotFoundHttpException;
 
 /**
  * Lists all the available versions for an api and handles error responses.
+ *
+ * @property \tecnocen\roa\modules\ApiContainer $module
  *
  * @author Angel (Faryshta) Guevara <aguevara@tecnocen.com>
  */
 class ApiContainerController extends \yii\rest\Controller
 {
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [];
+    }
+
     /**
      * Lists the available versions and their respective stability for the
      * parent module.
