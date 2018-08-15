@@ -38,7 +38,8 @@
         "flow/jsonpath": "~0.3",
         "tecnocen/yii2-migrate": "*",
         "phpunit/php-code-coverage": "*",
-        "yiisoft/yii2-debug": "*"
+        "yiisoft/yii2-debug": "*",
+        "yii2tech/ar-softdelete": "~1.0.2"
     },
     "scripts": {
         "deploy-tests": [
