@@ -16,8 +16,16 @@ class ProfileCest extends \tecnocen\roa\test\AbstractResourceCest
         $I->amBearerAuthenticated(OauthAccessTokensFixture::SIMPLE_TOKEN);
     }
 
+    public function fixtures(ApiTester $I)
+    {
+        $I->haveFixtures([
+            'access_tokens' => OauthAccessTokensFixture::class,
+        ]);
+    }
+
     /**
      * @param  ApiTester $I
+     * @depends fixtures
      * @before authToken
      */
     public function view(ApiTester $I)
@@ -25,12 +33,7 @@ class ProfileCest extends \tecnocen\roa\test\AbstractResourceCest
         $I->wantTo('Retrieve Profile record.');
         $I->sendGET($this->getRoutePattern());
         $I->seeResponseCodeIs(HttpCode::OK);
-        $I->seeResponseContainsJson([
-            'id' => 'integer:>0',
-            'username' => 'string'
-        ]);
-        $I->dontSeeRecordJsonType($I);
-
+        $I->seeResponseMatchesJsonType($this->recordJsonType());
     }
 
     /**
@@ -56,8 +59,8 @@ class ProfileCest extends \tecnocen\roa\test\AbstractResourceCest
     {
         $I->wantTo('Update a Profile record.');
         $this->internalUpdate($I, $example);
-        $this->dontSeeRecordJsonType($I);
     }
+
     /**
      * @return array[] data for test `update()`.
      */
@@ -79,7 +82,7 @@ class ProfileCest extends \tecnocen\roa\test\AbstractResourceCest
                 'data' => ['username' => ''],
                 'httpCode' => HttpCode::UNPROCESSABLE_ENTITY,
                 'validationErrors' => [
-                    'username' => 'Username is required.'
+                    'username' => 'Username cannot be blank.'
                 ],
             ],
         ];
@@ -92,19 +95,8 @@ class ProfileCest extends \tecnocen\roa\test\AbstractResourceCest
     public function delete(ApiTester $I)
     {
         $I->wantTo('Delete a Profile record.');
-        $I->sendDELETE($this->getRoutePattern(). '/1');
+        $I->sendDELETE($this->getRoutePattern());
         $I->seeResponseCodeIs(HttpCode::METHOD_NOT_ALLOWED);
-    }
-
-    /**
-     * @return array[] dontSeeResponseMatchesJsonType() for test.
-     */    
-    protected function dontSeeRecordJsonType(ApiTester $I){
-        return $I->dontSeeResponseMatchesJsonType([
-            'auth_key' => 'string',
-            'password_hash' => 'string',
-            'password_reset_token' => 'string',
-        ]);
     }
 
     /**
@@ -114,7 +106,7 @@ class ProfileCest extends \tecnocen\roa\test\AbstractResourceCest
     {
         return [
             'id' => 'integer:>0',
-            'name' => 'string',
+            'username' => 'string',
         ];
     }
 

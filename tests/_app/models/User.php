@@ -188,7 +188,8 @@ class User extends \yii\db\ActiveRecord implements
     public function rules()
     {
         return [
-            [['username'], 'string'],
+            [['username'], 'required'],
+            [['username'], 'string', 'min' => 4],
         ];
     }
 }
