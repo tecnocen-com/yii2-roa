@@ -14,6 +14,10 @@ use tecnocen\roa\urlRules\SingleRecord;
 class Version extends \tecnocen\roa\modules\ApiVersion
 {
 
+    public $releaseDate = '2018-06-15';
+    public $deprecationDate = '2020-01-01';
+    public $obsoleteDate = '2020-12-31';
+
     const SHOP_ROUTE = 'shop';
     const EMPLOYEE_ROUTE = self::SHOP_ROUTE . '/<shop_id:\d+>/employee';
     const RESTORE_SOFT_DELETE_ROUTE = 'restore-soft-delete';

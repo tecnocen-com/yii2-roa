@@ -1,5 +1,6 @@
 <?php
 
+use app\api\modules\Obsolete;
 use app\api\modules\Version;
 use app\models\User;
 use tecnocen\roa\modules\ApiVersion;
@@ -28,7 +29,7 @@ return yii\helpers\ArrayHelper::merge(
                         'class' => ApiVersion::class,
                     ],
                     'obsolete' => [
-                        'class' => ApiVersion::class,
+                        'class' => Obsolete::class,
                     ],
                 ],
             ],
