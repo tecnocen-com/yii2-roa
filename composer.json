@@ -44,11 +44,11 @@
         "yii": "@php tests/_app/yii.php",
         "deploy-tests": [
             "@composer update --prefer-stable",
-            "@yii migrate -p=@tecnocen/oauth2server/migrations/tables --interactive=0",
-            "@yii migrate -p=@app/migrations/ --interactive=0"
+            "@composer yii migrate -p=@tecnocen/oauth2server/migrations/tables --interactive=0",
+            "@composer yii migrate -p=@app/migrations/ --interactive=0"
         ],
         "run-tests": "@php vendor/bin/codecept run --steps",
-        "run-coverage": "@run-tests -- --coverage --coverage-xml"
+        "run-coverage": "@composer run-tests -- --coverage --coverage-xml"
     },
     "scripts-descriptions": {
         "yii": "shortcut for `php tests/_app/yii.php`",
