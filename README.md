@@ -12,8 +12,6 @@ using the Yii2 framework.
 Scrutinizer [![Build Status Scrutinizer](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/badges/build.png?b=master&style=flat)](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/build-status/master)
 Travis [![Build Status Travis](https://api.travis-ci.org/tecnocen-com/yii2-roa.svg?branch=master&style=flat?style=for-the-badge)](https://travis-ci.org/tecnocen-com/yii2-roa)
 
-Code Coverage - TODO
-
 ## Getting Started
 
 TODO
