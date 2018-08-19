@@ -36,6 +36,7 @@
         "codeception/verify": "~0.3.1|~1.0.0",
         "flow/jsonpath": "~0.3",
         "tecnocen/yii2-migrate": "*",
+        "tecnocen/yii2-rmdb": "*",
         "phpunit/php-code-coverage": "*",
         "yiisoft/yii2-debug": "*",
         "yii2tech/ar-softdelete": "~1.0.2"

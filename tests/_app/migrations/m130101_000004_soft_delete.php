@@ -1,14 +1,13 @@
 <?php
 
-class m130101_000002_shop extends \tecnocen\migrate\CreateTableMigration
+class m130101_000004_soft_delete extends \tecnocen\migrate\CreateTableMigration
 {
-
     /**
      * @inhertidoc
      */
     public function getTableName()
     {
-        return 'shop';
+        return 'soft_delete';
     }
 
     /**
@@ -18,7 +17,7 @@ class m130101_000002_shop extends \tecnocen\migrate\CreateTableMigration
     {
         return [
             'id' => $this->primaryKey(),
-            'name' => $this->string(32)->notNull()->unique(),
+            'deleted' => $this->boolean(),
         ];
     }
 }
