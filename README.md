@@ -12,59 +12,75 @@ using the Yii2 framework.
 Scrutinizer [![Build Status Scrutinizer](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/badges/build.png?b=master&style=flat)](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/build-status/master)
 Travis [![Build Status Travis](https://api.travis-ci.org/tecnocen-com/yii2-roa.svg?branch=master&style=flat?style=for-the-badge)](https://travis-ci.org/tecnocen-com/yii2-roa)
 
-## Getting Started
-
-TODO
-
 ### Prerequisites
 
-- Install PHP 7.2 or higher
+- Install PHP 7.1 or higher
 - [Composer Installed](https://getcomposer.org/doc/00-intro.md)
-
-The rest of the requirements are checked by composer when installing the
-repository on the next step.
+- Run command `composer check-platform-reqs` to check all requirements.
 
 ### Installation
 ----------------
 
-You can use composer to install the library `tecnocen/yii2-roa` by running
-the command;
+Install on a Yii2 App Advanced Project
 
-`composer require tecnocen/yii2-roa`
-
-or edit the `composer.json` file
-
-```json
-require: {
-    "tecnocen/yii2-roa": "~0.3.1",
-}
-```
-
-### Deployment
-
-TODO
-
-
-#### ROA Backend Usage
------------------
-
-The ROA support is very simple and can be done by just adding a module version
-to the api container which will be used to hold the resources.
-
-TODO
+[create new project](https://git.io/fAvT2)
 
 ## Running the tests
 
-TODO
+This section is to run the tests on this library, to run the tests on your
+application check [Yii2 App Roa Tests](https://git.io/fAvUA)
 
-### Break down into end to end tests
+### Configure tests
 
-TODO
+The tests come preconfigured except for the database credentials, to configure
+your database credentials create a file `tests/_app/config/db.local.php` with
+the Yii2 configuration for `Yii::$app->db` component. Example:
+
+```php
+return [
+    'dsn' => ..., 
+    'username' => ..., 
+    'password' => ..., 
+];
+```
+
+Make sure to create a database to load the migrations, by default the name is
+`yii2_roa_test`
+
+### Deploy tests
+
+This library includes a composer script to deploy the tests.
+
+`composer deploy-tests`
+
+### Run tests
+
+This library also includes 2 composer scripts to run the tests easily.
+
+- `composer run-tests` run all codeception tests.
+- `composer run-coverage` run all codeception tests and generate coverage report
+
+### Write Tests
+
+You can write new tests on the `tests/` folder following
+[codeception documentation](https://codeception.com/docs/)
 
 ## Examples
 
+### Yii2 ROA Live Demo
+
 You can run a live demo on a freshly installed project to help you run testing
-or understand the responses returned by the server. You can clone the following repositories and use the live demo they provide
+or understand the responses returned by the server.
+
+`composer yii -- serve [yii2Options]`
+
+See https://www.yiiframework.com/doc/api/2.0/yii-console-controllers-servecontroller
+
+Then on your browser access the route `http://localhost:8080/index.php/api`
+
+### Other Libraries
+
+You can clone the following repositories and use the live demo they provide
 
 - [yii2-formgenerator](https://github.com/tecnocen-com/yii2-formgenerator)
 - [yii2-workflow](https://github.com/tecnocen-com/yii2-workflow)
