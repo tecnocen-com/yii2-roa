@@ -118,10 +118,7 @@ class Resource extends \yii\rest\ActiveController
             throw new MethodNotAllowedHttpException(
                 'Method Not Allowed. This URL can only handle the following '
                     . 'request methods: '
-                    . implode(
-                        ', ',
-                        $this->fetchActionAllowedMethods($id, $params)
-                    )
+                    . implode(', ', $this->fetchActionAllowedMethods($id))
                     . '.',
                 0,
                 $e
