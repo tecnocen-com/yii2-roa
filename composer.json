@@ -26,9 +26,8 @@
         }
     ],
     "require": {
-        "php": ">=5.6",
+        "php": ">=7.1",
         "tecnocen/yii2-oauth2-server": "~4.0.0",
-        "tecnocen/yii2-rmdb": "*",
         "yiisoft/yii2": "~2.0.14"
     },
     "require-dev": {
@@ -37,21 +36,26 @@
         "codeception/verify": "~0.3.1|~1.0.0",
         "flow/jsonpath": "~0.3",
         "tecnocen/yii2-migrate": "*",
+        "tecnocen/yii2-rmdb": "*",
         "phpunit/php-code-coverage": "*",
-        "yiisoft/yii2-debug": "*"
+        "yiisoft/yii2-debug": "*",
+        "yii2tech/ar-softdelete": "~1.0.2"
     },
     "scripts": {
+        "yii": "@php tests/_app/yii.php",
         "deploy-tests": [
             "@composer update --prefer-stable",
-            "@php tests/_app/yii.php migrate -p=@tecnocen/oauth2server/migrations/tables --interactive=0",
-            "@php tests/_app/yii.php migrate -p=@app/migrations/ --interactive=0"
+            "@composer yii -- migrate -p=@tecnocen/oauth2server/migrations/tables --interactive=0",
+            "@composer yii -- migrate -p=@app/migrations/ --interactive=0"
         ],
-        "run-tests": [
-            "@php vendor/bin/codecept run --steps"
-        ],
-        "run-coverage": [
-            "@php vendor/bin/codecept run --steps --coverage --coverage-xml"
-        ]
+        "run-tests": "@php vendor/bin/codecept run --steps",
+        "run-coverage": "@composer run-tests -- --coverage --coverage-xml"
+    },
+    "scripts-descriptions": {
+        "yii": "shortcut for `php tests/_app/yii.php`",
+        "deploy-tests": "Deploy the testing application",
+        "run-tests": "shortcut for `codecept run --steps`",
+        "run-coverage": "shortcut for `run-tests -- --coverage --coverage-xml"
     },
     "autoload": {
         "psr-4": {

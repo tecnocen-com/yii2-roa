@@ -1,14 +1,15 @@
 <?php
 
-class m130101_000003_shop_employee extends \tecnocen\migrate\CreateTableMigration
+class m130101_000006_safe_delete_child extends \tecnocen\migrate\CreateTableMigration
 {
-
+    
+    public $defaultOnDelete = 'RESTRICT';
     /**
      * @inhertidoc
      */
     public function getTableName()
     {
-        return 'shop_employee';
+        return 'safe_delete_child';
     }
 
     /**
@@ -18,8 +19,7 @@ class m130101_000003_shop_employee extends \tecnocen\migrate\CreateTableMigratio
     {
         return [
             'id' => $this->primaryKey(),
-            'shop_id' => $this->normalKey(),
-            'name' => $this->string(32)->notNull()->unique(),
+            'safe_delete_id' => $this->normalKey(),
         ];
     }
 
@@ -28,6 +28,6 @@ class m130101_000003_shop_employee extends \tecnocen\migrate\CreateTableMigratio
      */
     public function foreignKeys()
     {
-        return ['shop_id' => 'shop'];
+        return ['safe_delete_id' => 'safe_delete'];
     }
 }

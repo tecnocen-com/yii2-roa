@@ -2,9 +2,9 @@
 
 use Codeception\Example;
 use Codeception\Util\HttpCode;
+use app\fixtures\EmployeeFixture;
 use app\fixtures\OauthAccessTokensFixture;
 use app\fixtures\ShopFixture;
-use app\fixtures\EmployeeFixture;
 
 /**
  * Cest to shop resource.
@@ -18,10 +18,12 @@ class ShopCest extends \tecnocen\roa\test\AbstractResourceCest
         $I->amBearerAuthenticated(OauthAccessTokensFixture::SIMPLE_TOKEN);
     }
 
+    /**
+     * @depends ProfileCest:fixtures
+     */
     public function fixtures(ApiTester $I)
     {
         $I->haveFixtures([
-            'access_tokens' => OauthAccessTokensFixture::class,
             'shop' => ShopFixture::class,
             'employee' => [
                 'class' => EmployeeFixture::class,
