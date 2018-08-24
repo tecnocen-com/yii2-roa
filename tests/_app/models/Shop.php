@@ -27,13 +27,6 @@ class Shop extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    protected function attributeTypecast()
-    {
-        return parent::attributeTypecast() + ['id' => 'integer'];
-    }
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
@@ -47,10 +40,10 @@ class Shop extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return array_merge([
+        return [
             'id' => 'ID',
             'name' => 'Shop Name',
-        ], parent::attributeLabels());
+        ];
     }
     /**
      * @return \yii\db\ActiveQuery
