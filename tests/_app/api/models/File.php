@@ -37,7 +37,8 @@ class File extends \app\models\File implements Linkable, Embeddable
     public function getLinks()
     {
         return array_merge($this->getSlugLinks(), $this->getCuriesLinks(), [
-            'file-stream' => $this->getSelfLink() . substr($this->path, -4),
+            'file-stream' => $this->getSelfLink()
+                . substr($this->path, strrpos($this->path, '.')),
         ]);
     }
 }
