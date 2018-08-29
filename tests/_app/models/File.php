@@ -31,7 +31,7 @@ class File extends \yii\db\ActiveRecord implements FileRecord
     {
         return [
             [['path'], 'required'],
-            [['path'], 'file'],
+            [['path'], 'file', 'skipOnEmpty' => false],
         ];
     }
     /**
