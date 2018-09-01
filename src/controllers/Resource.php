@@ -293,7 +293,8 @@ class Resource extends \yii\rest\ActiveController
      *
      * @return string[] which HTTP Methods are allowed for each action id.
      */
-    protected function fetchActionAllowedMethods(string $actionId): array {
+    protected function fetchActionAllowedMethods(string $actionId): array
+    {
         $recordActions = $this->listRecordActions();
         $collectionActions = $this->listCollectionActions();
         $verbs = $this->verbs();
