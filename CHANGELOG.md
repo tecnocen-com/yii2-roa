@@ -1,11 +1,40 @@
 Yii2 ROA Library
 ================
 
+0.4.0 September 03, 2018
+------------------------
+
+- [Brk] `tecnocen\roa\hal\JsonResponseFormatter` deleted in favor of
+  `yii\web\JsonResponseFormatter` (Faryshta)
+- [Brk] `tecnocen\roa\controllers\OAuth2Resource` and
+  `tecnocen\roa\controllers\OAuth2FileResource` deleted in favor of
+  `tecnocen\roa\controllers\Resource`(Faryshta)
+- [Enh] Action Filter classes are now implemented on `ApiVersion` and
+  `ApiContainer`. See [docs/guide/action-filters.md] (Faryshta)
+- [Enh] New class `tecnocen\roa\controllers\Resource` which simplifies resource
+  Creation by NOT implementing OAuth2 and other behaviors so they can be
+  inherited by parent modules. See [docs/guide/action-filters.md] (Faryshta)
+- [Enh] ApiContainer::$responseFormatters declares formatteres to configure
+  `Yii::$app->response->formatters` on event `beforeAction`. (Faryshta)
+- [Enh] `ApiVersion::$apidoc` admits an URL string which links to the apidoc
+  documentation. (Faryshta)
+- [Bug] When a verb is not supported by a resource 404 Http Status was sent, fixed
+  to 405. (Faryshta)
+
+0.3.1 July 21, 2018
+-------------------
+
+- [Bug] `EmbeddableTrait::fields()` and `EmbeddableTrait::extraFields()` turned
+  into abstracts to prevent the trait to override implementations by
+  `yii\db\ActiveRecord` and `yii\base\Model` (Faryshta)
+
 0.3.0 July 20, 2018
 --------------------
 
-- [Enh] New Support to curies (See https://tools.ietf.org/html/draft-kelly-json-hal-08) (Faryshta)
-- [Enh] Implement support for nestable embedded relation on resources as in yii2.0.14 (Faryshta)
+- [Enh] New Support to curies
+  (See https://tools.ietf.org/html/draft-kelly-json-hal-08) (Faryshta)
+- [Enh] Implement support for nestable embedded relation on resources as in
+  yii2.0.14 (Faryshta)
 - Updated CHANGELOG.md (neverabe)
 
 0.2.3 January 5, 2018
