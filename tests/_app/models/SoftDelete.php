@@ -37,18 +37,11 @@ class SoftDelete extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    protected function attributeTypecast()
-    {
-        return parent::attributeTypecast() + ['id' => 'integer'];
-    }
-    /**
-     * @inheritdoc
-     */
     public function attributeLabels()
     {
-        return array_merge([
+        return [
             'id' => 'ID',
-        ], parent::attributeLabels());
+        ];
     }
     /**
      * @inheritdoc

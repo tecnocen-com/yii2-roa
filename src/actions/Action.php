@@ -18,7 +18,7 @@ class Action extends \yii\rest\Action
             $model->checkAccess($params);
         }
         if (isset($this->checkAccess)) {
-            call_user_func($this->checkAccess, $model, $params);
+            call_user_func($this->checkAccess, $this, $model, $params);
         }
     }
 }

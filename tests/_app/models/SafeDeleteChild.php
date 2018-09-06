@@ -25,16 +25,6 @@ class SafeDeleteChild extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    protected function attributeTypecast()
-    {
-        return parent::attributeTypecast() + [
-            'id' => 'integer',
-            'safe_delete_id' => 'integer',
-        ];
-    }
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
@@ -53,10 +43,10 @@ class SafeDeleteChild extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return array_merge([
+        return [
             'id' => 'ID',
             'safe_delete_id' => 'Safe Delete ID'
-        ], parent::attributeLabels());
+        ];
     }
     /**
      * @return \yii\db\ActiveQuery

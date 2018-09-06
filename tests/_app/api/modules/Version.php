@@ -4,12 +4,14 @@ namespace app\api\modules;
 
 use app\api\resources\ShopResource;
 use app\api\resources\EmployeeResource;
+use app\api\resources\FileResource;
 use app\api\resources\RestoreSoftDeleteResource;
 use app\api\resources\SoftDeleteResource;
 use app\api\resources\SafeDeleteResource;
 use app\api\resources\SafeDeleteChildResource;
 use tecnocen\roa\controllers\ProfileResource;
 use tecnocen\roa\urlRules\SingleRecord;
+use tecnocen\roa\urlRules\File as FileUrlRule;
 
 class Version extends \tecnocen\roa\modules\ApiVersion
 {
@@ -32,6 +34,12 @@ class Version extends \tecnocen\roa\modules\ApiVersion
         'profile' => [
             'class' => ProfileResource::class,
             'urlRule' => ['class' => SingleRecord::class],
+        ],
+        'file' => [
+            'class' => FileResource::class,
+            'urlRule' => [
+                'class' => FileUrlRule::class,
+            ],
         ],
         self::SHOP_ROUTE => ['class' => ShopResource::class],
         self::EMPLOYEE_ROUTE => ['class' => EmployeeResource::class],

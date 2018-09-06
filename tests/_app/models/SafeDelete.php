@@ -32,7 +32,7 @@ class SafeDelete extends \yii\db\ActiveRecord
      * `getSageDeleteChild()`.
      */
     protected $safeDeleteChildClass = SafeDeleteChild::class;
-    
+
     /**
      * @inheritdoc
      */
@@ -44,19 +44,11 @@ class SafeDelete extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    protected function attributeTypecast()
-    {
-        return parent::attributeTypecast() + ['id' => 'integer'];
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function attributeLabels()
     {
-        return array_merge([
+        return [
             'id' => 'ID',
-        ], parent::attributeLabels());
+        ];
     }
     /**
      * @return \yii\db\ActiveQuery

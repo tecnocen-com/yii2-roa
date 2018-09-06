@@ -25,16 +25,6 @@ class Employee extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    protected function attributeTypecast()
-    {
-        return parent::attributeTypecast() + [
-            'id' => 'integer',
-            'shop_id' => 'integer',
-        ];
-    }
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
@@ -55,11 +45,11 @@ class Employee extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return array_merge([
+        return [
             'id' => 'ID',
             'name' => 'Employee Name',
             'shop_id' => 'Shop ID'
-        ], parent::attributeLabels());
+        ];
     }
     /**
      * @return \yii\db\ActiveQuery
