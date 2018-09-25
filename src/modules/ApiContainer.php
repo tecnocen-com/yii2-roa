@@ -101,7 +101,11 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
                 'class' => CompositeAuth::class,
                 'oauth2Module' => $this->getUniqueId() . '/'
                     . $this->oauth2ModuleId,
-                'except' => ['oauth2/*', 'index/*'],
+                'except' => [
+                    'oauth2/*', // the oauth2 module
+                    'index/*', // controller that return this module info
+                    '*/options', // all OPTIONS actions for CORS preflight
+                ],
             ],
         ];
     }
