@@ -33,6 +33,15 @@ class ProfileResource extends Resource
         return [
             'view' => ['class' => ProfileView::class],
             'update' => ['class' => ProfileUpdate::class],
+            'options' => ['class' => \yii\rest\OptionsAction::class],
         ];
+    }
+
+    /**
+     * @inheridoc
+     */
+    protected function fetchActionAllowedMethods(string $actionId): array
+    {
+        return ['GET', 'PATCH', 'OPTIONS'];
     }
 }
