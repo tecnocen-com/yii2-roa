@@ -277,6 +277,19 @@ separado. De esa forma la peticion
 
 ```
 
+Conclusion
+----------
+
+ROA se puede interpretar como un SOA el cual se enfoca unicamente en REST + HAL
+y aprovecha por completo las ventajas que estos ofrecen para simplificar el
+desarrollo de servicios y reducir su tiempo de entrega.
+
+Se recomienda para APIs que solo se tengan planeadas para ser consumidas
+unicamente usando el protocolo HTTP 1.1.
+
+Esta modelo de madurez es una guia de como lograr una implementacion de ROA
+completamente funcional.
+
 [Resource Oriented Architecture]: https://enwp.org/Resource-oriented_architecture
 [Service Oriented Architecture]: https://enwp.org/Service-oriented_architecture
 [Recurso REST]: https://enwp.org/Representational_state_transfer
