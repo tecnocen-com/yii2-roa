@@ -2,72 +2,53 @@
 
 namespace app\api\models;
 
-use tecnocen\roa\behaviors\Curies;
-use tecnocen\roa\behaviors\Slug;
-use tecnocen\roa\hal\Embeddable;
-use tecnocen\roa\hal\EmbeddableTrait;
-use yii\web\Linkable;
+use tecnocen\roa\hal\Contract;
+use tecnocen\roa\hal\ContractTrait;
 use yii\web\NotFoundHttpException;
+
 /**
  * ROA contract to handle shop records.
- *
- * @method string[] getSlugLinks()
- * @method string getSelfLink()
  */
-class Shop extends \app\models\Shop implements Linkable, Embeddable
+class Shop extends \app\models\Shop implements Contract
 {
-    use EmbeddableTrait {
-        EmbeddableTrait::toArray as embedArray;
+    use ContractTrait {
+        getLinks as getContractLinks;
     }
-    /**
-     * @inheritdoc
-     */
-    public function toArray(
-        array $fields = [],
-        array $expand = [],
-        $recursive = true
-    ) {
-        return $this->embedArray(
-            $fields ?: $this->attributes(),
-            $expand,
-            $recursive
-        );
-    }
+
     /**
      * @inheritdoc
      */
     protected $employeeClass = Employee::class;
+
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    protected function slugBehaviorConfig()
     {
-        return array_merge(parent::behaviors(), [
-            'slug' => [
-                'class' => Slug::class,
-                'resourceName' => 'shop',
-                'checkAccess' => function ($params) {
-                    if (isset($params['shop_id'])
-                        && $this->id != $params['shop_id']
-                    ) {
-                        throw new NotFoundHttpException(
-                            'Shop not associated to element.'
-                        );
-                    }
-                },
-            ],
-            'curies' => Curies::class,
-        ]);
+        return [
+            'resourceName' => 'shop',
+            'checkAccess' => function ($params) {
+                if (isset($params['shop_id'])
+                    && $this->id != $params['shop_id']
+                ) {
+                    throw new NotFoundHttpException(
+                       'Shop not associated to element.'
+                    );
+                }
+            },
+        ];
     }
+
     /**
      * @inheritdoc
      */
     public function getLinks()
     {
-        return array_merge($this->getSlugLinks(), $this->getCuriesLinks(), [
+        return array_merge($this->getContractLinks(), [
             'employee' => $this->getSelfLink() . '/employee',
         ]);
     }
+
     /**
      * @inheritdoc
      */
