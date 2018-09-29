@@ -17,16 +17,33 @@ V1Version extends \tecnocen\roa\modules\ApiVersion
     public $obsoleteDate = '2012-12-31';
 
     public $resources = [
-        'user', // UserResource
-        'comment', // CommentResource
-        'comment/<comment_id:[\d]+>/reply', // CommenReplyResource
-        'user/avatar', // UserAvatarResource
-        'user/avatar.<ext:[jpg|png]>' => UserAvatarFileResource::class,
+        // toma la clase `backend\api\v1\resources\UserResource`
+        'user',
+        // toma la clase `backend\api\v1\resources\CommentResource`
+        'comment',
+        // toma la clase `backend\api\v1\resources\comment\ReplyResource`
+        'comment/<comment_id:[\d]+>/reply',
+        // toma la clase `backend\api\v1\resources\user\AvatarResource`
+        'user/avatar',
+        'forum' => resources\ForumResource::class, // ruta de la clase
+        'forum/<forum_id:\d>/post' => [
+            'class' => resources\PostResource,
+            'urlRule' => [
+                // configuracion especial ver guia de enrutamiento.
+            ],
+        ],
     ];
 
     public $apidoc = 'http://mockapi.com/api/v1';
+
+    public $controllerNamespace = 'backend\api\v1\resources';
+
+    public $controllerSubfix = 'Resource';
 }
 ```
+
+El uso de la llave `urlRule` en el ejemplo del recurso `post` se detalla en la
+guia de [Enrutamiento](routing.md)
 
 Recursos
 --------
@@ -37,7 +54,7 @@ que consiste en un arreglo donde cada elemento declara un recurso.
 Cada elemento de `$resources` puede consistir de una cadena para declarar la
 ruta y automáticamente se deduce el controlador asociado o de una pareja
 `'ruta' => 'recurso'` donde `'recurso'` es una especificacion como se define en
-la [guia de recurso](resource.md).
+la [guia de recurso](roa-resource.md).
 
 Api Documentation
 -----------------
@@ -148,7 +165,7 @@ Para depreciar un módulo de versión es necesario definir los atributos
     'releaseDate' => '2020-06-15',
     'deprecationDate' => '2021-06-01',
     'obsoleteDate' => '2021-12-31',
-```
+	```
 
 ### Fin de Ciclo de Vida
 

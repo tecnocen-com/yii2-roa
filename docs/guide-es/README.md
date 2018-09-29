@@ -7,6 +7,8 @@ Introduccion
 - [Modelo de Madurez de ROA](roa-maturity-model.md)
 - [Guia oficial de Yii2](https://www.yiiframework.com/doc/guide/2.0/es)
 - Migrar de Yii2 a ROA
+  - Nuevo Proyecto
+  - Proyecto existente
 
 Primeros Pasos
 --------------
@@ -22,7 +24,7 @@ Estructura
 - [API Contenedor](api-container.md)
 - [Version de API](api-version.md)
 - [Enrutamiento](routing.md)
-- Recurso REST
+- Recurso ROA
 - [Slug Behavior](slug-behavior.md)
 - [Filtros de Accion](action-filters.md)
 - Control de Accesos
