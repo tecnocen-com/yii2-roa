@@ -10,7 +10,7 @@ use app\api\resources\SoftDeleteResource;
 use app\api\resources\SafeDeleteResource;
 use app\api\resources\SafeDeleteChildResource;
 use tecnocen\roa\controllers\ProfileResource;
-use tecnocen\roa\urlRules\SingleRecord;
+use tecnocen\roa\urlRules\Profile as ProfileUrlRule;
 use tecnocen\roa\urlRules\File as FileUrlRule;
 
 class Version extends \tecnocen\roa\modules\ApiVersion
@@ -33,7 +33,7 @@ class Version extends \tecnocen\roa\modules\ApiVersion
     public $resources = [
         'profile' => [
             'class' => ProfileResource::class,
-            'urlRule' => ['class' => SingleRecord::class],
+            'urlRule' => ['class' => ProfileUrlRule::class],
         ],
         'file' => [
             'class' => FileResource::class,
