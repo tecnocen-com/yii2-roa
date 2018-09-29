@@ -99,31 +99,9 @@ class Resource extends \yii\rest\ActiveController
             // api container
             'verbFilter' => [
                 'class' => VerbFilter::class,
-                'actions' => $this->verbs(),
+                'actions' => $this->buildAllowedVerbs(),
             ],
         ];
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @throws MethodNotAllowedHttpException in ROA if the resource is reached
-     * means the route is valid but the HTTP Method used might not.
-     */
-    public function runAction($id, $params = [])
-    {
-        try {
-            return parent::runAction($id, $params);
-        } catch (InvalidRouteException $e) {
-            throw new MethodNotAllowedHttpException(
-                'Method Not Allowed. This URL can only handle the following '
-                    . 'request methods: '
-                    . implode(', ', $this->fetchActionAllowedMethods($id))
-                    . '.',
-                0,
-                $e
-            );
-        }
     }
 
     /**
@@ -289,38 +267,67 @@ class Resource extends \yii\rest\ActiveController
     }
 
     /**
-     * @param string $actionId
+     * Builds the HTTP Methods allowed for each action.
+     *
+     * Since ROA Resources differentiate routes on record routes and collection
+     * rules it was needed to organize the action into record action and
+     * collection actions and make sure that all record/collection actions
+     * returned the same allowed verbs since they are using the same route.
      *
      * @return string[] which HTTP Methods are allowed for each action id.
+     * @see VerbFilter::$verbs
      */
-    protected function fetchActionAllowedMethods(string $actionId): array
+    protected function buildAllowedVerbs(): array
     {
+        $verbs = $this->verbs();
         $recordActions = $this->listRecordActions();
         $collectionActions = $this->listCollectionActions();
-        $verbs = $this->verbs();
-        $allowedVerbs = ['OPTIONS'];
+        $recordVerbs = ['OPTIONS'];
+        $collectionVerbs = ['OPTIONS'];
 
-        if (in_array($actionId, $recordActions)) {
-            foreach ($recordActions as $action) {
-                $allowedVerbs = array_merge(
-                    $allowedVerbs,
-                    ArrayHelper::getValue($verbs, $action, [])
-                );
-            }
-        } elseif (in_array($actionId, $collectionActions)) {
-            foreach ($collectionActions as $action) {
-                $allowedVerbs = array_merge(
-                    $allowedVerbs,
-                    ArrayHelper::getValue($verbs, $action, [])
-                );
-            }
-        } else {
-            $allowedVerbs = array_merge(
-                $allowedVerbs,
-                ArrayHelper::getValue($verbs, $actionId, [])
+        foreach ($recordActions as $action) {
+            $recordVerbs = array_merge(
+                $recordVerbs,
+                ArrayHelper::getValue($verbs, $action, [])
             );
         }
 
-        return array_map('strtoupper', array_unique($allowedVerbs));
+        $recordVerbs = array_values(array_unique(
+            array_map('strtoupper', $recordVerbs)
+        ));
+
+        foreach ($collectionActions as $action) {
+            $collectionVerbs = array_merge(
+                $collectionVerbs,
+                ArrayHelper::getValue($verbs, $action, [])
+            );
+        }
+
+        $collectionVerbs = array_values(array_unique(
+            array_map('strtoupper', $collectionVerbs)
+        ));
+
+        $allowedVerbs = ['options' => 'OPTIONS'];
+        foreach ($verbs as $action => $defaultVerbs) {
+            if (in_array($action, $recordActions)) {
+                $allowedVerbs[$action] = $recordVerbs;
+            } elseif (in_array($action, $collectionActions)) {
+                $allowedVerbs[$action] = $collectionVerbs;
+            } else {
+                $allowedVerbs[$action] = $defaultVerbs;
+            }
+        }
+
+        foreach (self::DEFAULT_REST_ACTIONS as $action) {
+            if (!isset($allowedVerbs[$action])) {
+                if (in_array($action, $recordActions)) {
+                    $allowedVerbs[$action] = $recordVerbs;
+                } elseif (in_array($action, $collectionActions)) {
+                    $allowedVerbs[$action] = $collectionVerbs;
+                }
+            }
+        }
+
+        return $allowedVerbs;
     }
 }

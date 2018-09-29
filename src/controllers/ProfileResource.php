@@ -4,25 +4,38 @@ namespace tecnocen\roa\controllers;
 
 use tecnocen\roa\actions\ProfileUpdate;
 use tecnocen\roa\actions\ProfileView;
+use yii\filters\VerbFilter;
+use yii\rest\OptionsAction;
 
-class ProfileResource extends Resource
+class ProfileResource extends \yii\rest\Controller
 {
     /**
-     * @inheridoc
+     * @inheritdoc
      */
-    public function init()
+    public function behaviors()
     {
+        return [
+            // content negotiator, autenticator, etc moved by default to
+            // api container
+            'verbFilter' => [
+                'class' => VerbFilter::class,
+                'actions' => $this->verbs(),
+            ],
+        ];
     }
 
     /**
      * @inheridoc
      */
-    final public function verbs()
+    public function verbs()
     {
-        $verbs = parent::verbs();
-        unset($verbs['index'], $verbs['create'], $verbs['delete']);
+        $verbs = ['GET', 'PUT', 'PATCH', 'OPTIONS'];
 
-        return $verbs;
+        return [
+            'view' => $verbs,
+            'update' => $verbs,
+            'options' => $verbs,
+        ];
     }
 
     /**
@@ -33,15 +46,7 @@ class ProfileResource extends Resource
         return [
             'view' => ['class' => ProfileView::class],
             'update' => ['class' => ProfileUpdate::class],
-            'options' => ['class' => \yii\rest\OptionsAction::class],
+            'options' => ['class' => OptionsAction::class],
         ];
-    }
-
-    /**
-     * @inheridoc
-     */
-    protected function fetchActionAllowedMethods(string $actionId): array
-    {
-        return ['GET', 'PATCH', 'OPTIONS'];
     }
 }
