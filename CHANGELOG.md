@@ -1,6 +1,20 @@
 Yii2 ROA Library
 ================
 
+0.4.1 October 10, 2018
+----------------------
+
+- [Bug] `ProfileResource` supports options action for the OPTIONS verb.
+- [Enh] Simplified `ProfileResource` by extending `yii\rest\Controller`
+  directly eliminating the need of several methods.
+- [Bug] `Resource` and `ProfileResource` has unpredictable errors when
+  searching for unexisten actions or matching verbs and actions.
+- [Bug] `Resource` and `ProfileResource` now use
+  `yii\filters\VerbFilter` to handle when a verb is not supported.
+- [ENh] `tecnocen\roa\hal\Contract` and
+  `tecnocen\roa\hal\ContractTrait` define and provide a simple
+   implementation of a Hal contrat for ROA services.
+
 0.4.0 September 03, 2018
 ------------------------
 
