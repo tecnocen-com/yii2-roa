@@ -25,12 +25,12 @@ class SafeDelete extends Action
             Yii::$app->request->queryParams
         );
 
-
         if (false === $model->safeDelete()) {
             throw new ServerErrorHttpException(
                 'Failed to delete the object for unknown reason.'
             );
         }
+
         Yii::$app->getResponse()->setStatusCode(204);
     }
 }

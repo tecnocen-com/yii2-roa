@@ -3,7 +3,7 @@
 namespace tecnocen\roa\behaviors;
 
 use yii\base\InvalidConfigException;
-use yii\db\ActiveRecord;
+use yii\db\BaseActiveRecord;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -59,7 +59,7 @@ class Slug extends \yii\base\Behavior
     public $parentNotFoundMessage = '"{resourceName}" not found';
 
     /**
-     * @var ActiveRecord parent record.
+     * @var ?BaseActiveRecord parent record.
      */
     protected $parentSlug;
 
@@ -78,17 +78,18 @@ class Slug extends \yii\base\Behavior
                 self::class . '::$resourceName must be defined.'
             );
         }
+
         $this->idAttribute = (array)$this->idAttribute;
     }
 
     /**
      * Ensures the parent record is attached to the behavior.
      *
-     * @param  ActiveRecord $owner
-     * @param  bool $force whether to force finding the slug parent record
+     * @param BaseActiveRecord $owner
+     * @param bool $force whether to force finding the slug parent record
      * when `$parentSlugRelation` is defined
      */
-    private function ensureSlug($owner, $force = false)
+    private function ensureSlug(BaseActiveRecord $owner, bool $force = false)
     {
         if (null === $this->parentSlugRelation) {
             $this->resourceLink = Url::to([$this->resourceName . '/'], true);
@@ -101,30 +102,32 @@ class Slug extends \yii\base\Behavior
 
     /**
      * This populates the slug to the parentSlug
-     * @param  ActiveRecord $owner
+     * @param BaseActiveRecord $owner
      */
-    private function populateSlugParent($owner)
+    private function populateSlugParent(BaseActiveRecord $owner)
     {
         $relation = $this->parentSlugRelation;
         $this->parentSlug = $owner->$relation;
+
         if (null === $this->parentSlug) {
             throw new NotFoundHttpException(
                 strtr(
-                    $this->parentNotFoundMessage,
+                    $this->parentNotFoundMessage, 
                     [
                         '{resourceName}' => $this->parentSlugRelation,
                     ]
                 )
             );
         }
+
         $this->resourceLink = $this->parentSlug->getSelfLink()
             . '/' . $this->resourceName;
     }
 
     /**
-     * @return mixed value of the owner's identifier
+     * @return string value of the owner's identifier
      */
-    public function getResourceRecordId()
+    public function getResourceRecordId(): string
     {
         $attributeValues = [];
         foreach ($this->idAttribute as $attribute) {
@@ -137,7 +140,7 @@ class Slug extends \yii\base\Behavior
     /**
      * @return string HTTP Url to the resource list
      */
-    public function getResourceLink()
+    public function getResourceLink(): string
     {
         $this->ensureSlug($this->owner, true);
 
@@ -147,7 +150,7 @@ class Slug extends \yii\base\Behavior
     /**
      * @return string HTTP Url to self resource
      */
-    public function getSelfLink()
+    public function getSelfLink(): string
     {
         $resourceRecordId = $this->getResourceRecordId();
         $resourceLink = $this->getResourceLink();
@@ -160,7 +163,7 @@ class Slug extends \yii\base\Behavior
     /**
      * @return array link to self resource and all the acumulated parent's links
      */
-    public function getSlugLinks()
+    public function getSlugLinks(): array
     {
         $this->ensureSlug($this->owner, true);
         $selfLinks = [
@@ -184,7 +187,7 @@ class Slug extends \yii\base\Behavior
      * record or any of its chidren resources.
      * @param  Array $params
      */
-    public function checkAccess($params)
+    public function checkAccess(array $params)
     {
         $this->ensureSlug($this->owner, true);
 

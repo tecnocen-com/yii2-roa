@@ -88,7 +88,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
     /**
      * @return string the stability defined for this version.
      */
-    public function getStability()
+    public function getStability(): string
     {
         return $this->stability;
     }
@@ -131,7 +131,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
     /**
      * @return string[] gets the list of routes allowed for this api version.
      */
-    public function getRoutes()
+    public function getRoutes(): array
     {
         $routes = ['/'];
         foreach ($this->resources as $index => $value) {
@@ -145,7 +145,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
     /**
      * @return array stability, life cycle and resources for this version.
      */
-    public function getFactSheet()
+    public function getFactSheet(): array
     {
         return [
             'stability' => $this->stability,
@@ -170,6 +170,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
         parent::init();
         $releaseTime = $this->calcTime($this->releaseDate);
         $now = time();
+
         if ($releaseTime !== null && $releaseTime <= $now) {
             $deprecationTime = $this->calcTime($this->deprecationDate);
             $obsoleteTime = $this->calcTime($this->obsoleteDate);
@@ -232,7 +233,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
     /**
      * @inheritdoc
      */
-    public function createUrlRules(CompositeUrlRule $urlRule)
+    public function createUrlRules(CompositeUrlRule $urlRule): array
     {
         $rules = $this->defaultUrlRules();
         if ($this->stability == self::STABILITY_OBSOLETE) {
@@ -279,7 +280,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
      * @param string $roaRoute
      * @return string
      */
-    private function buildControllerRoute($roaRoute)
+    private function buildControllerRoute(string $roaRoute): string
     {
         return strtr(
             preg_replace(
@@ -297,7 +298,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
      * @param string $controllerRoute
      * @return string
      */
-    private function buildControllerClass($controllerRoute)
+    private function buildControllerClass(string $controllerRoute): string
     {
         $lastSeparator = strrpos($controllerRoute, '--');
         if ($lastSeparator === false) {
@@ -316,9 +317,9 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
 
     /**
      * @param string $date in 'Y-m-d' format
-     * @return int unix timestamp
+     * @return ?int unix timestamp
      */
-    private function calcTime($date)
+    private function calcTime($date): ?int
     {
         if ($date === null) {
             return null;
@@ -335,7 +336,7 @@ class ApiVersion extends \yii\base\Module implements UrlRuleCreator
     /**
      * @return string HTTP Url linking to this module
      */
-    public function getSelfLink()
+    public function getSelfLink(): string
     {
         return Url::to(['//' . $this->getUniqueId()], true);
     }

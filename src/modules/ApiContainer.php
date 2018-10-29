@@ -133,9 +133,9 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
     }
 
     /**
-     * @var \tecnocen\oauth2server\Module
+     * @return OAuth2Module
      */
-    public function getOauth2Module()
+    public function getOauth2Module(): OAuth2Module
     {
         if (!$this->hasModule($this->oauth2ModuleId)) {
             $this->oauth2Module['storageMap']['user_credentials']
@@ -168,7 +168,7 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
      * @return ApiVersion[] return all the versions attached to the container
      * indexed by their respective id.
      */
-    public function getVersionModules()
+    public function getVersionModules(): array
     {
         $versions = [];
         foreach ($this->versions as $route => $config) {
@@ -198,7 +198,7 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
     /**
      * @inheritdoc
      */
-    public function createUrlRules(CompositeUrlRule $urlRule)
+    public function createUrlRules(CompositeUrlRule $urlRule): array
     {
         // change the error handler and identityClass
         Yii::$app->errorHandler->errorAction = $this->errorAction;
@@ -222,7 +222,7 @@ class ApiContainer extends Module implements UrlRuleCreator, BootstrapInterface
     /**
      * @return string HTTP Url linking to this module
      */
-    public function getSelfLink()
+    public function getSelfLink(): string
     {
         return Url::to(['//' . $this->getUniqueId()]);
     }
