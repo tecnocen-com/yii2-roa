@@ -15,5 +15,5 @@ interface Embeddable extends \yii\base\Arrayable
     /**
      * @return string property which will contain all the expanded parameters.
      */
-    public function getExpandEnvelope();
+    public function getExpandEnvelope(): string;
 }

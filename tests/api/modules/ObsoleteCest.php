@@ -1,11 +1,14 @@
 <?php
 
+namespace modules;
+
+use ApiTester;
 use Codeception\Util\HttpCode;
 
 class ObsoleteCest
 {
     /**
-     * @depends ApiCest:versions
+     * @depends modules\ApiCest:versions
      */
     public function routes(ApiTester $I)
     {

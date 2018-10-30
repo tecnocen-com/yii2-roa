@@ -30,6 +30,7 @@ class SoftDelete extends Action
                 'Failed to delete the object for unknown reason.'
             );
         }
+
         Yii::$app->getResponse()->setStatusCode(204);
     }
 }

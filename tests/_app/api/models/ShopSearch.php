@@ -20,11 +20,14 @@ class ShopSearch extends Shop implements \tecnocen\roa\ResourceSearch
             [['name'], 'string'],
         ];
     }
+
     /**
      * @inhertidoc
      */
-    public function search(array $params, $formName = '')
-    {
+    public function search(
+        array $params,
+        ?string $formName = ''
+    ): ?ActiveDataProvider {
         $this->load($params, $formName);
         if (!$this->validate()) {
             return null;

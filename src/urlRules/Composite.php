@@ -5,6 +5,7 @@ namespace tecnocen\roa\urlRules;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\web\NotFoundHttpException;
+use yii\web\UrlManager;
 use yii\web\UrlNormalizer;
 
 /**
@@ -55,10 +56,10 @@ abstract class Composite extends \yii\web\CompositeUrlRule
      * Determines if this rule must parse the request using the children rules
      * or return `false` inmediately.
      *
+     * @param string $route
      * @return bool
-     * @param mixed $route
      */
-    abstract protected function isApplicable($route);
+    abstract protected function isApplicable(string $route): bool;
 
     /**
      * Ensures that `$rules` property is set
@@ -117,18 +118,20 @@ abstract class Composite extends \yii\web\CompositeUrlRule
      * @param UrlManager $manager the URL manager
      * @return bool
      */
-    protected function hasNormalizer($manager)
+    protected function hasNormalizer($manager): bool
     {
-        return $this->getNormalizer($manager) instanceof UrlNormalizer;
+        return null !== $this->getNormalizer($manager);
     }
 
     /**
      * @param UrlManager $manager the URL manager
-     * @return UrlNormalizer|null
+     * @return ?UrlNormalizer
      */
-    protected function getNormalizer($manager)
+    protected function getNormalizer(UrlManager $manager): ?UrlNormalizer
     {
-        if ($this->normalizer === null) {
+        if ($this->normalizer === null
+            && $manager->normalizer instanceof UrlNormalizer
+        ) {
             return $manager->normalizer;
         }
 

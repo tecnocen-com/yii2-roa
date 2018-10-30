@@ -1,8 +1,11 @@
 <?php
 
+namespace resources;
+
+use ApiTester;
+use app\fixtures\OauthAccessTokensFixture;
 use Codeception\Example;
 use Codeception\Util\HttpCode;
-use app\fixtures\OauthAccessTokensFixture;
 
 /**
  * Cest to shop resource.
