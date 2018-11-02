@@ -3,9 +3,12 @@
 namespace resources;
 
 use ApiTester;
+use app\fixtures\ItemFixture;
 use app\fixtures\EmployeeFixture;
 use app\fixtures\OauthAccessTokensFixture;
 use app\fixtures\ShopFixture;
+use app\fixtures\SaleFixture;
+use app\fixtures\SaleItemFixture;
 use Codeception\Example;
 use Codeception\Util\HttpCode;
 
@@ -27,11 +30,14 @@ class ShopCest extends \tecnocen\roa\test\AbstractResourceCest
     public function fixtures(ApiTester $I)
     {
         $I->haveFixtures([
+            'item' => ItemFixture::class,
             'shop' => ShopFixture::class,
             'employee' => [
                 'class' => EmployeeFixture::class,
                 'depends' => [],
             ],
+            'sale' => SaleFixture::class,
+            'sale_item' => SaleItemFixture::class,
         ]);
     }
 
@@ -218,7 +224,7 @@ class ShopCest extends \tecnocen\roa\test\AbstractResourceCest
                 'urlParams' => ['id' => 4],
                 'httpCode' => HttpCode::NOT_FOUND,
                 'validationErrors' => [
-                    'name' => 'The record "1" does not exists.'
+                    'name' => 'The record "4" does not exists.'
                 ],
             ],
         ];

@@ -1,6 +1,6 @@
 <?php
 
-class m130101_000003_shop_employee extends \tecnocen\migrate\CreateTableMigration
+class m130101_000006_shop_sale_item extends \tecnocen\migrate\CreateTableMigration
 {
 
     /**
@@ -8,7 +8,7 @@ class m130101_000003_shop_employee extends \tecnocen\migrate\CreateTableMigratio
      */
     public function getTableName()
     {
-        return 'shop_employee';
+        return 'shop_sale_item';
     }
 
     /**
@@ -18,9 +18,8 @@ class m130101_000003_shop_employee extends \tecnocen\migrate\CreateTableMigratio
     {
         return [
             'id' => $this->primaryKey(),
-            'shop_id' => $this->normalKey(),
-            'name' => $this->string(32)->notNull()->unique(),
-            'deleted' => $this->boolean(),
+            'item_id' => $this->normalKey(),
+            'sale_id' => $this->normalKey(),
         ];
     }
 
@@ -29,6 +28,9 @@ class m130101_000003_shop_employee extends \tecnocen\migrate\CreateTableMigratio
      */
     public function foreignKeys()
     {
-        return ['shop_id' => 'shop'];
+        return [
+            'item_id' => 'item',
+            'sale_id' => 'shop_sale',
+        ];
     }
 }

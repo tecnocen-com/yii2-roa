@@ -5,14 +5,13 @@ namespace app\models;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
- * Model class for table `{{%shop_employee}}`
+ * Model class for table `{{%shop_sale}}`
  *
  * @property integer $id
- * @property string $name
- *
  * @property Shop $shop
+ * @property Employee $employee
  */
-class Employee extends \yii\db\ActiveRecord
+class Sale extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -25,7 +24,6 @@ class Employee extends \yii\db\ActiveRecord
                 'softDeleteAttributeValues' => [
                     'deleted' => true
                 ],
-                'replaceRegularDelete' => false
             ],
         ];
     }
@@ -35,11 +33,16 @@ class Employee extends \yii\db\ActiveRecord
      */
     protected $shopClass = Shop::class;
     /**
+     * @var string full class name of the model used in the relation
+     * `getEmployee()`.
+     */
+    protected $employeeClass = Employee::class;
+    /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%shop_employee}}';
+        return '{{%shop_sale}}';
     }
     /**
      * @inheritdoc
@@ -47,15 +50,20 @@ class Employee extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['shop_id', 'name'], 'required'],
-            [['name'], 'string', 'min' => 6],
-            [['name'], 'unique'],
+            [['shop_id', 'employee_id'], 'required'],
             [
                 ['shop_id'],
                 'exist',
                 'skipOnError' => true,
                 'targetClass' => Shop::class,
                 'targetAttribute' => ['shop_id' => 'id'],
+            ],
+            [
+                ['employee_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Employee::class,
+                'targetAttribute' => ['employee_id' => 'id'],
             ],
         ];
     }
@@ -66,8 +74,8 @@ class Employee extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Employee Name',
-            'shop_id' => 'Shop ID'
+            'shop_id' => 'Shop ID',
+            'employee_id' => 'Employee ID',
         ];
     }
     /**
@@ -78,6 +86,16 @@ class Employee extends \yii\db\ActiveRecord
         return $this->hasOne(
             $this->shopClass,
             ['id' => 'shop_id']
+        );
+    }
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEmployee()
+    {
+        return $this->hasOne(
+            $this->employeeClass,
+            ['id' => 'employee_id']
         );
     }
     /**

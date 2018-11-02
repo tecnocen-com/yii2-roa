@@ -5,14 +5,14 @@ namespace app\models;
 use yii2tech\ar\softdelete\SoftDeleteBehavior;
 
 /**
- * Model class for table `{{%shop_employee}}`
+ * Model class for table `{{%item}}`
  *
  * @property integer $id
  * @property string $name
  *
- * @property Shop $shop
+ * @property Sale[] $sale
  */
-class Employee extends \yii\db\ActiveRecord
+class Item extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
@@ -31,15 +31,15 @@ class Employee extends \yii\db\ActiveRecord
     }
     /**
      * @var string full class name of the model used in the relation
-     * `getShop()`.
+     * `getSale()`.
      */
-    protected $shopClass = Shop::class;
+    protected $saleClass = Sale::class;
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%shop_employee}}';
+        return '{{%item}}';
     }
     /**
      * @inheritdoc
@@ -47,16 +47,9 @@ class Employee extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['shop_id', 'name'], 'required'],
+            [['name'], 'required'],
             [['name'], 'string', 'min' => 6],
             [['name'], 'unique'],
-            [
-                ['shop_id'],
-                'exist',
-                'skipOnError' => true,
-                'targetClass' => Shop::class,
-                'targetAttribute' => ['shop_id' => 'id'],
-            ],
         ];
     }
     /**
@@ -66,19 +59,16 @@ class Employee extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Employee Name',
-            'shop_id' => 'Shop ID'
+            'name' => 'Item Name',
         ];
     }
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getShop()
+    public function getSales()
     {
-        return $this->hasOne(
-            $this->shopClass,
-            ['id' => 'shop_id']
-        );
+        return $this->hasMany($this->saleClass, ['item_id' => 'id'])
+            ->inverseOf('item');
     }
     /**
      * @inheritdoc

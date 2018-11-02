@@ -1,6 +1,6 @@
 <?php
 
-class m130101_000002_shop extends \tecnocen\migrate\CreateTableMigration
+class m130101_000005_item extends \tecnocen\migrate\CreateTableMigration
 {
 
     /**
@@ -8,7 +8,7 @@ class m130101_000002_shop extends \tecnocen\migrate\CreateTableMigration
      */
     public function getTableName()
     {
-        return 'shop';
+        return 'item';
     }
 
     /**
