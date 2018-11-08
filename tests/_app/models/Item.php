@@ -24,8 +24,7 @@ class Item extends \yii\db\ActiveRecord
                 'class' => SoftDeleteBehavior::className(),
                 'softDeleteAttributeValues' => [
                     'deleted' => true
-                ],
-                'replaceRegularDelete' => false
+                ]
             ],
         ];
     }

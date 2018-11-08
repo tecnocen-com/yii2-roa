@@ -23,7 +23,7 @@ class Sale extends \yii\db\ActiveRecord
                 'class' => SoftDeleteBehavior::className(),
                 'softDeleteAttributeValues' => [
                     'deleted' => true
-                ],
+                ]
             ],
         ];
     }
