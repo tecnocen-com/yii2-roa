@@ -39,11 +39,11 @@ class SaleItemCest extends \tecnocen\roa\test\AbstractResourceCest
     {
         return [
             'delete item 1' => [
-                'url' => '/v1/shop/2/sale/2/item/3',
+                'url' => '/v1/shop/2/employee/3/sale/2/item/3',
                 'httpCode' => HttpCode::NO_CONTENT,
             ],
             'not found' => [
-                'url' => '/v1/shop/2/sale/2/item/3',
+                'url' => '/v1/shop/2/employee/3/sale/2/item/3',
                 'httpCode' => HttpCode::NOT_FOUND,
                 'validationErrors' => [
                     'name' => 'The record "3" does not exists.'

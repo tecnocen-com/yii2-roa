@@ -39,11 +39,11 @@ class SaleCest extends \tecnocen\roa\test\AbstractResourceCest
     {
         return [
             'delete sale 1' => [
-                'url' => '/v1/shop/2/sale/1',
+                'url' => '/v1/shop/2/employee/2/sale/1',
                 'httpCode' => HttpCode::NO_CONTENT,
             ],
             'not found' => [
-                'url' => '/v1/shop/2/sale/1',
+                'url' => '/v1/shop/2/employee/2/sale/1',
                 'httpCode' => HttpCode::NOT_FOUND,
                 'validationErrors' => [
                     'name' => 'The record "1" does not exists.'
@@ -69,6 +69,6 @@ class SaleCest extends \tecnocen\roa\test\AbstractResourceCest
      */
     protected function getRoutePattern()
     {
-        return 'v1/shop/<shop_id:\d+>/sale';
+        return 'v1/shop/<shop_id:\d+>/employee/<employe_id:\d+>/sale';
     }
 }

@@ -12,7 +12,7 @@ use Codeception\Util\HttpCode;
  *
  * @author Carlos (neverabe) Llamosas <carlos@tecnocen.com>
  */
-class ShopRecoveryCest extends \tecnocen\roa\test\AbstractResourceCest
+class ShopRestoreCest extends \tecnocen\roa\test\AbstractResourceCest
 {
     protected function authToken(ApiTester $I)
     {
@@ -22,31 +22,30 @@ class ShopRecoveryCest extends \tecnocen\roa\test\AbstractResourceCest
     /**
      * @param  ApiTester $I
      * @param  Example $example
-     * @dataprovider deleteDataProvider
+     * @dataprovider restoreDataProvider
      * @before authToken
      */
-    public function delete(ApiTester $I, Example $example)
+    public function restore(ApiTester $I, Example $example)
     {
-        $I->wantTo('Recover a Shop record.');
-        $this->internalDelete($I, $example);
+        $I->wantTo('Restore a Shop record.');
+        $this->internalUpdate($I, $example);
     }
 
     /**
      * @return array[] data for test `delete()`.
      */
-    protected function deleteDataProvider()
+    protected function restoreDataProvider()
     {
         return [
             'recover shop 4' => [
                 'urlParams' => ['id' => 4],
                 'httpCode' => HttpCode::OK,
+                'data' => [],
             ],
             'not found' => [
                 'urlParams' => ['id' => 4],
                 'httpCode' => HttpCode::NOT_FOUND,
-                'validationErrors' => [
-                    'name' => 'The record "4" does not exists.'
-                ],
+                'data' => [],
             ],
         ];
     }
@@ -67,6 +66,6 @@ class ShopRecoveryCest extends \tecnocen\roa\test\AbstractResourceCest
      */
     protected function getRoutePattern()
     {
-        return 'v1/shop-recovery';
+        return 'v1/shop-restore';
     }
 }
