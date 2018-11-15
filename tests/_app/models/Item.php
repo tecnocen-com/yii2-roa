@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-use yii2tech\ar\softdelete\SoftDeleteBehavior;
+use yii\db\ActiveQuery;
 
 /**
  * Model class for table `{{%item}}`
@@ -10,29 +10,18 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  * @property integer $id
  * @property string $name
  *
- * @property Sale[] $sale
+ * @property Sale[] $sales
  */
 class Item extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'softDeleteBehavior' => [
-                'class' => SoftDeleteBehavior::className(),
-                'softDeleteAttributeValues' => [
-                    'deleted' => true
-                ]
-            ],
-        ];
-    }
+    use SoftDeleteTrait;
+
     /**
      * @var string full class name of the model used in the relation
      * `getSale()`.
      */
-    protected $saleClass = Sale::class;
+    protected $saleItemClass = SaleItems::class;
+
     /**
      * @inheritdoc
      */
@@ -40,6 +29,7 @@ class Item extends \yii\db\ActiveRecord
     {
         return '{{%item}}';
     }
+
     /**
      * @inheritdoc
      */
@@ -62,18 +52,11 @@ class Item extends \yii\db\ActiveRecord
         ];
     }
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getSales()
+    public function getSaleItems(): ActiveQuery
     {
-        return $this->hasMany($this->saleClass, ['item_id' => 'id'])
+        return $this->hasMany($this->saleItemClass, ['item_id' => 'id'])
             ->inverseOf('item');
-    }
-    /**
-     * @inheritdoc
-     */
-    public static function find()
-    {
-        return parent::find()->where(['deleted' => null])->orWhere(['deleted' => false]);
     }
 }

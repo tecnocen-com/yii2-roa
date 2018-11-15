@@ -2,8 +2,6 @@
 
 namespace app\models;
 
-use yii2tech\ar\softdelete\SoftDeleteBehavior;
-
 /**
  * Model class for table `{{%shop_sale_item}}`
  *
@@ -18,11 +16,13 @@ class SaleItem extends \yii\db\ActiveRecord
      * `getSale()`.
      */
     protected $saleClass = Sale::class;
+
     /**
      * @var string full class name of the model used in the relation
      * `getItem()`.
      */
     protected $itemClass = Item::class;
+
     /**
      * @inheritdoc
      */
@@ -30,6 +30,7 @@ class SaleItem extends \yii\db\ActiveRecord
     {
         return '{{%shop_sale_item}}';
     }
+
     /**
      * @inheritdoc
      */
@@ -53,6 +54,7 @@ class SaleItem extends \yii\db\ActiveRecord
             ],
         ];
     }
+
     /**
      * @inheritdoc
      */
@@ -64,20 +66,22 @@ class SaleItem extends \yii\db\ActiveRecord
             'item_id' => 'Item ID',
         ];
     }
+
     /**
-     * @return \yii\db\ActiveQuery
+     * @return SoftDeleteQuery
      */
-    public function getSale()
+    public function getSale(): SoftDeleteQuery
     {
         return $this->hasOne(
             $this->saleClass,
             ['id' => 'sale_id']
         );
     }
+
     /**
-     * @return \yii\db\ActiveQuery
+     * @return SoftDeleteQuery
      */
-    public function getItem()
+    public function getItem(): SoftDeleteQuery
     {
         return $this->hasOne(
             $this->itemClass,

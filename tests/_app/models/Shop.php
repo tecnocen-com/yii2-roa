@@ -2,8 +2,6 @@
 
 namespace app\models;
 
-use yii2tech\ar\softdelete\SoftDeleteBehavior;
-
 /**
  * Model class for table `{{%shop}}`
  *
@@ -14,25 +12,14 @@ use yii2tech\ar\softdelete\SoftDeleteBehavior;
  */
 class Shop extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'softDeleteBehavior' => [
-                'class' => SoftDeleteBehavior::className(),
-                'softDeleteAttributeValues' => [
-                    'deleted' => true
-                ]
-            ],
-        ];
-    }
+    use SoftDeleteTrait;
+
     /**
      * @var string full class name of the model used in the relation
      * `getEmployee()`.
      */
     protected $employeeClass = Employee::class;
+
     /**
      * @inheritdoc
      */
@@ -40,6 +27,7 @@ class Shop extends \yii\db\ActiveRecord
     {
         return '{{%shop}}';
     }
+
     /**
      * @inheritdoc
      */
@@ -51,6 +39,7 @@ class Shop extends \yii\db\ActiveRecord
             [['name'], 'unique'],
         ];
     }
+
     /**
      * @inheritdoc
      */
@@ -61,19 +50,13 @@ class Shop extends \yii\db\ActiveRecord
             'name' => 'Shop Name',
         ];
     }
+
     /**
-     * @return \yii\db\ActiveQuery
+     * @return SoftDeleteQuery
      */
-    public function getEmployees()
+    public function getEmployees(): SoftDeleteQuery
     {
         return $this->hasMany($this->employeeClass, ['shop_id' => 'id'])
             ->inverseOf('shop');
-    }
-    /**
-     * @inheritdoc
-     */
-    public static function find()
-    {
-        return parent::find()->where(['deleted' => null])->orWhere(['deleted' => false]);
     }
 }

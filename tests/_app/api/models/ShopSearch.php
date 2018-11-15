@@ -35,7 +35,7 @@ class ShopSearch extends Shop implements \tecnocen\roa\ResourceSearch
         $class = get_parent_class();
 
         return new ActiveDataProvider([
-            'query' => $class::find()->andFilterWhere(
+            'query' => $class::find()->andFilterDeleted()->andFilterWhere(
                 ['like', 'name', $this->name]
             ),
         ]);

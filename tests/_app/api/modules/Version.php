@@ -2,29 +2,43 @@
 
 namespace app\api\modules;
 
-use app\api\resources\EmployeeResource;
-use app\api\resources\ItemResource;
-use app\api\resources\SaleResource;
-use app\api\resources\SaleItemResource;
-use app\api\resources\ShopResource;
-use app\api\resources\ShopRecoveryResource;
-use app\api\resources\RestoreSoftDeleteResource;
-use tecnocen\roa\controllers\ProfileResource;
-use tecnocen\roa\urlRules\Profile as ProfileUrlRule;
-use tecnocen\roa\urlRules\File as FileUrlRule;
+use app\api\resources\{
+    EmployeeResource,
+    EmployeeRestoreResource,
+    ItemResource,
+    ItemRestoreResource,
+    SaleResource,
+    SaleItemResource,
+    ShopRestoreResource,
+    ShopResource
+};
+use tecnocen\roa\{
+    controllers\ProfileResource,
+    modules\ApiVersion,
+    urlRules\Profile as ProfileUrlRule,
+    urlRules\File as FileUrlRule
+};
 
-class Version extends \tecnocen\roa\modules\ApiVersion
+class Version extends ApiVersion
 {
-
     public $releaseDate = '2018-06-15';
     public $deprecationDate = '2020-01-01';
     public $obsoleteDate = '2020-12-31';
 
     const ITEM_ROUTE = 'item';
+    const ITEM_RESTORE_ROUTE = 'item-restore';
+
     const SHOP_ROUTE = 'shop';
-    const SHOP_RECOVERY_ROUTE = 'shop-recovery';
+    const SHOP_RESTORE_ROUTE = 'shop-restore';
+
     const EMPLOYEE_ROUTE = self::SHOP_ROUTE . '/<shop_id:\d+>/employee';
-    const SALE_ROUTE = self::SHOP_ROUTE . '/<shop_id:\d+>/sale';
+    const EMPLOYEE_RESTORE_ROUTE = self::SHOP_ROUTE
+        . '/<shop_id:\d+>/employee-restore';
+
+    const SALE_ROUTE = self::EMPLOYEE_ROUTE . '/<employee_id:\d+>/sale';
+    const SALE_RESTORE_ROUTE = self::EMPLOYEE_ROUTE
+        . '/<employee_id:\d+>/sale-recovery';
+
     const SALE_ITEM_ROUTE = self::SALE_ROUTE . '/<sale_id:\d+>/item';
 
     /**
@@ -41,11 +55,21 @@ class Version extends \tecnocen\roa\modules\ApiVersion
                 'class' => FileUrlRule::class,
             ],
         ],
+
         self::ITEM_ROUTE => ['class' => ItemResource::class],
+        self::ITEM_RESTORE_ROUTE => ['class' => ItemRestoreResource::class],
+
         self::SHOP_ROUTE => ['class' => ShopResource::class],
-        self::SHOP_RECOVERY_ROUTE => ['class' => ShopRecoveryResource::class],
+        self::SHOP_RESTORE_ROUTE => ['class' => ShopRestoreResource::class],
+
         self::EMPLOYEE_ROUTE => ['class' => EmployeeResource::class],
+        self::EMPLOYEE_RESTORE_ROUTE => [
+            'class' => EmployeeRestoreResource::class,
+        ],
+
         self::SALE_ROUTE => ['class' => SaleResource::class],
+        self::SALE_RESTORE_ROUTE => ['class' => SaleRestoreResource::class],
+
         self::SALE_ITEM_ROUTE => ['class' => SaleItemResource::class],
     ];
 

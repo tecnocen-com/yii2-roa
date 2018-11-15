@@ -20,7 +20,7 @@ class m130101_000003_shop_employee extends \tecnocen\migrate\CreateTableMigratio
             'id' => $this->primaryKey(),
             'shop_id' => $this->normalKey(),
             'name' => $this->string(32)->notNull()->unique(),
-            'deleted' => $this->boolean(),
+            'deleted' => $this->boolean()->notNull()->defaultValue(false),
         ];
     }
 

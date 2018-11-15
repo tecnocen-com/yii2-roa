@@ -139,7 +139,8 @@ class User extends \yii\db\ActiveRecord implements
      */
     public function generatePasswordResetToken()
     {
-        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+        $this->password_reset_token = Yii::$app->security
+            ->generateRandomString() . '_' . time();
     }
 
     /**

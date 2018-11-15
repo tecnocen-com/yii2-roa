@@ -3,8 +3,8 @@
 namespace app\api\resources;
 
 use tecnocen\roa\actions\SoftDelete as ActionSoftDelete;
-use app\api\models\Shop;
-use app\api\models\ShopSearch;
+use app\api\models\{Shop, ShopSearch};
+use yii\db\ActiveQuery;
 
 /**
  * CRUD resource for `Shop` records
@@ -19,8 +19,10 @@ class ShopResource extends \tecnocen\roa\controllers\Resource
     {
         $actions = parent::actions();
         $actions['delete']['class'] = ActionSoftDelete::class;
+
         return $actions;
     }
+
     /**
      * @inheritdoc
      */
@@ -30,4 +32,12 @@ class ShopResource extends \tecnocen\roa\controllers\Resource
      * @inheritdoc
      */
     public $searchClass = ShopSearch::class;
+
+    /**
+     * @inheritdoc
+     */
+    protected function baseQuery(): ActiveQuery
+    {
+        return parent::baseQuery()->andFilterDeleted();
+    }
 }

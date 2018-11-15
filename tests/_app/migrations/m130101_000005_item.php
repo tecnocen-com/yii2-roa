@@ -19,7 +19,7 @@ class m130101_000005_item extends \tecnocen\migrate\CreateTableMigration
         return [
             'id' => $this->primaryKey(),
             'name' => $this->string(32)->notNull()->unique(),
-            'deleted' => $this->boolean(),
+            'deleted' => $this->boolean()->notNull()->defaultValue(false),
         ];
     }
 }

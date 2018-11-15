@@ -2,41 +2,26 @@
 
 namespace app\models;
 
-use yii2tech\ar\softdelete\SoftDeleteBehavior;
-
 /**
  * Model class for table `{{%shop_sale}}`
  *
  * @property integer $id
+ * @property integer $shop_id
+ * @property integer $employee_id
+ *
  * @property Shop $shop
  * @property Employee $employee
  */
 class Sale extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'softDeleteBehavior' => [
-                'class' => SoftDeleteBehavior::className(),
-                'softDeleteAttributeValues' => [
-                    'deleted' => true
-                ]
-            ],
-        ];
-    }
-    /**
-     * @var string full class name of the model used in the relation
-     * `getShop()`.
-     */
-    protected $shopClass = Shop::class;
+    use SoftDeleteTrait;
+
     /**
      * @var string full class name of the model used in the relation
      * `getEmployee()`.
      */
     protected $employeeClass = Employee::class;
+
     /**
      * @inheritdoc
      */
@@ -44,6 +29,7 @@ class Sale extends \yii\db\ActiveRecord
     {
         return '{{%shop_sale}}';
     }
+
     /**
      * @inheritdoc
      */
@@ -67,6 +53,7 @@ class Sale extends \yii\db\ActiveRecord
             ],
         ];
     }
+
     /**
      * @inheritdoc
      */
@@ -78,31 +65,12 @@ class Sale extends \yii\db\ActiveRecord
             'employee_id' => 'Employee ID',
         ];
     }
+
     /**
-     * @return \yii\db\ActiveQuery
+     * @return SoftDeleteQuery
      */
-    public function getShop()
+    public function getEmployee(): SoftDeleteQuery
     {
-        return $this->hasOne(
-            $this->shopClass,
-            ['id' => 'shop_id']
-        );
-    }
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getEmployee()
-    {
-        return $this->hasOne(
-            $this->employeeClass,
-            ['id' => 'employee_id']
-        );
-    }
-    /**
-     * @inheritdoc
-     */
-    public static function find()
-    {
-        return parent::find()->where(['deleted' => null])->orWhere(['deleted' => false]);
+        return $this->hasOne($this->employeeClass, ['id' => 'employee_id']);
     }
 }

@@ -2,27 +2,16 @@
 
 namespace app\api\resources;
 
-use app\api\models\{Sale, SaleSearch};
+use app\api\models\{Sale, SoftDeleteQuery};
 use app\models\SoftDeleteQuery;
-use tecnocen\roa\actions\SafeDelete as ActionSafeDelete;
+use tecnocen\roa\controllers\RestoreResource;
 use yii\db\ActiveQuery;
 
 /**
  * Resource to
  */
-class SaleResource extends \tecnocen\roa\controllers\Resource
+class SaleRestoreResource extends RestoreResource
 {
-    /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        $actions = parent::actions();
-        $actions['delete']['class'] = ActionSafeDelete::class;
-
-        return $actions;
-    }
-
     /**
      * @inheritdoc
      */
@@ -36,14 +25,16 @@ class SaleResource extends \tecnocen\roa\controllers\Resource
     /**
      * @inheritdoc
      */
-    public $searchClass = SaleSearch::class;
+    public $filterParams = ['employee_id', 'shop_id'];
 
     /**
      * @inheritdoc
      */
     protected function baseQuery(): ActiveQuery
     {
-        return parent::baseQuery()->andFilterDeleted('sale')->innerJoinWith([
+        return parent::baseQuery()
+            ->andFilterDeleted('sale', true)
+            ->innerJoinWith([
                 'employee' => function (SoftDeleteQuery $query) {
                     // only active employees
                     $query->andFilterDeleted('employee');
@@ -55,3 +46,5 @@ class SaleResource extends \tecnocen\roa\controllers\Resource
             ]);
     }
 }
+
+

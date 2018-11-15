@@ -18,9 +18,8 @@ class m130101_000004_shop_sale extends \tecnocen\migrate\CreateTableMigration
     {
         return [
             'id' => $this->primaryKey(),
-            'shop_id' => $this->normalKey(),
             'employee_id' => $this->normalKey(),
-            'deleted' => $this->boolean(),
+            'deleted' => $this->boolean()->notNull()->defaultValue(false),
         ];
     }
 
@@ -30,7 +29,6 @@ class m130101_000004_shop_sale extends \tecnocen\migrate\CreateTableMigration
     public function foreignKeys()
     {
         return [
-            'shop_id' => 'shop',
             'employee_id' => 'shop_employee',
         ];
     }

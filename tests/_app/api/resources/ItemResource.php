@@ -2,14 +2,17 @@
 
 namespace app\api\resources;
 
-use Yii;
-use yii\web\NotFoundHttpException;
-use tecnocen\roa\actions\SafeDelete as ActionSafeDelete;
 use app\api\models\Item;
+use tecnocen\roa\{
+    actions\SafeDelete as ActionSafeDelete,
+    controllers\Resource
+};
+use yii\db\ActiveQuery;
+
 /**
  * Resource to
  */
-class ItemResource extends \tecnocen\roa\controllers\Resource
+class ItemResource extends Resource
 {
     /**
      * @inheritdoc
@@ -18,11 +21,20 @@ class ItemResource extends \tecnocen\roa\controllers\Resource
     {
         $actions = parent::actions();
         $actions['delete']['class'] = ActionSafeDelete::class;
+
         return $actions;
     }
+
     /**
      * @inheritdoc
      */
     public $modelClass = Item::class;
 
+    /**
+     * @inheritdoc
+     */
+    protected function baseQuery(): ActiveQuery
+    {
+        return parent::baseQuery()->andFilterDeleted();
+    }
 }

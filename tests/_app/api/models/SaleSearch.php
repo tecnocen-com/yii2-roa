@@ -32,13 +32,16 @@ class SaleSearch extends Sale implements \tecnocen\roa\ResourceSearch
         if (!$this->validate()) {
             return null;
         }
-        if (null === $this->shop) {
+        if (null === $this->employee || $this->employee->deleted) {
+            throw new NotFoundHttpException('Unexistant employee path.');
+        }
+        if ($this->employee->shop->deleted) {
             throw new NotFoundHttpException('Unexistant shop path.');
         }
         $class = get_parent_class();
+
         return new ActiveDataProvider([
             'query' => $class::find()->andFilterWhere([
-                    'shop_id' => $this->shop_id,
                     'employee_id' => $this->employee_id,
                 ]),
         ]);

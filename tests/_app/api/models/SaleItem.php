@@ -20,6 +20,11 @@ class SaleItem extends \app\models\SaleItem implements Contract
     /**
      * @inheritdoc
      */
+    protected $itemClass = Item::class;
+
+    /**
+     * @inheritdoc
+     */
     public function extraFields()
     {
         return [

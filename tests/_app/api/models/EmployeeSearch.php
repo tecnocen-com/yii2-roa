@@ -33,12 +33,14 @@ class EmployeeSearch extends Employee implements \tecnocen\roa\ResourceSearch
         if (!$this->validate()) {
             return null;
         }
-        if (null === $this->shop) {
+        if (null === $this->shop || $this->shop->deleted) {
             throw new NotFoundHttpException('Unexistant shop path.');
         }
         $class = get_parent_class();
+
         return new ActiveDataProvider([
-            'query' => $class::find()->andFilterWhere([
+            'query' => $class::find()
+                ->andFilterWhere([
                     'shop_id' => $this->shop_id,
                 ])
                 ->andFilterWhere(['like', 'name', $this->name]),

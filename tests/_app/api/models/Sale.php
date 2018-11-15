@@ -15,7 +15,7 @@ class Sale extends \app\models\Sale implements Contract
     /**
      * @inheritdoc
      */
-    protected $shopClass = Shop::class;
+    protected $employeeClass = Employee::class;
 
     /**
      * @inheritdoc
@@ -23,7 +23,6 @@ class Sale extends \app\models\Sale implements Contract
     public function extraFields()
     {
         return [
-            'shop',
             'employee'
         ];
     }
@@ -35,7 +34,7 @@ class Sale extends \app\models\Sale implements Contract
     {
         return [
             'resourceName' => 'sale',
-            'parentSlugRelation' => 'shop',
+            'parentSlugRelation' => 'employee',
         ];
     }
 }

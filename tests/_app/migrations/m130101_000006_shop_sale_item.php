@@ -18,10 +18,17 @@ class m130101_000006_shop_sale_item extends \tecnocen\migrate\CreateTableMigrati
     public function columns()
     {
         return [
-            'id' => $this->primaryKey(),
             'item_id' => $this->normalKey(),
             'sale_id' => $this->normalKey(),
         ];
+    }
+
+    /**
+     * @inhertidoc
+     */
+    public function compositePrimaryKeys()
+    {
+        return ['item_id', 'sale_id'];
     }
 
     /**
