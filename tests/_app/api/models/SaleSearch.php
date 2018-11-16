@@ -18,7 +18,7 @@ class SaleSearch extends Sale implements \tecnocen\roa\ResourceSearch
     public function rules()
     {
         return [
-            [['shop_id','employee_id'], 'integer'],
+            [['employee_id'], 'integer'],
         ];
     }
     /**
@@ -35,7 +35,10 @@ class SaleSearch extends Sale implements \tecnocen\roa\ResourceSearch
         if (null === $this->employee || $this->employee->deleted) {
             throw new NotFoundHttpException('Unexistant employee path.');
         }
-        if ($this->employee->shop->deleted) {
+        if ($this->employee->shop->deleted
+            || !isset($params['shop_id'])
+            || $this->employee->shop_id != $params['shop_id']
+        ) {
             throw new NotFoundHttpException('Unexistant shop path.');
         }
         $class = get_parent_class();
