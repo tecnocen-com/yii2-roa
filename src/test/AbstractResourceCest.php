@@ -283,7 +283,7 @@ abstract class AbstractResourceCest
     {
         $this->checkSuccessViewResponse($I, $example);
         $I->seeHttpHeaderOnce('Location');
-        $this->checkSelfLink($I->grabHttpHeader('Location'));
+        $this->checkSelfLink($I, $I->grabHttpHeader('Location'));
     }
 
     /**
