@@ -343,7 +343,7 @@ abstract class AbstractResourceCest
             return;
         }
 
-        verify($I->grabResponseByJsonPath($path))
+        verify($I->grabDataFromResponseByJsonPath($path))
             ->contains($expected);
     }
 
