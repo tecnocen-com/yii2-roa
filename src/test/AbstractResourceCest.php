@@ -342,7 +342,7 @@ abstract class AbstractResourceCest
             return;
         }
 
-        verify($selfLink = $I->grabResponseByJsonPath($path()))
+        verify($I->grabDataFromResponseByJsonPath($path))
             ->contains($expected);
     }
 
