@@ -283,9 +283,7 @@ abstract class AbstractResourceCest
     {
         $this->checkSuccessViewResponse($I, $example);
         $I->seeHttpHeaderOnce('Location');
-        $I->seeResponseContainsJson(['_links' => [
-            'self' => ['href' => $I->grabHttpHeader('Location')],
-        ]]);
+        $this->checkSelfLink($I, $I->grabHttpHeader('Location'));
     }
 
     /**
@@ -333,6 +331,28 @@ abstract class AbstractResourceCest
         if (isset($example['error'])) {
             $I->seeResponseContainsJson($example['error']);
         }
+    }
+
+    /**
+     * @param Tester $I
+     * @param string $expected the expected self link.
+     */
+    protected function checkSelfLink(Tester $I, string $expected)
+    {
+        if ('' == $path = $this->selfLinkPath()) {
+            return;
+        }
+         verify($I->grabDataFromResponseByJsonPath($path))
+            ->contains($expected);
+    }
+
+    /**
+     * @return string the path which will be used to obtain the self link of a
+     * record. Return empty string to skip that check.
+     */
+    protected function selfLinkPath(): string
+    {
+        return '$._links.self.href';
     }
 
     /**
