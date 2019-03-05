@@ -59,7 +59,7 @@ la [guia de recurso](roa-resource.md).
 Api Documentation
 -----------------
 
-La propiedad `$apidoc` puede almacenar una URL para la documentacion del api.
+La propiedad `$apidoc` puede almacenar una URL para la documentación del api.
 
 Ciclo de Vida
 -------------
@@ -178,5 +178,5 @@ fecha `$obsoleteDate` menor a la fecha actual.
 Recurso de informacion de version
 ---------------------------------
 
-Al acceder a la ruta base de la version se puede encontrar la documentacion de
-sus ciclo de vida, coleccion de rutas y el apidoc.
+Al acceder a la ruta base de la versión se puede encontrar la documentación de
+sus ciclo de vida, colección de rutas y el apidoc.
