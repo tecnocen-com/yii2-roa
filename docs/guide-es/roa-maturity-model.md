@@ -82,7 +82,7 @@ se devuelve
 {
   "id": "3",
   "name": "Tienda Matriz",
-  "engargado_id": "7",
+  "encargado_id": "7",
   "_links": {
     "self": {
       "href": "/store/3"
@@ -102,7 +102,7 @@ parametro llamado `{rel}` estos sirven para poder agrupar enlaces relacionales
 dependiendo de su uso y aplicacion. El uso mas comun es para poder diferenciar
 que recursos se pueden incrustar como se define en el siguiente paso.
 
-#### HAL 2: Recursos Incrustados
+#### HAL 3: Recursos Incrustados
 
 En una misma llamada HTTP se puede incrustar informacion de otros recursos
 relacionados. Usando la propiedad `_embedded`
@@ -116,6 +116,9 @@ Ejemplo la llamada `GET /store/1/product?expand=product,store.manager`
     "inventory": "1028",
     "_links": {
         
+    }
+    "_embedded":{
+
     }
   },
   {
