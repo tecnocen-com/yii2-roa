@@ -7,6 +7,16 @@ Yii2 ROA Library
 - [BRK] Methods now use the typecast supported in php 7.1
 - [BRK] Added `tecnocen\roa\hal\Contract::getSelfLink()`
 
+0.4.3 December 14, 2018
+----------------------
+
+- [Enh] barebones fix of #35 hard coded self link
+
+0.4.2 October 25, 2018
+----------------------
+
+- [Enh] Can use Single Use token with 4.1.0 yii2-oauth2-server
+
 0.4.1 October 10, 2018
 ----------------------
 
