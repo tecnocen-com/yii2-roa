@@ -2,17 +2,14 @@
 
 namespace tecnocen\roa\controllers;
 
-use tecnocen\roa\actions;
-use tecnocen\roa\FileRecord;
+use tecnocen\roa\{actions, FileRecord};
 use Yii;
 use yii\base\InvalidRouteException;
 use yii\data\ActiveDataProvider;
-use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
+use yii\db\{ActiveQuery, ActiveRecord};
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
-use yii\web\MethodNotAllowedHttpException;
-use yii\web\NotFoundHttpException;
+use yii\web\{MethodNotAllowedHttpException, NotFoundHttpException};
 
 /**
  * Resource Controller with OAuth2 Support.
@@ -217,8 +214,16 @@ class Resource extends \yii\rest\ActiveController
     protected function baseQuery(): ActiveQuery
     {
         $modelClass = $this->modelClass;
-        $query = $modelClass::find();
 
+        return $modelClass::find()
+            ->andFilterWhere($this->filterCondition());
+    }
+
+    /**
+     * @return the conditions to filter the base query to find records.
+     */
+    protected function filterCondition(): array
+    {
         $condition = [];
         foreach ($this->filterParams as $attribute => $param) {
             if (is_int($attribute)) {
@@ -226,13 +231,12 @@ class Resource extends \yii\rest\ActiveController
             }
             $condition[$attribute] = Yii::$app->request->getQueryParam($param);
         }
-        $query->andFilterWhere($condition);
 
         if (isset($this->userAttribute)) {
-            $query->andWhere([$this->userAttribute => Yii::$app->user->id]);
+            $condition[$this->userAttribute] = Yii::$app->user->id;
         }
 
-        return $query;
+        return $condition;
     }
 
     /**

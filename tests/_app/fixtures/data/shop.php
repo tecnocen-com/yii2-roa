@@ -10,4 +10,7 @@ return [
     [
     	'name' => 'Bed Bath & Beyond',
     ],
+    [
+    	'name' => 'Walmart',
+    ],
 ];

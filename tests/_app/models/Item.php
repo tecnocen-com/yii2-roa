@@ -2,30 +2,32 @@
 
 namespace app\models;
 
+use yii\db\ActiveQuery;
+
 /**
- * Model class for table `{{%shop}}`
+ * Model class for table `{{%item}}`
  *
  * @property integer $id
  * @property string $name
  *
- * @property Employee[] $employee
+ * @property Sale[] $sales
  */
-class Shop extends \yii\db\ActiveRecord
+class Item extends \yii\db\ActiveRecord
 {
     use SoftDeleteTrait;
 
     /**
      * @var string full class name of the model used in the relation
-     * `getEmployee()`.
+     * `getSale()`.
      */
-    protected $employeeClass = Employee::class;
+    protected $saleItemClass = SaleItems::class;
 
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%shop}}';
+        return '{{%item}}';
     }
 
     /**
@@ -39,7 +41,6 @@ class Shop extends \yii\db\ActiveRecord
             [['name'], 'unique'],
         ];
     }
-
     /**
      * @inheritdoc
      */
@@ -47,16 +48,15 @@ class Shop extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Shop Name',
+            'name' => 'Item Name',
         ];
     }
-
     /**
-     * @return SoftDeleteQuery
+     * @return ActiveQuery
      */
-    public function getEmployees(): SoftDeleteQuery
+    public function getSaleItems(): ActiveQuery
     {
-        return $this->hasMany($this->employeeClass, ['shop_id' => 'id'])
-            ->inverseOf('shop');
+        return $this->hasMany($this->saleItemClass, ['item_id' => 'id'])
+            ->inverseOf('item');
     }
 }

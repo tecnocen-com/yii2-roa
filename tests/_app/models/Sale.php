@@ -3,46 +3,53 @@
 namespace app\models;
 
 /**
- * Model class for table `{{%shop_employee}}`
+ * Model class for table `{{%shop_sale}}`
  *
  * @property integer $id
  * @property integer $shop_id
- * @property string $name
+ * @property integer $employee_id
  *
  * @property Shop $shop
+ * @property Employee $employee
  */
-class Employee extends \yii\db\ActiveRecord
+class Sale extends \yii\db\ActiveRecord
 {
     use SoftDeleteTrait;
 
     /**
      * @var string full class name of the model used in the relation
-     * `getShop()`.
+     * `getEmployee()`.
      */
-    protected $shopClass = Shop::class;
+    protected $employeeClass = Employee::class;
 
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%shop_employee}}';
+        return '{{%shop_sale}}';
     }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['shop_id', 'name'], 'required'],
-            [['name'], 'string', 'min' => 6],
-            [['name'], 'unique'],
+            [['shop_id', 'employee_id'], 'required'],
             [
                 ['shop_id'],
                 'exist',
                 'skipOnError' => true,
                 'targetClass' => Shop::class,
                 'targetAttribute' => ['shop_id' => 'id'],
+            ],
+            [
+                ['employee_id'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Employee::class,
+                'targetAttribute' => ['employee_id' => 'id'],
             ],
         ];
     }
@@ -54,18 +61,16 @@ class Employee extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Employee Name',
-            'shop_id' => 'Shop ID'
+            'shop_id' => 'Shop ID',
+            'employee_id' => 'Employee ID',
         ];
     }
+
     /**
      * @return SoftDeleteQuery
      */
-    public function getShop(): SoftDeleteQuery
+    public function getEmployee(): SoftDeleteQuery
     {
-        return $this->hasOne(
-            $this->shopClass,
-            ['id' => 'shop_id']
-        );
+        return $this->hasOne($this->employeeClass, ['id' => 'employee_id']);
     }
 }
