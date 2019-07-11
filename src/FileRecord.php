@@ -15,7 +15,7 @@ interface FileRecord
      * @param string $ext the requested extension.
      * @return string the full path for the file.
      */
-    public function filePath($ext);
+    public function filePath(string $ext): string;
 
     /**
      * Name used to save the file upon download.
@@ -23,7 +23,7 @@ interface FileRecord
      * @param string $ext the requested extension.
      * @return ?string
      */
-    public function fileName($ext);
+    public function fileName(string $ext): ?string;
 
     /**
      * Full path for the file.
@@ -31,5 +31,5 @@ interface FileRecord
      * @param string $ext the requested extension.
      * @return string
      */
-    public function fileMimeType($ext);
+    public function fileMimeType(string $ext): string;
 }

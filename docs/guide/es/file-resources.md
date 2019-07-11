@@ -1,7 +1,7 @@
 Recursos de Archivos
 ====================
 
-Algunos recursos necesitan subir y descargar archivos, ademas estos archivos
+Algunos recursos necesitan subir y descargar archivos, además estos archivos
 deben ser accesibles mediante recursos ROA para por ejemplo validar que se
 tengan los permisos de acceso y que estos sigan el ciclo de vida de recursos.
 
@@ -10,8 +10,8 @@ Para ello se emplean varias clases que permitan su manejo como recursos ROA.
 tecnocen\roa\FileRecord
 -----------------------
 
-Interfaz de PHP la cual facilitar usar el metodo `yii\web\Response::sendFile()`
-para devolver un archivo como respuesta de una peticion.
+Interfaz de PHP la cual facilita usar el método `yii\web\Response::sendFile()`
+para devolver un archivo como respuesta de una petición.
 
 ```php
 namespace backend\api\v1\models;
@@ -64,13 +64,13 @@ class Product extends \common\models\Product implements FileRecord, Linkable
 }
 ```
 
-> Note: all the logic to actually store the file and save the record must be
-  implemented independently.
+> Nota: Toda la lógica para almacenar el archivo y guardar el registro
+  debe implementarse de forma independiente.
 
 tecnocen\roa\controllers\Resource
 ---------------------------------
 
-On the resource class you must configure which files to load to the model.
+En la clase del Recurso, se debe configurar qué archivos cargar al modelo.
 
 
 ```php
@@ -90,9 +90,9 @@ class ProductResource extends \tecnocen\roa\controllers\Resource
 
 ### tecnocen\roa\actions\FileStream
 
-The Resource class will automatically recognize `Product` as a file record and
-configure this action by default, you can optionally modify it on the `actions()`
-method.
+La clase Resource reconocerá automaticamente `Product` como un registro de
+archivo y configurará esta acción por defecto, opcionalmente esto se puede
+modificar en el método `actions()`.
 
 ```php
 class ProductResource extends \tecnocen\roa\controllers\Resource

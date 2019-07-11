@@ -2,8 +2,6 @@
 
 namespace tecnocen\roa\test;
 
-use yii\web\UserIdentity;
-
 /**
  * Interface to test ROA resources services.
  *

@@ -7,6 +7,7 @@ use tecnocen\roa\FileRecord;
 use Yii;
 use yii\base\InvalidRouteException;
 use yii\data\ActiveDataProvider;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -166,7 +167,7 @@ class Resource extends \yii\rest\ActiveController
      *
      * @return ActiveDataProvider
      */
-    public function indexProvider()
+    public function indexProvider(): ActiveDataProvider
     {
         return new ActiveDataProvider(['query' => $this->indexQuery()]);
     }
@@ -177,7 +178,7 @@ class Resource extends \yii\rest\ActiveController
      * @return ActiveRecord
      * @throws NotFoundHttpException if the record can't be found.
      */
-    public function findModel($id)
+    public function findModel($id): ActiveRecord
     {
         if (null === ($model = $this->findQuery($id)->one())) {
             throw new NotFoundHttpException(
@@ -194,7 +195,7 @@ class Resource extends \yii\rest\ActiveController
      * @param int $id the unique identifier
      * @return ActiveQuery
      */
-    public function findQuery($id)
+    public function findQuery($id): ActiveQuery
     {
         return $this->baseQuery()->andWhere([$this->idAttribute => $id]);
     }
@@ -205,7 +206,7 @@ class Resource extends \yii\rest\ActiveController
      *
      * @return ActiveQuery
      */
-    public function indexQuery()
+    public function indexQuery(): ActiveQuery
     {
         return $this->baseQuery();
     }
@@ -213,7 +214,7 @@ class Resource extends \yii\rest\ActiveController
     /**
      * @return ActiveQuery
      */
-    protected function baseQuery()
+    protected function baseQuery(): ActiveQuery
     {
         $modelClass = $this->modelClass;
         $query = $modelClass::find();

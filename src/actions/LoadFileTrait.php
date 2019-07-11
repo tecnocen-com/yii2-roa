@@ -31,7 +31,7 @@ trait LoadFileTrait
      *
      * @return UploadedFile[] files sent to the action.
      */
-    protected function parseFileAttributes()
+    protected function parseFileAttributes(): array
     {
         $files = [];
         foreach ($this->fileAttributes as $attribute => $value) {

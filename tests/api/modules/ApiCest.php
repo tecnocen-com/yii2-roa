@@ -1,5 +1,8 @@
 <?php
 
+namespace modules;
+
+use ApiTester;
 use Codeception\Util\HttpCode;
 
 class ApiCest

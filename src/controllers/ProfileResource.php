@@ -27,7 +27,7 @@ class ProfileResource extends \yii\rest\Controller
     /**
      * @inheridoc
      */
-    public function verbs()
+    protected function verbs()
     {
         $verbs = ['GET', 'PUT', 'PATCH', 'OPTIONS'];
 
