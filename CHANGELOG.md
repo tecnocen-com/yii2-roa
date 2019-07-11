@@ -1,6 +1,37 @@
 Yii2 ROA Library
 ================
 
+0.5.0 (Release Candidate)
+-------------------------
+
+- [BRK] Methods now use the typecast supported in php 7.1
+- [BRK] Added `tecnocen\roa\hal\Contract::getSelfLink()`
+
+0.4.3 December 14, 2018
+----------------------
+
+- [Enh] barebones fix of #35 hard coded self link
+
+0.4.2 October 25, 2018
+----------------------
+
+- [Enh] Can use Single Use token with 4.1.0 yii2-oauth2-server
+
+
+0.4.1 October 10, 2018
+----------------------
+
+- [Bug] `ProfileResource` supports options action for the OPTIONS verb.
+- [Enh] Simplified `ProfileResource` by extending `yii\rest\Controller`
+  directly eliminating the need of several methods.
+- [Bug] `Resource` and `ProfileResource` has unpredictable errors when
+  searching for unexisten actions or matching verbs and actions.
+- [Bug] `Resource` and `ProfileResource` now use
+  `yii\filters\VerbFilter` to handle when a verb is not supported.
+- [ENh] `tecnocen\roa\hal\Contract` and
+  `tecnocen\roa\hal\ContractTrait` define and provide a simple
+   implementation of a Hal contrat for ROA services.
+
 0.4.0 September 03, 2018
 ------------------------
 

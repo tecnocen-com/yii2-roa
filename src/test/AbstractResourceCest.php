@@ -341,7 +341,6 @@ abstract class AbstractResourceCest
         if ('' == $path = $this->selfLinkPath()) {
             return;
         }
-
         verify($I->grabDataFromResponseByJsonPath($path))
             ->contains($expected);
     }
