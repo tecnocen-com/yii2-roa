@@ -1,14 +1,14 @@
-Filtros de Accion
+Filtros de Acción
 =================
 
 Las clases que extienden [ActionFilter] definen comportamientos para
-ejecutarse antes y despues de ejecutarse una accion.
+ejecutarse antes y después de ejecutarse una acción.
 
 ActionFilter en Yii2
 --------------------
 
-La mayoria de los filtros tales como [Cors], [HostControl], [HttpCache],
-[PageCache] y [RateLimiter] no tienen implementacion por defecto y se pueden
+La mayoría de los filtros tales como [Cors], [HostControl], [HttpCache],
+[PageCache] y [RateLimiter] no tienen implementación por defecto y se pueden
 usar tal y como se detalla en la [Guia de Yii2].
 
 Funcionalidades Implementadas en ROA
@@ -19,7 +19,7 @@ ROA que es necesario resaltar.
 
 ### Autenticacion
 
-La autenticacion [OAuth2] es soportada con los filtros:
+La autenticación [OAuth2] es soportada con los filtros:
 
 - `tecnocen\oauth2server\filters\auth\CompositeAuth`
 - `yii\filters\auth\HttpBearerAuth`
@@ -45,12 +45,12 @@ public function behaviors()
 }
 ```
 
-> Por defecto esta definido en `tecnocen\roa\modules\ApiContainer::behaviors()`.
-> al extender este metodo hay que tener esto en cuenta.
+> Por defecto está definido en `tecnocen\roa\modules\ApiContainer::behaviors()`.
+> al extender este método hay que tener esto en cuenta.
 
-### Negociacion de Contenido
+### Negociación de Contenido
 
-Negociacion de Contenido es soportado con el filtro
+Negociación de Contenido es soportado con el filtro
 `yii\filters\ContentNegotiator`.
 
 ```php
@@ -72,22 +72,22 @@ public function behaviors()
 }
 ```
 
-> Por defecto esta definido en `tecnocen\roa\modules\ApiContainer::behaviors()`.
-> al extender este metodo hay que tener esto en cuenta.
+> Por defecto está definido en `tecnocen\roa\modules\ApiContainer::behaviors()`.
+> al extender este método hay que tener esto en cuenta.
 
 ### Control de Acceso
 
 El control de acceso es mas complejo ya que no solo se soporta con el filtro
-`yii\filters\AccessControl` si no ademas con metodos
+`yii\filters\AccessControl` si no ademas con métodos
 `tecnocen\roa\controllers\Resource::checkAccess()`,
 `tecnocen\roa\behaviors\Slug::checkAccess()` y paradigmas como [RBAC].
 
 [Articulo de Control de Acceso en ROA]
 
-Metodos de Uso
+Métodos de Uso
 --------------
 
-Los filtros de accion se pueden usar de varias maneras tanto en los recursos
+Los filtros de acción se pueden usar de varias maneras tanto en los recursos
 como en el modulo de contenedor o en los modulos de versiones dependiendo del
 alcance que se necesite para cada funcionalidad.
 
@@ -125,14 +125,14 @@ class Api extends \tecnocen\roa\modules\ApiContainer
 
 Esto hace que todas las versiones dadas de alta en el contenedor.
 
-> Por defecto el metodo contiene soporte para autenticacion y content negotiator
+> Por defecto el método contiene soporte para autenticación y content negotiator
 > por lo que se deben redefinir estas funcionalidades al sobre escribir el
-> metodo o invocar `parent::behaviors()` como en el ejemplo
+> método o invocar `parent::behaviors()` como en el ejemplo
 
 Anexar en Api Version
 ---------------------
 
-Se puede anexar a una instancia de version de api desde el contenedor:
+Se puede anexar a una instancia de versión de api desde el contenedor:
 
 ```php
 
@@ -162,7 +162,7 @@ class Api extends \tecnocen\roa\modules\ApiContainer
 }
 ```
 
-o en la declaracion de la clase.
+o en la declaración de la clase.
 
 ```php
 use tecnocen\oauth2server\filters\auth\CompositeAuth;
@@ -194,9 +194,9 @@ class V1 extends \tecnocen\roa\modules\ApiVersion
 Anexar a Recurso
 ----------------
 
-Por ultimo se puede definir la autenticacion por recurso de forma individual.
+Por último se puede definir la autenticación por recurso de forma individual.
 
-Esto se puede hacer desde la version a la que pertenece.
+Esto se puede hacer desde la versión a la que pertenece.
 
 
 ```php
@@ -227,7 +227,7 @@ class V1 extends \tecnocen\roa\modules\ApiVersion
 }
 ```
 
-o en la declaracion de la clase.
+o en la declaración de la clase.
 
 ```php
 use tecnocen\oauth2server\filters\auth\CompositeAuth;
@@ -256,8 +256,8 @@ class ShopResource extends \tecnocen\roa\controllers\Resource
 }
 ```
 
-> Si se us algun ActionFilter con mas de uno de los metodos descritos,
-> todos se ejecutaran a la vez por lo que es necesario usar `$except` y `$only`
+> Si se us algún ActionFilter con mas de uno de los métodos descritos,
+> todos se ejecutarán a la vez por lo que es necesario usar `$except` y `$only`
 > para evitar colisiones.
 
 [ActionFilter]: https://www.yiiframework.com/doc/api/2.0/yii-base-actionfilter

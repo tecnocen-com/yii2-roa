@@ -35,7 +35,7 @@ class BackendApi extends \tecnocen\roa\modules\ApiContainer
 Propiedad `$versions`
 ---------------------
 
-La propiedad `$versions` declarara las versiones soportadas y las clases de
+La propiedad `$versions` declarará las versiones soportadas y las clases de
 los módulos asociados a cada versión.
 
 El índice determina el identificador de las versiones así como la ruta de

@@ -11,23 +11,23 @@ yii\filters\AccessControl
 es un ActionFilter de Yii2 que permite declarar reglas de acceso el cual se puede
 axexar en controladores o modulos.
 
-Al ser un ActionFilter de Yii2 se puede usar como se describe en la guia de
+Al ser un ActionFilter de Yii2 se puede usar como se describe en la guía de
 [Filtros de Accion](action-filters.md)
 
 Cubre el caso de uso de dar soporte a modulos completos o grupos de
-controladores mediante la configuracion de `$only` y `$except`.
+controladores mediante la configuración de `$only` y `$except`.
 
 CheckAccess
 -----------
 
-Hay varios metodos declarados como 'checkAccess' cubriendo diferentes casos de
+Hay varios métodos declarados como 'checkAccess' cubriendo diferentes casos de
 uso y formas de ser declarados.
 
 ### tecnocen\roa\controllers\Resource::checkAccess()
 
 Extiende de
 [yii\rest\ActiveController](https://www.yiiframework.com/doc/api/2.0/yii-rest-activecontroller)
-Cubre el caso de uso de validar el acceso para un controlador especifico.
+Cubre el caso de uso de validar el acceso para un controlador específico.
 
 ```php
 class ShopResource extends \tecnocen\roa\Resource
@@ -41,11 +41,11 @@ class ShopResource extends \tecnocen\roa\Resource
 
 ### tecnocen\roa\actions\Action::$checkAcccess
 
-Extiende de [yii\rest\Action] cubre el caso de uso de validar una accion
-especifica.
+Extiende de [yii\rest\Action] cubre el caso de uso de validar una acción
+específica.
 
-La firma de la funcion anonima cambia agregando un argumento `$params` que
-contiene los parametros enviados mediante POST y GET.
+La firma de la función anónima cambia agregando un argumento `$params` que
+contiene los parámetros enviados mediante POST y GET.
 
 
 ```php
@@ -71,10 +71,10 @@ class ShopResource extends \tecnocen\roa\Resource
 ### tecnocen\roa\behaviors\Slug::$checkAccess
 
 La clase Slug se anexa a los modelos  para generar links anidados de registros
-y ademas revisar que se tenga acceso a cada seccion de la ruta roa.
+y además revisar que se tenga acceso a cada sección de la ruta roa.
 
-Por ejemplo si se tiene hace una peticion a la ruta `shop/1/section/3/aisle/5`
-se ejecuta la validacion de `checkAccess` en `aisle` de id 5, section de id 3
+Por ejemplo si se tiene, hace una petición a la ruta `shop/1/section/3/aisle/5`
+se ejecuta la validación de `checkAccess` en `aisle` de id 5, section de id 3
 y `shop` de id 1 en ese orden.
 
 ```php
@@ -94,4 +94,4 @@ class Shop extends \yii\db\ActiveRecord
 }
 ```
 
-Donde `$params` son los parametros enviados mediante POST y GET.
+Donde `$params` son los parámetros enviados mediante POST y GET.
