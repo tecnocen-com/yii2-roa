@@ -33,5 +33,5 @@ Estructura
 Pruebas
 -------
 
-- Ejecutar Pruebas
-- Crear Pruebas de Recursos ROA
+- [Ejecutar Pruebas]](run-tests.md)
+- [Crear Pruebas de Recursos ROA](create-tests.md)
