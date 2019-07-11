@@ -2,8 +2,7 @@
 
 namespace tecnocen\roa\test;
 
-use Codeception\Example;
-use Codeception\Util\HttpCode;
+use Codeception\{Example, Util\HttpCode};
 
 abstract class AbstractAccessTokenCest
 {

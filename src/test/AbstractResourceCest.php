@@ -2,8 +2,7 @@
 
 namespace tecnocen\roa\test;
 
-use Codeception\Example;
-use Codeception\Util\HttpCode;
+use Codeception\{Example, Util\HttpCode};
 use tecnocen\roa\urlRules\Resource as ResourceUrlRule;
 use yii\web\UrlManager;
 
@@ -342,7 +341,7 @@ abstract class AbstractResourceCest
         if ('' == $path = $this->selfLinkPath()) {
             return;
         }
-         verify($I->grabDataFromResponseByJsonPath($path))
+        verify($I->grabDataFromResponseByJsonPath($path))
             ->contains($expected);
     }
 
