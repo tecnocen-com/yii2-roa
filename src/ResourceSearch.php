@@ -2,6 +2,8 @@
 
 namespace tecnocen\roa;
 
+use yii\data\ActiveDataProvider;
+
 interface ResourceSearch
 {
     /**
@@ -9,7 +11,11 @@ interface ResourceSearch
      *
      * @param array $params search parameters.
      * @param ?string $formName the name of the form to load into the model
-     * @return ?\yii\data\DataProviderInterface
+     * @return ?DataProviderInterface
      */
-    public function search(array $params, $formName = null);
+    public function search(
+        array $params,
+        ?string $formName = ''
+    ): ?ActiveDataProvider;
+
 }

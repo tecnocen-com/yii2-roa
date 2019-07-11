@@ -10,5 +10,5 @@ interface UrlRuleCreator
      * @param Composite $urlRule the $urlRule object invoking the creator.
      * @return \yii\web\UrlRuleInterface[]
      */
-    public function createUrlRules(Composite $urlRule);
+    public function createUrlRules(Composite $urlRule): array;
 }

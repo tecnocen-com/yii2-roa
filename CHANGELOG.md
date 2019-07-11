@@ -1,6 +1,12 @@
 Yii2 ROA Library
 ================
 
+0.5.0 (Release Candidate)
+-------------------------
+
+- [BRK] Methods now use the typecast supported in php 7.1
+- [BRK] Added `tecnocen\roa\hal\Contract::getSelfLink()`
+
 0.4.3 December 14, 2018
 ----------------------
 
@@ -10,6 +16,7 @@ Yii2 ROA Library
 ----------------------
 
 - [Enh] Can use Single Use token with 4.1.0 yii2-oauth2-server
+
 
 0.4.1 October 10, 2018
 ----------------------

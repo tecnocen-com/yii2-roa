@@ -84,7 +84,7 @@ trait EmbeddableTrait
     /**
      * @return string property which will contain all the expanded parameters.
      */
-    public function getExpandEnvelope()
+    public function getExpandEnvelope(): string
     {
         return Embeddable::EMBEDDED_PROPERTY;
     }
@@ -100,7 +100,7 @@ trait EmbeddableTrait
      * field names, and the array values are the corresponding object property
      * names or PHP callables returning the field values.
      */
-    protected function resolveFieldList($fields)
+    protected function resolveFieldList($fields): array
     {
         $fields = $this->extractRootFields($fields);
         $result = [];
@@ -129,7 +129,7 @@ trait EmbeddableTrait
      * field names, and the array values are the corresponding object property
      * names or PHP callables returning the field values.
      */
-    protected function resolveExpandList($expand)
+    protected function resolveExpandList($expand): array
     {
         if (empty($expand)) {
             return [];

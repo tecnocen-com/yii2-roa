@@ -29,13 +29,9 @@ class Modular extends Composite
     public $moduleId;
 
     /**
-     * Determines if this rule must parse the request using the children rules
-     * or return `false` inmediately.
-     *
-     * @return bool
-     * @param mixed $route
+     * @inheritdoc
      */
-    protected function isApplicable($route)
+    protected function isApplicable(string $route): bool
     {
         // only parse rules which start with the module id
         return 0 === strpos($route, $this->moduleId);

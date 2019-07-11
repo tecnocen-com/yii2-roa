@@ -41,7 +41,7 @@ class FileStream extends Action
      * @param mixed $id the identifier value.
      * @param string $ext the requested file extension.
      */
-    public function run($id, $ext)
+    public function run($id, string $ext)
     {
         $this->checkAccess(
             ($model = $this->findModel($id)),

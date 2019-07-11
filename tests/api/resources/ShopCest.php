@@ -1,16 +1,20 @@
 <?php
 
+namespace resources;
+
+use ApiTester;
+use app\fixtures\EmployeeFixture;
+use app\fixtures\OauthAccessTokensFixture;
+use app\fixtures\ShopFixture;
 use Codeception\Example;
 use Codeception\Util\HttpCode;
-use app\fixtures\OauthAccessTokensFixture;
-use app\fixtures\EmployeeFixture;
 
 /**
- * Cest to Employee resource.
+ * Cest to shop resource.
  *
  * @author Carlos (neverabe) Llamosas <carlos@tecnocen.com>
  */
-class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
+class ShopCest extends \tecnocen\roa\test\AbstractResourceCest
 {
     protected function authToken(ApiTester $I)
     {
@@ -18,15 +22,29 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
     }
 
     /**
+     * @depends resources\ProfileCest:fixtures
+     */
+    public function fixtures(ApiTester $I)
+    {
+        $I->haveFixtures([
+            'shop' => ShopFixture::class,
+            'employee' => [
+                'class' => EmployeeFixture::class,
+                'depends' => [],
+            ],
+        ]);
+    }
+
+    /**
      * @param  ApiTester $I
      * @param  Example $example
      * @dataprovider indexDataProvider
-     * @depends ShopCest:fixtures
+     * @depends fixtures
      * @before authToken
      */
     public function index(ApiTester $I, Example $example)
     {
-        $I->wantTo('Retrieve list of Employee records.');
+        $I->wantTo('Retrieve list of Shop records.');
         $this->internalIndex($I, $example);
     }
 
@@ -37,25 +55,12 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
     {
         return [
             'list' => [
-                'urlParams' => [
-                    'shop_id' => 2,
-                    'expand' => 'shop'
-                ],
                 'httpCode' => HttpCode::OK,
-                'headers' => [
-                    'X-Pagination-Total-Count' => 2,
-                ],
-            ],
-            'not found shop' => [
-                'urlParams' => [
-                    'shop_id' => 10
-                ],
-                'httpCode' => HttpCode::NOT_FOUND,
             ],
             'filter by name' => [
                 'urlParams' => [
-                    'shop_id' => 2,
-                    'name' => 'Robert',
+                    'name' => 'Miniso',
+                    'expand' => 'employees'
                 ],
                 'httpCode' => HttpCode::OK,
                 'headers' => [
@@ -64,175 +69,161 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
             ],
         ];
     }
+
     /**
      * @param  ApiTester $I
      * @param  Example $example
      * @dataprovider viewDataProvider
-     * @depends ShopCest:fixtures
+     * @depends fixtures
      * @before authToken
      */
     public function view(ApiTester $I, Example $example)
     {
-        $I->wantTo('Retrieve Employee single record.');
+        $I->wantTo('Retrieve Shop single record.');
         $this->internalView($I, $example);
+        if (isset($example['response'])) {
+            $I->seeResponseContainsJson($example['response']);
+        }
     }
+
     /**
-     * @return array<string,array<string,string>> data for test `view()`.
+     * @return array[] data for test `view()`.
      */
     protected function viewDataProvider()
     {
         return [
-            'single record' => [
+            'expand employees' => [
                 'urlParams' => [
-                    'shop_id' => 2,
-                    'id' => 3,
-                    'expand' => 'shop'
+                    'id' => 1,
+                    'expand' => 'employees'
                 ],
                 'httpCode' => HttpCode::OK,
                 'response' => [
                     '_embedded' => [
-                        'shop' => [
-                            ['id' => 2],
+                        'employees' => [
+                            ['id' => 1],
                         ],
                     ],
                 ],
             ],
-            'not found employee record' => [
-                'url' => '/v1/shop/1/employee/3',
-                'httpCode' => HttpCode::NOT_FOUND,
-            ],
-            'not found shop record' => [
-                'url' => '/v1/shop/10/employee/10',
-                'httpCode' => HttpCode::NOT_FOUND,
-            ],
         ];
     }
+
     /**
      * @param  ApiTester $I
      * @param  Example $example
      * @dataprovider createDataProvider
-     * @depends ShopCest:fixtures
+     * @depends fixtures
      * @before authToken
      */
     public function create(ApiTester $I, Example $example)
     {
-        $I->wantTo('Create a Employee record.');
+        $I->wantTo('Create a Shop record.');
         $this->internalCreate($I, $example);
     }
+
     /**
-     * @return array<string,array<string,string|array<string,string>>> data for test `create()`.
+     * @return array<string,array<string,array<string,string>>> data for test `create()`.
      */
     protected function createDataProvider()
     {
         return [
-            'create employee 3' => [
-                'urlParams' => [
-                    'shop_id' => 1
-                ],
-                'data' => ['name' => 'Employee 3'],
+            'create shop 4' => [
+                'data' => ['name' => 'Shop 4'],
                 'httpCode' => HttpCode::CREATED,
             ],
             'unique' => [
-                'urlParams' => [
-                    'shop_id' => 1
-                ],
-                'data' => ['name' => 'Employee 3'],
+                'data' => ['name' => 'Shop 4'],
                 'httpCode' => HttpCode::UNPROCESSABLE_ENTITY,
                 'validationErrors' => [
-                    'name' =>
-                        'Employee Name "Employee 3" has already been taken.'
+                    'name' => 'Shop Name "Shop 4" has already been taken.'
                 ],
             ],
             'to short' => [
-                'urlParams' => [
-                    'shop_id' => 1
-                ],
-                'data' => ['name' => 'wo'],
+                'data' => ['name' => 'Shop'],
                 'httpCode' => HttpCode::UNPROCESSABLE_ENTITY,
                 'validationErrors' => [
-                    'name' =>
-                        'Employee Name should contain at least 6 characters.'
+                    'name' => 'Shop Name should contain at least 6 characters.'
                 ],
             ],
             'not blank' => [
-                'urlParams' => [
-                    'shop_id' => 1
-                ],
                 'httpCode' => HttpCode::UNPROCESSABLE_ENTITY,
                 'validationErrors' => [
-                    'name' => 'Employee Name cannot be blank.'
+                    'name' => 'Shop Name cannot be blank.'
                 ],
             ],
         ];
     }
+
     /**
      * @param  ApiTester $I
      * @param  Example $example
      * @dataprovider updateDataProvider
-     * @depends ShopCest:fixtures
+     * @depends fixtures
      * @before authToken
      */
     public function update(ApiTester $I, Example $example)
     {
-        $I->wantTo('Update a Employee record.');
+        $I->wantTo('Update a Shop record.');
         $this->internalUpdate($I, $example);
     }
+
     /**
      * @return array[] data for test `update()`.
      */
     protected function updateDataProvider()
     {
         return [
-            'update employee 1' => [
-                'url' => '/v1/shop/1/employee/1',
-                'data' => ['name' => 'employee 7'],
+            'update shop 1' => [
+                'urlParams' => ['id' => '1'],
+                'data' => ['name' => 'Shop 1'],
                 'httpCode' => HttpCode::OK,
             ],
             'to short' => [
-                'url' => '/v1/shop/1/employee/1',
-                'data' => ['name' => 'em'],
+                'urlParams' => ['id' => '1'],
+                'data' => ['name' => 'Shop'],
                 'httpCode' => HttpCode::UNPROCESSABLE_ENTITY,
                 'validationErrors' => [
-                    'name' => 'Employee Name should contain at least 6 characters.'
+                    'name' => 'Shop Name should contain at least 6 characters.'
                 ],
             ],
         ];
     }
+
     /**
      * @param  ApiTester $I
      * @param  Example $example
      * @dataprovider deleteDataProvider
-     * @depends ShopCest:fixtures
+     * @depends fixtures
      * @before authToken
      */
     public function delete(ApiTester $I, Example $example)
     {
-        $I->wantTo('Delete a Employee record.');
+        $I->wantTo('Delete a Shop record.');
         $this->internalDelete($I, $example);
     }
+
+
     /**
      * @return array[] data for test `delete()`.
      */
     protected function deleteDataProvider()
     {
         return [
-            'shop not found' => [
-                'url' => '/v1/shop/10/employee/1',
-                'httpCode' => HttpCode::NOT_FOUND,
-            ],
-            'delete Employee 7' => [
-                'url' => '/v1/shop/1/employee/7',
+            'delete shop 1' => [
+                'urlParams' => ['id' => 4],
                 'httpCode' => HttpCode::NO_CONTENT,
             ],
             'not found' => [
-                'url' => '/v1/shop/1/employee/7',
+                'urlParams' => ['id' => 4],
                 'httpCode' => HttpCode::NOT_FOUND,
                 'validationErrors' => [
-                    'name' => 'The record "8" does not exists.'
+                    'name' => 'The record "1" does not exists.'
                 ],
             ],
         ];
     }
+
     /**
      * @inheritdoc
      */
@@ -243,11 +234,12 @@ class EmployeeCest extends \tecnocen\roa\test\AbstractResourceCest
             'name' => 'string',
         ];
     }
+
     /**
      * @inheritdoc
      */
     protected function getRoutePattern()
     {
-        return 'v1/shop/<shop_id:\d+>/employee';
+        return 'v1/shop';
     }
 }

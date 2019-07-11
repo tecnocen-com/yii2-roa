@@ -11,4 +11,8 @@ use yii\web\Linkable;
  */
 interface Contract extends Embeddable, Linkable
 {
+    /**
+     * @return string the URL to the record being referenced.
+     */
+    public function getSelfLink(): string;
 }
