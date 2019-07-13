@@ -94,7 +94,6 @@ class StoreResource extends \tecnocen\roa\controllers\Resource
 }
 ```
 
-
 #### Propiedad `$modelClass`
 
 Es la propiedad más importante del recurso, define el modelo que se usará para
