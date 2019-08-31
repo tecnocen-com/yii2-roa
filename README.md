@@ -6,10 +6,8 @@ using the Yii2 framework.
 
 [![Latest Stable Version](https://poser.pugx.org/tecnocen/yii2-roa/v/stable)](https://packagist.org/packages/tecnocen/yii2-roa)
 [![Total Downloads](https://poser.pugx.org/tecnocen/yii2-roa/downloads)](https://packagist.org/packages/tecnocen/yii2-roa)
-[![Code Coverage](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/?branch=master)
 
-Scrutinizer [![Build Status Scrutinizer](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/badges/build.png?b=master&style=flat)](https://scrutinizer-ci.com/g/tecnocen-com/yii2-roa/build-status/master)
+
 Travis [![Build Status Travis](https://api.travis-ci.org/tecnocen-com/yii2-roa.svg?branch=master&style=flat?style=for-the-badge)](https://travis-ci.org/tecnocen-com/yii2-roa)
 
 ### Prerequisites
